@@ -1,0 +1,99 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+<title>AAU Push | {{section.code}}</title>
+{% endblock %}
+
+{% block style %}
+<style>	
+	#announcements {
+				
+	}
+	
+	#materials {
+		width:100%;
+		min-height:200px;
+		padding-bottom:30px;
+		padding-top:2px;
+		background-color:#eee;
+			
+	}
+	
+	.announcement {
+	}
+	
+	.announcement-message {
+		padding-left:1.5%;	
+	}
+	
+	.material {
+		width:80%;
+		margin-left:auto;
+		margin-right:auto;
+		margin-bottom:10px;
+		border-bottom-style:solid;
+		border-bottom-width:1px;
+		border-bottom-color:#F00;
+	}
+	
+	.material-course {
+		margin-bottom:3px;	
+	}
+	
+	.material-name a {
+		color:#135CE6;			
+	}
+	
+	.material-name a:hover {
+		color:#2A3F55;
+		text-decoration:none;			
+	}
+</style>
+{% endblock %}
+
+{% block section_code %}
+Year {{section.year}} | Section {{section.section_number}} | Code: {{section.code}}
+{% endblock %}
+
+{% block extra %}
+
+{% endblock%}
+
+{% block content %}
+<table class="table content-table">
+<tr class="row"><td class="col-sm-9">
+	<h5 class="text-capitalize mark"><a href="{% url 'Home' %}">{{section.studyfield}} </a><span class="glyphicon glyphicon-chevron-right"></span>  <a href="{% url 'Section' section.code %}">{{section.code}}</a></h5>
+<div id="announcements">
+	<h3 class="page-header text-center">Announcements</h3>
+	{% for announcement in announcements %}
+	<div class="announcement media">
+    	<div class="media-body">
+        	<h4 class="media-heading">{{announcement.lecturer}}<small> - Posted on {{announcement.pub_date}}</small> </h4>
+            {% if announcement.is_urgent %}
+            <p class="announcement-message"><font color="#F3252B">{{announcement.message}}</font></p>
+            {% else %}
+            <p class="announcement-message">{{announcement.message}}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% 	empty %}
+    <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.1;"></span><h4 class="text-center">No announcements right now, check later.</h4></h2>
+    {% endfor %}
+</div>
+</td><td  class="col-sm-3">
+<div id="materials">
+	<h3 class="text-center">Uploads this week</h3>
+        
+    {% for upload in this_week %}
+    	<div class="material">
+        	<h4 class="material-course">{{upload.course}}</h4>
+            <p class="material-description">{{upload.description}}[.{{upload.ext}}]</p>            
+            <p class="material-name"><a href="{% url 'File' upload.id %}"><span class="glyphicon glyphicon-save-file"></span>&nbsp;{{upload.name | capfirst}}&nbsp;[.{{upload.ext}}]</a><span class="small">&nbsp;&nbsp;({{upload.file_size | filesizeformat }})</span></p>
+            <h5 class="material-pub_date"><small>Uploaded on {{upload.pub_date}}</small></h5>
+        </div>
+    {% 	empty %}
+    <h2 class="text-center"><span class="glyphicon glyphicon-folder-close" style="opacity:0.05;"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
+    {% endfor %}
+</div></td></tr>
+</table>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+	<title>AAU Push | {{course.name}}</title>
+{% endblock %}
+
+{% block style %}
+<style>
+	.file {
+		color:#135CE6;			
+	}
+	
+	.file:hover {
+		color:#2A3F55;
+		text-decoration:none;			
+	}
+</style>
+{% endblock %}
+{% block content %}
+	<table class="table content-table">
+    	<tr>
+        <td>
+        <h5 class="text-capitalize mark"><a href="{% url 'Home' %}">{{section.studyfield}} </a><span class="glyphicon glyphicon-chevron-right"></span>  <a href="{% url 'Section' section.code %}">{{section.code}}</a> <span class="glyphicon glyphicon-chevron-right"></span>  <a href="{% url 'course_view' section.code course.get_link_name %}">{{course.name}}</a></h5>
+    <form action="{% url 'course_view' section.code course.get_link_name %}" method="post">
+    {% csrf_token %}       
+   			{% for material in materials %}
+            		{% if forloop.first %}
+						<table class="table content-table">
+  							<caption><h3>Materials for {{ course.name }}</h3></caption>
+        					<thead>
+   								<tr>
+     	    	   					<th class="col-sm-1"></th>
+     								<th class="col-sm-3">File Name</th>
+     								<th class="col-sm-6">Description</th>
+     								<th class="col-sm-2">Upload Date</th>
+   								</tr>
+   	    	 				</thead>
+                            
+                            <tbody>                    
+                    {% endif %}
+    				<tr>
+     					<td class="col-sm-1">
+							<input type="checkbox" name={{material.id}} />
+    					</td>
+                                                             
+     					<td class="col-sm-3">
+     						<p><a class="file" href="{% url 'File' material.id %}">[{{material.ext | upper}}] {{material.name | capfirst}}</a><span class="small">&nbsp;&nbsp;({{material.file_size | filesizeformat }})</span></p>                        	     												
+     					</td>
+                    
+      					<td class="col-sm-6">
+      						<p>{% filter capfirst %}{{material.description}}{%endfilter%}</p>
+      					</td>
+                    
+      					<td class="col-sm-2">
+      						<p>{{material.pub_date | date:"N"}}&nbsp;{{material.pub_date | date:"j"}}, {{material.pub_date | date:"o"}}</p>
+      					</td>
+    				</tr>
+            {% empty %}
+            <h2 class="text-center"><span class="glyphicon glyphicon-folder-close" style="opacity:0.05;"></span><h4 class="text-center">There are no uploaded materials for this course. Contact your teacher.</h4></h2>
+   			{%endfor%}
+        </tbody>          
+   	</table>
+    {% if materials %}
+  	<input type="submit" value="Download"/>
+ 	</form>
+    {% endif %}
+    </td>
+    </tr>
+    </table>
+{% endblock %}

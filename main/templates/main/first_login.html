@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<style>
+			body {
+				color:#303030;	
+			}
+			
+			li {
+				color:#F00;	
+			}
+		</style>
+    </head>
+    
+	<body>
+        
+	<center>
+	<br>
+	<h4>Please fill out the form below and submit it to go to your account.</h4>
+    <hr>
+	<h5>You can choose multiple choices by holding down the CTRL key while choosing.</h5>
+
+ 	<table border = "2px" width="50%" align = "center">
+	<tr>
+    	<td>  
+		<form action="{% url 'first_login' %}" method="post">
+		{%csrf_token%} {{form.as_p}}
+		<label for="password" >Please enter your new password:</label>
+		<input id="password" type="text" name="new_password" required/>
+		<br><br>
+		<input type="submit" value="Submit" style="float:right;margin-right:20px;" />
+		<br><br>
+		</form>
+		</td>
+	</tr>
+	</table>
+	<p>If a section or course is missing, please inform Addis 0913350082.</p>
+	</center>
+    
+	</body>
+</html>
