@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from main.models import *
 from push_page.models import *
-from main.forms import Lecturerform
+from main.forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from django.core import serializers
