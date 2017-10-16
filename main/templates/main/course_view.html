@@ -25,7 +25,7 @@
     {% csrf_token %}       
    			{% for material in materials %}
             		{% if forloop.first %}
-						<table class="table content-table">
+						<table class="table">
   							<caption><h3>Materials for {{ course.name }}</h3></caption>
         					<thead>
    								<tr>
@@ -44,7 +44,7 @@
     					</td>
                                                              
      					<td class="col-sm-3">
-     						<p><a class="file" href="{% url 'File' material.id %}">[{{material.ext | upper}}] {{material.name | capfirst}}</a><span class="small">&nbsp;&nbsp;({{material.file_size | filesizeformat }})</span></p>                        	     												
+     						<p><a class="file" href="{% url 'File' material.id %}">[{{material.ext | upper}}] {{material.name | capfirst}}</a><span class="small">&nbsp;&nbsp; ({{material.file_size | filesizeformat }})</span></p>                        	     												
      					</td>
                     
       					<td class="col-sm-6">
