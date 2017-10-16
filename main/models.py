@@ -94,6 +94,11 @@ class Announcement(models.Model):
         return 'main/' + self.file2.url.split('/')[-1]
       else:
         return ""
+   def inc_count(self):
+      self.count = self.count + 1
+      self.save()
+      return True
+   
 def upload_path(instance, filename):
    return 'aaupush/uploads/' + instance.course.studyfield.department.name + '/' + instance.course.studyfield.name + '/' + instance.course.name + '/' + instance.name + '.' +  instance.ext()
 
