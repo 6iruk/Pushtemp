@@ -1,41 +1,83 @@
 <!DOCTYPE html>
 <html>
 	<head>
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     	<style>
 			body {
+				margin:0px;
 				color:#303030;	
 			}
 			
 			li {
 				color:#F00;	
 			}
+		
+			p {
+				padding:20px 0px 0px 15px;
+			}
+			
+			h5 {
+				color:#808080;
+			}
+			
+			h5::before {
+				content:"* ";
+				color:#F00;
+				font-size:150%;
+				vertical-align:text-top;
+			}
+						
+			p:nth-child(2)::after {
+				content:"	This will be your username from now on.";
+				opacity:0.8;	
+			}
+			
+			#header {
+				background-size:100% 150%;
+				padding-top:15px;
+				padding-bottom:25px;	
+			}
+			
+			#lect-table {
+				background-color:#EBEBEB;
+				padding-bottom:100px;
+				border-radius:8px;
+				margin-top:30px;
+			}
+				
 		</style>
     </head>
     
 	<body>
-        
+ 	{% load static %}
+ 	<div id="header" style="background:url({% static 'main/Gradient.svg' %})">
+		{% load static %}
+ 		<center><img src="{% static 'main/White-Logo.svg' %}" width="160px" height="100px"></center>
+ 	</div>
+    <div class="container">    
 	<center>
 	<br>
 	<h4>Please fill out the form below and submit it to go to your account.</h4>
     <hr>
-	<h5>You can choose multiple choices by holding down the CTRL key while choosing.</h5>
+	<h5> You can choose multiple choices by holding down the CTRL key while choosing.</h5>
 
- 	<table border = "2px" width="50%" align = "center">
+ 	<table id="lect-table" width="50%">
 	<tr>
     	<td>  
-		<form action="{% url 'first_login' %}" method="post">
-		{%csrf_token%} {{form.as_p}}
-		<label for="password" >Please enter your new password:</label>
-		<input id="password" type="text" name="new_password" required/>
+		<form class="lect-form" action="{% url 'first_login' %}" method="post">
+		{{form.as_p}}
+		<p><label for="password" >Please enter your new password:</label>
+		<input id="password" type="text" name="new_password" required/></p>        
 		<br><br>
-		<input type="submit" value="Submit" style="float:right;margin-right:20px;" />
-		<br><br>
+        {%csrf_token%}
+		<input  class="btn btn-info" type="submit" value="Submit" style="float:right;margin-right:20px;" />
+		<br><br>       
 		</form>
 		</td>
 	</tr>
 	</table>
-	<p>If a section or course is missing, please inform Addis 0913350082.</p>
+	<p><font size="+1" color="#4D4D4D">Need help?</font><br><font color="#808080">If there is any problem please contact Addis 0913350082.</font></p>
 	</center>
-    
+    </div>
 	</body>
 </html>
