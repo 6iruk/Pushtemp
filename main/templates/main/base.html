@@ -159,6 +159,10 @@
 				border-collapse:collapse;
 				overflow:hidden;	
 			}
+			
+			.course-name {
+				overflow:hidden;	
+			}
 				
 			.header-content-right {
 				display:inline;
@@ -261,7 +265,7 @@
                 <div id="nav-content">
 					<div id="course-list" class="text-left">
     					{% for course in courses %}
-        						<div class="course"><a href="{% url 'course_view' section.code course.get_link_name %}"><h4>{{course.name}}</h4></a></div>
+        						<div class="course"><a href="{% url 'course_view' section.code course.get_link_name %}"><h4 class="course-name">{{course.name}}</h4></a></div>
         				{% endfor %}
     				</div>
                 	
