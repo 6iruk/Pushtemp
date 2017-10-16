@@ -91,7 +91,7 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
         </div>
     </div>
     {% 	empty %}
-    <h2 class="text-center"><span class="glyphicon glyphicon-list-alt op-sym" style="opacity:0.1;"></span><h4 class="text-center">No announcements right now, check later.</h4></h2>
+    <h2 class="text-center"><span class="glyphicon glyphicon-list-alt op-sym"></span><h4 class="text-center">No announcements right now, check later.</h4></h2>
     {% endfor %}
 </div>
 </td><td  class="col-sm-3">
@@ -106,7 +106,7 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
             <h4 class="material-pub_date"><small>Uploaded on {{upload.pub_date}}</small></h4>
         </div>
     {% 	empty %}
-    <h2 class="text-center"><span class="glyphicon glyphicon-folder-close op-sym" style="opacity:0.05;"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
+    <h2 class="text-center"><span class="glyphicon glyphicon-folder-close op-sym op-sym-lite"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
     {% endfor %}
 </div></td></tr>
 </table>
