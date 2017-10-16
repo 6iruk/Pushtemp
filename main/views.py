@@ -25,6 +25,8 @@ def section(request,section_code):
         quote = Quote.objects.get(id=1)
         now = datetime.datetime.now()
         announcements = section.announcement_set.order_by('-pub_date').filter(exp_date__gt = now)
+        for announcement in announcements:
+                announcement.inc_count()
         this_week = []
         a_week_ago = now - datetime.timedelta(days=7)
         this_week = section.material_set.order_by('-pub_date').filter(pub_date__range=(a_week_ago , now))
