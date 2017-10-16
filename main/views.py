@@ -107,14 +107,14 @@ def portal(request):
                                 file1 = request.FILES.get('file')
                                 if request.FILES.get('file_'):
                                         file2 = request.FILES.get('file_')  
-                                        ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, file2=file2, pub_date=pub_date, exp_date=exp_date)  
+                                        ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, file2=file2, pub_date=pub_date, exp_date=exp_date,count=0)  
                                 else:
-                                        ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, pub_date=pub_date, exp_date=exp_date)
+                                        ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, pub_date=pub_date, exp_date=exp_date,count=0)
                         elif request.FILES.get('file_'):
                                 file1 = request.FILES.get('file_')
-                                ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, pub_date=pub_date, exp_date=exp_date)
+                                ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, pub_date=pub_date, exp_date=exp_date,count=0)
                         else:
-                                ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, pub_date=pub_date, exp_date=exp_date)
+                                ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, pub_date=pub_date, exp_date=exp_date,count=0)
                         ann.save()
                         if request.POST.get('ann_type') == 'section':
                                 for sec in section:
@@ -133,7 +133,7 @@ def portal(request):
                         pub_date = datetime.datetime.now()
                         lecturer = Lecturer.objects.get(user=request.user)
                         course = Course.objects.get(id=request.POST.get('course'))
-                        material = Material(name=name,description=description,file=file,pub_date=pub_date,lecturer=lecturer,course=course)
+                        material = Material(name=name,description=description,file=file,pub_date=pub_date,lecturer=lecturer,course=course,count=0)
                         material.save() 
                         if request.POST.get('mat_type') == 'all':
                                 sections = Section.objects.filter(course=course).distinct()
