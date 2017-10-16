@@ -2,7 +2,7 @@
 <html>
 	<head>		
         {% block title %}{% endblock %}
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         {% block script %}{% endblock %}
@@ -17,8 +17,8 @@
 				src:url(/static/main/Light.otf);	
 			}
 			
+			
 			html {				 
-				 font-size:16px;
 				 height:100%;
 			} 
 		  		
@@ -31,7 +31,6 @@
 			
 			h3 {
 				color:#2D2D2D;
-	
 			}
 			
 			h4 {
@@ -58,7 +57,7 @@
 			
 			q {
 	      		font-family: Copperplate, Papyrus;
-	     		font-size: 1rem;
+	     		font-size:1.5rem;
 		    }  
 			
 			#main {
@@ -68,7 +67,8 @@
 			
 			#content {
 				width:80%;
-				margin-left:20%;
+				position:absolute;
+				right:0px;
 			}
 			
 			.content-table {
@@ -198,6 +198,49 @@
 			.push-page-blog-post-2 {
 				background-color:#799f44;
 			}
+			
+			.cr {
+				font-size:1rem;	
+			}
+				
+			@media only screen and (max-width:500px) {
+				h3 {
+					font-size:1rem;	
+				}
+				
+				h4 {
+					font-size:0.8rem;	
+				}
+				
+				p {
+					font-size:0.6rem;	
+				}
+				
+				a {
+					font-size:0.6rem;	
+				}
+				
+				q {
+					font-size:0.6rem;	
+				}
+				
+				img {
+					width:45px;
+					height:35px;
+				}
+				
+				#course-list {
+					margin-top:5px;	
+				}
+				
+				span {
+					font-size:0.8rem;	
+				}
+				
+				.cr {
+					font-size:0.7rem;	
+				}
+			}
 					      	
   		  </style>
           
@@ -211,7 +254,7 @@
                 	<div class="logo">                
   						<a href="{% url 'Home' %}">
                 			{% load static %}
-                			<img src="{% static 'main/White-L	ogo.svg' %}" width="90px" height="70px">
+                			<img src="{% static 'main/White-logo.svg' %}" width="90px" height="70px">
                 		</a>
                 	</div>
                 </div>
@@ -228,7 +271,8 @@
                                       
 					<div id="footer" class="text-center">
         				<div id="quote">
-							<q>{{quote.quote}}</q><br>- {{quote.author}}<br>
+							<q>{{quote.quote}}</q><br><p>- {{quote.author}}</p><br>
+                            <p class="cr"><span class="glyphicon glyphicon-copyright-mark cr"></span> AAU Push 2017</p>
             			</div>
     				</div>
                 </div>
