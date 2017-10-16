@@ -54,6 +54,20 @@
 		</script>
         
  		<style>
+			@font-face {
+				font-family:proxima-nova;
+				src:url(/static/main/Regular.otf);	
+			}
+			
+			@font-face {
+				font-family:proxima-nova-light;
+				src:url(/static/main/Light.otf);	
+			}
+				body {
+					margin:0px;
+					font-family:proxima-nova;
+			}
+			
 				q {
 		      		font-family: Copperplate, Papyrus;
 		      		font-size: 1.5rem;
@@ -94,7 +108,7 @@
 		</style>
 	</head>
     
-	<body style="margin:0px;">
+	<body>
  		{% load static %}
  		<div id="header" style="background:url({% static 'main/Gradient.svg' %})">
 			{% load static %}
@@ -199,7 +213,7 @@
                 	        </div>                                                                     
                     	</div>
                     
-						<input class="btn btn-primary" type='submit' value='Post Announcement'/>
+						<input class="btn btn-info" type='submit' value='Post Announcement'/>
 					</form>  
 				</td>
 				<td valign="top">
@@ -251,7 +265,7 @@
                        		</div>                                                                     
                     	</div>
                          
-						<input class="btn btn-primary" type='submit' value='Upload Material'/>
+						<input class="btn btn-info" type='submit' value='Upload Material'/>
 					</form>    
 				</td>
 			</tr>
