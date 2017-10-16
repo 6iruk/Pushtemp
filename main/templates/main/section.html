@@ -97,4 +97,13 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
     {% for upload in this_week %}
     	<div class="material">
         	<h4 class="material-course">{{upload.course}}</h4>
-            <p class="material-description">{{upload.description}}[.{{upload.ext
+            <p class="material-description">{{upload.description}}[.{{upload.ext}}]</p>            
+            <p class="material-name"><a href="{% url 'File' upload.id %}"><span class="glyphicon glyphicon-save-file"></span>&nbsp;{{upload.name | capfirst}}&nbsp; [.{{upload.ext}}]</a><span class="small">&nbsp;&nbsp; ({{upload.file_size | filesizeformat }})</span></p>
+            <h4 class="material-pub_date"><small>Uploaded on {{upload.pub_date}}</small></h4>
+        </div>
+    {% 	empty %}
+    <h2 class="text-center"><span class="glyphicon glyphicon-folder-close" style="opacity:0.05;"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
+    {% endfor %}
+</div></td></tr>
+</table>
+{% endblock %}
