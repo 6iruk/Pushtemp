@@ -54,20 +54,6 @@
 		</script>
         
  		<style>
-			@font-face {
-				font-family:proxima-nova;
-				src:url(/static/main/Regular.otf);	
-			}
-			
-			@font-face {
-				font-family:proxima-nova-light;
-				src:url(/static/main/Light.otf);	
-			}
-				body {
-					margin:0px;
-					font-family:proxima-nova;
-			}
-			
 				q {
 		      		font-family: Copperplate, Papyrus;
 		      		font-size: 1.5rem;
@@ -95,6 +81,12 @@
 					height:100%;
 				}
 				
+				#help {
+					margin-top:20px;
+					opacity:0.8;
+					font-size:0.9rem;	
+				}
+					
 				.panel {
 					width:30%;
 					position:absolute;
@@ -108,7 +100,7 @@
 		</style>
 	</head>
     
-	<body>
+	<body style="margin:0px;">
  		{% load static %}
  		<div id="header" style="background:url({% static 'main/Gradient.svg' %})">
 			{% load static %}
@@ -142,18 +134,23 @@
                                	<div class="media-body">
                                    	<h5 class="media-heading"><small>Posted on {{pre.pub_date}}</small></h5>
                                     <p>{{pre.message}}</p>
+                                    <h5><small>{{pre.count}} views</small></h5>
                                 </div>
                             </div>
                             <div id="prev-collapse" class="collapse">
                             {% else %}
                        		<div class="media">
                                	<div class="media-body">
-                                   	<h5 class="media-heading"><small>Posted on {{pre.pub_date}}</small></h5>
+                                	<hr>
+                                   	<h5 class="media-heading"><small>Posted on {{pre.pub_date}} </small></h5>
                                     <p>{{pre.message}}</p>
+                                    <h5><small>{{pre.count}} views</small></h5>
                                 </div>
                             </div>
                             {% endif %}
+                            {% if forloop.last %}
                             </div>
+                            {% endif %}
                     {% empty %}
                     <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced anything {{lecturer.title}}{{lecturer.name}},<h4 class="text-center">Say something to your students.</h4></h4></h2>                          
                    {% endfor %}                  			
@@ -213,7 +210,7 @@
                 	        </div>                                                                     
                     	</div>
                     
-						<input class="btn btn-info" type='submit' value='Post Announcement'/>
+						<input class="btn btn-primary" type='submit' value='Post Announcement'/>
 					</form>  
 				</td>
 				<td valign="top">
@@ -265,7 +262,7 @@
                        		</div>                                                                     
                     	</div>
                          
-						<input class="btn btn-info" type='submit' value='Upload Material'/>
+						<input class="btn btn-primary" type='submit' value='Upload Material'/>
 					</form>    
 				</td>
 			</tr>
@@ -273,8 +270,9 @@
         
     </div>
     </div>
-    <footer class="text-center" style="margin-top:50px;margin-bottom:50px;">
+    <footer class="text-center" style="margin-top:50px;margin-bottom:10px;">
 		<q>{{quote.quote}}</q><br>- {{quote.author}}<br>
+        <P id="help"><span class="glyphicon glyphicon-copyright-mark cr"></span> AAU Push 2017 - If there are any problems(even minor ones) or if you have any feedbacks, please contact Addis 0913350082.</P>
     </footer>
 	
     </body>
