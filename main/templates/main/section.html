@@ -28,6 +28,7 @@
 	
 	.material {
 		width:80%;
+		min-width:80px;
 		margin-left:auto;
 		margin-right:auto;
 		margin-bottom:10px;
@@ -47,6 +48,16 @@
 	.material-name a:hover {
 		color:#2A3F55;
 		text-decoration:none;			
+	}
+	
+	@media only screen and (max-width:500px) {
+		#materials {
+			padding-bottom:5px;	
+		}
+		
+		.material {
+			margin:5px;	
+		}
 	}
 </style>
 {% endblock %}
@@ -88,8 +99,8 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
     	<div class="material">
         	<h4 class="material-course">{{upload.course}}</h4>
             <p class="material-description">{{upload.description}}[.{{upload.ext}}]</p>            
-            <p class="material-name"><a href="{% url 'File' upload.id %}"><span class="glyphicon glyphicon-save-file"></span>&nbsp;{{upload.name | capfirst}}&nbsp;[.{{upload.ext}}]</a><span class="small">&nbsp;&nbsp;({{upload.file_size | filesizeformat }})</span></p>
-            <h5 class="material-pub_date"><small>Uploaded on {{upload.pub_date}}</small></h5>
+            <p class="material-name"><a href="{% url 'File' upload.id %}"><span class="glyphicon glyphicon-save-file"></span>&nbsp;{{upload.name | capfirst}}&nbsp; [.{{upload.ext}}]</a><span class="small">&nbsp;&nbsp; ({{upload.file_size | filesizeformat }})</span></p>
+            <h4 class="material-pub_date"><small>Uploaded on {{upload.pub_date}}</small></h4>
         </div>
     {% 	empty %}
     <h2 class="text-center"><span class="glyphicon glyphicon-folder-close" style="opacity:0.05;"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
