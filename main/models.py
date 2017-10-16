@@ -95,7 +95,7 @@ class Announcement(models.Model):
       else:
         return ""
 def upload_path(instance, filename):
-   return 'aaupush/uploads/' + instance.course.studyfield.department + instance.course.studyfield.name + instance.course.name + '/' + instance.course.name
+   return 'aaupush/uploads/' + instance.course.studyfield.department.name + '/' + instance.course.studyfield.name + '/' + instance.course.name + '/' + instance.name + '.' +  instance.ext()
 
 class Material(models.Model):
    name = models.CharField(max_length=100)
