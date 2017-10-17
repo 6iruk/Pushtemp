@@ -193,7 +193,7 @@ def sections(request):
 
 	#JSON output
 	#Start json array
-	output = "[";
+	output = "["
 
 	for section in sections:
 		output += "{"
