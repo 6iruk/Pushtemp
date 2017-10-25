@@ -72,7 +72,7 @@ def login_view(request):
                    return redirect('portal')
                 quote = Quote.objects.get(id=1)
                 return render(request, 'main/login.html',{'quote':quote})
-        username = request.POST.get('username').lower().title()
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -175,7 +175,7 @@ def first_login(request):
                 form.save()
                 user = User.objects.get(username=request.user)
                 user.set_password(request.POST['new_password'])
-                user.username = request.POST['name'].lower().title()
+                user.username = request.POST['lect_id'].lower()
                 user.save()
                 return redirect('login')
         else:
