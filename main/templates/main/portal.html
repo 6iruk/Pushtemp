@@ -4,6 +4,8 @@
  		<title>AAU Push | Portal</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
   		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'main/custom_portal.css ' %}">
  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  		
@@ -54,226 +56,270 @@
 		</script>
         
  		<style>
+				@font-face {
+					font-family:proxima-nova;
+					src:url(/static/main/Regular.otf);	
+				}
+			
+				@font-face {
+					font-family:proxima-nova-light;
+					src:url(/static/main/Light.otf);	
+				}
+				
+				html {
+					min-height:100%;
+					position:relative;	
+				}
+				
+				body {
+					height:100%;
+					font-family:proxima-nova;	
+				}
+				
+				#greeting {
+					font-family:proxima-nova-light;	
+				}
+				
 				q {
 		      		font-family: Copperplate, Papyrus;
 		      		font-size: 1.5rem;
 		      	}
 				
 				a {
-					text-decoration: none;
-		      		color: #4480b7;
+					text-decoration:none;
+		      		color:#4480b7;
 				} 
-				
-				td {
-					width:50%;
-				}
-				
+								
 				#header {
 					position:relative;
-					background-size:100% 150%;
-					padding-top:15px;
-					padding-bottom:25px;	
+					background-color:rgba(68,128,183,1);
+
+					box-shadow:0px 1px 3px #081D33;	
 				}
 				
+				#header-logo-container {
+					width:80%;
+					margin-left:auto;
+					margin-right:auto;	
+				}
+					
+				#header-logo {
+					width:12%;
+					height:150px;
+					margin-right:auto;
+				}
+				
+				#logout {
+					position:absolute;
+					top:5px;
+					right:10px;						
+				}
+				
+				#logout > .btn {
+					color:#FFFBF0;	
+				}
+				
+				#logout > .btn:hover {
+					color:#804040;	
+				}
+						
 				#content {
 					position:relative;
 					width:100%;
 					height:100%;
+					margin-bottom:150px;
 				}
 				
+				li a {
+					
+				}
+					
+				.tab-content {
+					background-color:#eee;
+					border-style:solid;
+					border-width:1px;
+					border-color:#ddd;
+					border-top-style:solid;
+					border-top-width:0px;
+					border-top-color:#FFF;			
+					padding:15px;
+				}
+					
 				#help {
 					margin-top:20px;
 					opacity:0.8;
 					font-size:0.9rem;	
 				}
-					
-				.panel {
-					width:30%;
-					position:absolute;
-					top:8px;
-					right:8px;
-					box-shadow:1px 1px 4px rgba(0, 0, 0, .4), -1px 1px 4px rgba(0,0,0, .4);
-					padding-bottom:5px;
-					z-index:2;
-				}
 				
+				#footer {
+					width:100%;
+					position:absolute;
+					bottom:0px;
+				}
+					
 		</style>
 	</head>
     
 	<body style="margin:0px;">
- 		{% load static %}
- 		<div id="header" style="background:url({% static 'main/Gradient.svg' %})">
-			{% load static %}
- 			<center><a href="{% url 'Home' %}"><img src="{% static 'main/White-Logo.svg' %}" width="160px" height="100px"></a></center>
-            		
- 	 		<form action="{% url 'portal' %}" method='post' style="position:absolute;bottom:10px;right:30px;">
+ 	{% load static %}
+ 	<div id="header">
+    	{% load static %}
+        <div id="header-logo-container">
+    		<div id="header-logo" style="background-image:url({% static 'main/Logo-03.svg' %});">			
+        	
+            </div>    	
+        </div>	
+        
+ 	 	<form  id="logout" action="{% url 'portal' %}" method='post' >
 			{% csrf_token %}
 			<input type="hidden" name="request_type" value='Logout'/>
-			<input class="btn btn-default btn-md" type="submit" name='logout' value='Logout'/>
-			</form>
- 		</div>
-    <div id="content">
-    <div class="container">
-  		<h1 class="page-header" style="text-align:center;">Welcome, {{lecturer.title}} {{lecturer.name}}</h1>
-        <h3 class="text-center">Post an announcement or upload a file</h3>
-        {% if success %}
-        	<div class="alert alert-success">
-            	<h4 class="text-center"><b>Success!</b></h4>
-           </div>
-        {% endif %}
-		<div id="close" class="panel panel-success">
-       		<div class="panel-heading">
-       			<h5 class="panel-title" style="display:inline;">Previous announcements</h5>
-                <a href="#" style="text-decoration:none;float:right;" onClick="document.getElementById('close').style.visibility = 'hidden'"><span class="glyphicon glyphicon-remove"></span></a>
-           	</div>
-            
-       		<div class="panel-body">                   
-				   {% for pre in prev %}
-                    		{% if forloop.first %}
-                       		<div class="media">
-                               	<div class="media-body">
-                                   	<h5 class="media-heading"><small>Posted on {{pre.pub_date}}</small></h5>
-                                    <p>{{pre.message}}</p>
-                                    <h5><small>{{pre.count}} views</small></h5>
-                                </div>
-                            </div>
-                            <div id="prev-collapse" class="collapse">
-                            {% else %}
-                       		<div class="media">
-                               	<div class="media-body">
-                                	<hr>
-                                   	<h5 class="media-heading"><small>Posted on {{pre.pub_date}} </small></h5>
-                                    <p>{{pre.message}}</p>
-                                    <h5><small>{{pre.count}} views</small></h5>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if forloop.last %}
-                            </div>
-                            {% endif %}
-                    {% empty %}
-                    <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced anything {{lecturer.title}}{{lecturer.name}},<h4 class="text-center">Say something to your students.</h4></h4></h2>                          
-                   {% endfor %}                  			
-                            </div>
-                   <p class="text-center" style="margin:0px;"><a id="show" data-toggle="collapse" href="#prev-collapse" onclick="prev_click()">Show more</a></p>
-       		</div>
- 		<table class="table">
-			<tr>
-            	<th>Post Announcement</th>
-				<th>Upload Material</th>
-            </tr>
-			<tr>
-				<td width="50%" valign="top">
-		  			<form enctype='multipart/form-data' action="{% url 'portal' %}" method='post'>
-		  				<input type='hidden' name='request_type' value='announcement' />
-			  			{% csrf_token %}
-    	                <div class="form-group">
-			   				<label class="control-label" for="message">Enter announcement:</label>
-							<textarea id="message" class="form-control" name="message" rows="5" cols="10" required></textarea>
-                	    </div>
-                    
-	                    <div class="form-group">
-			   				<label class="control-label" for="ann-file">Attach Images(Optional):</label>
-							<input id="ann-file" type="file" name="file" style="padding-left:5%;margin-top:5px;"/>
-            	            <input type="file" name="file_" style="padding-left:5%;margin-top:5px;"/>
- 	                    </div>
-                    
-    	                <div class="checkbox">
-    						<label><input name="urgent" type="checkbox" value="True">This announcement is urgent (make text in red)</label>
-  						</div>
-                    
-                	    <div class="form-group">
-							<p>This announcement should expire in <input name="duration" type="number" required/> from now</p>
-      	                </div>
-                    
-                    	<p class="lead">Send announcement:</p>
-                    
-	                    <div class="form-group">
-    	                	<div class="radio">
-								<label><input type="radio" name="ann_type" value="course" required onclick="myotherFunction('course','section')"/>To all students taking the following course(s):</label>
-            	            </div>
-                        
-                	        <div id="course-check" style="padding-left:5%">
-								{% for cor in course %} 
-									<label class="checkbox-inline"><input type="checkbox" name='course' value="{{cor.name}}" onchange="myFunction('course')" required="required" disabled="True">{{cor}}</label>
-								{% endfor %}
-                  		    </div>
-                        
-            	        	<div class="radio">
-								<label><input type="radio" name="ann_type" value="section" required onclick="myotherFunction('section','course')"/>To all students in the following section/sections:</label>
-                    	    </div>
-                        
-         	                <div id="section-check" style="padding-left:5%">
-								{% for section in sections %} 
-									<label class="checkbox-inline"><input type="checkbox" name='section' value="{{section}}" onchange="myFunction('section')" required="required" disabled="True">{{section}}</label>
-								{% endfor %}
-                	        </div>                                                                     
-                    	</div>
-                    
-						<input class="btn btn-primary" type='submit' value='Post Announcement'/>
-					</form>  
-				</td>
-				<td valign="top">
-					<form enctype='multipart/form-data' action="{% url 'portal' %}" method="post">
-                   		<input type='hidden' name='request_type' value='material' />
-				   		{% csrf_token %}
-                   		<div class="form-group">
-		   					<label class="control-label" for="name">Enter file name:</label>
-							<input id="name" class="form-control" type='text' name='name' required/>
-                    	</div>
-                    
-                    	<div class="form-group">
-		   					<label class="control-label" for="file-data">Choose file:</label>
-							<input id="file_data" type='file' name='file_data' style="padding-left:2%" required/>
-                    	</div>
-                    
-              		    <div class="form-group">
-    						<label class="control-label" for="description">Write short description</label>
-            	            <textarea id="description" class="form-control" name='description' rows="3" cols="50" required/></textarea>
-  						</div>
-                    
-              		    <p class="lead">Upload</p>
-                    
-      		            <div class="form-group">
-            	        	<div id="course-radio">
-								{% for cor in course %} 
-    			    	        		<label class="radio-inline"><input type="radio" name='course' value="{{cor.id}}" required="required">{{cor}}</label>
-			           			{% endfor %}
-                        	</div>
-                        
-                       		<div id="radio-container" style="padding-left:2%">
-                    			<div class="radio">
-									<label><input type="radio" name="mat_type" value="all" required onclick="myotherFunction('none','mat_section')"/>To all the students taking the course:</label>
-                        		</div>
-                        
-                        		<div class="radio">
-									<label><input type="radio" name="mat_type" value="my" required onclick="myotherFunction('none','mat_section')"/>To all the students I give the course to</label>
-                        	 	</div>
-                         
-                        	 	<div class="radio">
-									<label><input type="radio" name="mat_type" value="section" required onclick="myotherFunction('mat_section','none')"/>To all the students in the following section/sections:</label>
-                        		</div>
-                        	</div>
-                                             
-                        	<div id="section-check-mat" style="padding-left:5%">
-								{% for section in sections%}
-					        			<label class="checkbox-inline"><input name="mat_section" type="checkbox" value="{{section}}"  onchange="myFunction('mat_section')" required="required" disabled="True"/>{{section}}</label>
-				       			{%endfor%}
-                       		</div>                                                                     
-                    	</div>
-                         
-						<input class="btn btn-primary" type='submit' value='Upload Material'/>
-					</form>    
-				</td>
-			</tr>
-		</table>
+			<input class="btn btn-link btn-md" type="submit" name='logout' value='Logout'/>
+		</form>
         
+ 	</div>
+    
+    <div id="content">
+    	<div class="container">
+  			<h3 id="greeting" style="text-align:center;">Welcome, {{lecturer.title}} {{lecturer.name}}</h3>
+        	<p></p>
+        	{% if success %}
+        		<div class="alert alert-success">
+            		<h4 class="text-center"><b>Success!</b></h4>
+           		</div>
+        	{% endif %}
+        
+        	<ul class="nav nav-tabs">
+        		<li class="active"><a data-toggle="tab" href="#post">Post an announcement</a></li>
+            	<li><a data-toggle="tab" href="#upload">Upload a material</a></li>
+            	<li><a data-toggle="tab" href="#track">Tracker</a></li>        
+        	</ul>
+        
+            <div class="tab-content">
+                <div id="post" class="tab-pane active">
+                        <form enctype='multipart/form-data' action="{% url 'portal' %}" method='post'>
+                            <input type='hidden' name='request_type' value='announcement' />
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="control-label" for="message">Enter announcement:</label>
+                                <textarea id="message" class="form-control" name="message" rows="5" cols="10" required></textarea>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label class="control-label" for="ann-file">Attach Images(Optional):</label>
+                                <input id="ann-file" type="file" name="file" style="padding-left:5%;margin-top:5px;"/>
+                                <input type="file" name="file_" style="padding-left:5%;margin-top:5px;"/>
+                            </div>
+                        
+                            <div class="checkbox">
+                                <label><input name="urgent" type="checkbox" value="True">This announcement is urgent (make text in red)</label>
+                            </div>
+                        
+                            <div class="form-group">
+                                <p>This announcement should expire in <input name="duration" type="number" required/>days from now</p>
+                            </div>
+                        
+                            <p class="lead">Send announcement:</p>
+                        
+                            <div class="form-group">
+                                <div class="radio">
+                                    <label><input type="radio" name="ann_type" value="course" required onclick="myotherFunction('course','section')"/>To all students taking the following course(s):</label>
+                                </div>
+                            
+                                <div id="course-check" style="padding-left:5%">
+                                    {% for cor in course %} 
+                                        <label class="checkbox-inline"><input type="checkbox" name='course' value="{{cor.name}}" onchange="myFunction('course')" required="required" disabled="True">{{cor}}</label>
+                                    {% endfor %}
+                                </div>
+                            
+                                <div class="radio">
+                                    <label><input type="radio" name="ann_type" value="section" required onclick="myotherFunction('section','course')"/>To all students in the following section/sections:</label>
+                                </div>
+                            
+                                <div id="section-check" style="padding-left:5%">
+                                    {% for section in sections %} 
+                                        <label class="checkbox-inline"><input type="checkbox" name='section' value="{{section}}" onchange="myFunction('section')" required="required" disabled="True">{{section}}</label>
+                                    {% endfor %}
+                                </div>                                                                     
+                            </div>
+                        
+                            <input class="btn btn-primary" type='submit' value='Post Announcement'/>
+                        </form>              	
+                </div>
+                
+                <div id="upload" class="tab-pane">
+                        <form enctype='multipart/form-data' action="{% url 'portal' %}" method="post">
+                            <input type='hidden' name='request_type' value='material' />
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="control-label" for="name">Enter file name:</label>
+                                <input id="name" class="form-control" type='text' name='name' required/>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label class="control-label" for="file-data">Choose file:</label>
+                                <input id="file_data" type='file' name='file_data' style="padding-left:2%" required/>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label class="control-label" for="description">Write short description</label>
+                                <textarea id="description" class="form-control" name='description' rows="3" cols="50" required/></textarea>
+                            </div>
+                        
+                            <p class="lead">Upload</p>
+                        
+                            <div class="form-group">
+                                <div id="course-radio">
+                                    {% for cor in course %} 
+                                            <label class="radio-inline"><input type="radio" name='course' value="{{cor.id}}" required="required">{{cor}}</label>
+                                    {% endfor %}
+                                </div>
+                            
+                                <div id="radio-container" style="padding-left:2%">
+                                    <div class="radio">
+                                        <label><input type="radio" name="mat_type" value="all" required onclick="myotherFunction('none','mat_section')"/>To all the students taking the course:</label>
+                                    </div>
+                            
+                                    <div class="radio">
+                                        <label><input type="radio" name="mat_type" value="my" required onclick="myotherFunction('none','mat_section')"/>To all the students I give the course to</label>
+                                    </div>
+                             
+                                    <div class="radio">
+                                        <label><input type="radio" name="mat_type" value="section" required onclick="myotherFunction('mat_section','none')"/>To all the students in the following section/sections:</label>
+                                    </div>
+                                </div>
+                                                 
+                                <div id="section-check-mat" style="padding-left:5%">
+                                    {% for section in sections%}
+                                            <label class="checkbox-inline"><input name="mat_section" type="checkbox" value="{{section}}"  onchange="myFunction('mat_section')" required="required" disabled="True"/>{{section}}</label>
+                                    {%endfor%}
+                                </div>                                                                     
+                            </div>
+                             
+                            <input class="btn btn-primary" type='submit' value='Upload Material'/>
+                        </form>            
+                </div>
+                
+                <div id="track" class="tab-pane">
+                       {% for pre in prev %}
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><small>Posted on {{pre.pub_date}}</small></h5>
+                                        <p>{{pre.message}}</p>
+                                        <h5><small>{{pre.count}} views</small></h5>
+                                    </div>
+                                </div>
+                        {% empty %}
+                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced anything {{lecturer.title}}{{lecturer.name}},<h4 class="text-center">Say something to your students.</h4></h4>                         
+                       {% endfor %}                  		            
+                </div>                
+            </div>
+    	</div>
     </div>
-    </div>
-    <footer class="text-center" style="margin-top:50px;margin-bottom:10px;">
+    
+    <div id="footer" class="text-center">
 		<q>{{quote.quote}}</q><br>- {{quote.author}}<br>
         <P id="help"><span class="glyphicon glyphicon-copyright-mark cr"></span> AAU Push 2017 - If there are any problems(even minor ones) or if you have any feedbacks, please contact Addis 0913350082.</P>
-    </footer>
+    </div>
 	
     </body>
 </html>
