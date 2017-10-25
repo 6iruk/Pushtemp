@@ -140,7 +140,7 @@ def portal(request):
                         if request.POST.get('mat_type') == 'all':
                                 sections = Section.objects.filter(course=course).distinct()
                         elif request.POST.get('mat_type') == 'my':
-                                sections = set(Section.objects.filter(course=course)).intersection(lecturer.section.all()).distinct
+                                sections = set(Section.objects.filter(course=course)).intersection(lecturer.section.all())
                         elif request.POST.get('mat_type') == 'section':
                                 sections = [Section.objects.get(code=x)for x in request.POST.getlist('mat_section')]
 
