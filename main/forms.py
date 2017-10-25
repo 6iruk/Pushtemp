@@ -11,7 +11,10 @@ class Lecturerform(ModelForm):
             'user':HiddenInput()
         }
         labels = {
+            'name':_('First name'),
+            'last_name':_('Last name'),
+            'lect_id':_('Teachers ID'),
             'course': _('Courses you teach'),
             'section':_('Sections you teach'),
         }
-    
+
