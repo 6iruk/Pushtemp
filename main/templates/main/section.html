@@ -51,7 +51,10 @@
 	
 	@media only screen and (max-width:500px) {
 		#materials {
-			padding-bottom:5px;	
+			padding-bottom:5px;
+			width:80%;
+			margin-left:auto;
+			margin-right:auto;
 		}
 		
 		.material {
@@ -71,8 +74,8 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
 {% endblock%}
 
 {% block content %}
-<table class="table content-table">
-<tr class="row"><td class="col-sm-9">
+<div class="table content-table">
+<div class="row"><div class="col-sm-9">
 	<h5 class="text-capitalize mark"><a href="{% url 'Home' %}">{{section.studyfield}} </a><span class="glyphicon glyphicon-chevron-right"></span>  <a href="{% url 'Section' section.code %}">{{section.code}}</a></h5>
 <div id="announcements">
 	<h3 class="page-header text-center">Announcements</h3>
@@ -91,7 +94,7 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
     <h2 class="text-center"><span class="glyphicon glyphicon-list-alt op-sym"></span><h4 class="text-center">No announcements right now, check later.</h4></h2>
     {% endfor %}
 </div>
-</td><td  class="col-sm-3">
+</div><div  class="col-sm-3">
 <div id="materials">
 	<h3 class="text-center">Uploads this week</h3>
         
@@ -105,6 +108,6 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
     {% 	empty %}
     <h2 class="text-center"><span class="glyphicon glyphicon-folder-close op-sym op-sym-lite"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
     {% endfor %}
-</div></td></tr>
-</table>
+</div></div></div>
+</div>
 {% endblock %}
