@@ -123,7 +123,7 @@ class Material(models.Model):
       return self.file.name.split('.')[-1]
    def file_size(self):
       size_bytes = self.file.size
-      return i
+      return size_bytes
    def inc_count(self):
       self.count = self.count + 1
       self.save()
