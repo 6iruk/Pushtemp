@@ -125,7 +125,11 @@ class Material(models.Model):
       size_bytes = self.file.size
       i = float(size_bytes/1024)
       return i
-      
+   def inc_count(self):
+      self.count = self.count + 1
+      self.save()
+      return True
+   
 class Quote(models.Model):
    quote = models.CharField(max_length=140)
    author = models.CharField(max_length = 100)
