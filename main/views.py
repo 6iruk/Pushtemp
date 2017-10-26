@@ -44,6 +44,7 @@ def course_view(request,section_code,course_name):
                 newzip = zipfile.ZipFile(strio,'a')
                 for material in matter:
                         newzip.write("%s"%material.file.name, material.name + '.%s'%material.ext())
+                        material.inc_count()
                 newzip.close()
                 response = HttpResponse(strio.getvalue(), content_type='application/x-zip-compressed')
                 response['Content-Disposition'] = 'attachment; filename="Push-%s.zip"'%course_name
@@ -59,6 +60,7 @@ def course_view(request,section_code,course_name):
 
 def file_request(request, material_id):
         material = get_object_or_404(Material, id=material_id)
+        material.inc_count()
         ext = material.file.name.split('.')[-1]
         response = HttpResponse(content_type='application/%s'%ext)
         file_name = material.name + '.' + ext
