@@ -59,8 +59,8 @@ class Lecturer(models.Model):
    name = models.CharField(max_length=100)
    last_name = models.CharField(max_length=100)
    lect_id = models.CharField(max_length=20)
-   course = models.ManyToManyField(Course)
    department = models.ForeignKey(Department)
+   course = models.ManyToManyField(Course)   
    section = models.ManyToManyField(Section)
    
    def __str__(self):
