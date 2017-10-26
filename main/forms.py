@@ -1,4 +1,4 @@
-from django.forms import ModelForm, widgets, HiddenInput
+from django.forms import ModelForm, widgets, HiddenInput ,TextInput
 from main.models import Lecturer
 from django.utils.translation import gettext_lazy as _
 
@@ -8,11 +8,14 @@ class Lecturerform(ModelForm):
         model = Lecturer
         fields = '__all__'
         widgets = {
-            'user':HiddenInput()
+            'user':HiddenInput(),
+            'name':TextInput(attrs={'placeholder':'First Name'}),
+            'last_name':TextInput(attrs={'placeholder':'Last Name'}),
         }
         labels = {
-            'name':_('First name'),
-            'last_name':_('Last name'),
+            'title':_('Name'),
+            'name':_(''),
+            'last_name':_(''),
             'lect_id':_('Teachers ID'),
             'course': _('Courses you teach'),
             'section':_('Sections you teach'),
