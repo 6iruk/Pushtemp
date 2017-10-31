@@ -43,6 +43,7 @@ def study_fields(request):
 
 def courses(request):
 	# Check if study_field exists, exit if it doesn't
+	query = Q()
 	if request.GET.get('study_field'):
 		study_field_id = int(request.GET.get('study_field'))
 	else :
@@ -52,6 +53,12 @@ def courses(request):
 		section_code = request.GET.get('section')
 		section = get_object_or_404(Section, code=section_code)
 		courses = Course.objects.filter(section = section).filter(studyfield__id=study_field_id)
+	elif request.GET.get('sections'):
+		section_codes = request.GET.get('sections').split('-')
+		for section_code in section_codes:
+			section = get_object_or_404(Section, code=section_code)
+			query.add(Q(section=section), Q.OR)
+		courses = Course.objects.filter(query).order_by('studyfield').distinct()
 	elif request.GET.get('ex_section'):
 		section_code = request.GET.get('ex_section')
 		section = get_object_or_404(Section, code=section_code)
