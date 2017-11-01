@@ -176,11 +176,12 @@ def first_login(request):
                         return render(request,'main/first_login.html',context)
                 form.save()
                 user = User.objects.get(username=request.user)
-                user.set_password(request.POST['new_password'])
                 user.username = request.POST['lect_id'].lower()
+                user.set_password(request.POST['new_password'])
                 user.save()
                 return redirect('login')
         else:
-                form = Lecturerform(initial={'user':request.user})
-                context = {'form':form,'user':request.user}
+                departments = Department.objects.all()
+                sections = Section.objects.all()
+                context = {'user':request.user,'departments':departments, 'sections':sections}
                 return render(request,'main/first_login.html',context)
