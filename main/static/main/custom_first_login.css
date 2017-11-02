@@ -1,0 +1,69 @@
+			@font-face {
+				font-family:proxima-nova;
+				src:url(/static/main/Regular.otf);	
+			}
+			
+			@font-face {
+				font-family:proxima-nova-light;
+				src:url(/static/main/Light.otf);	
+			}
+		
+			body {
+				font-family:proxima-nova;
+				margin:0px;
+				color:#303030;	
+			}
+			
+			.nav {
+				display:none;
+			}
+			
+			.error-msg {
+				color:#F00;	
+			}
+				
+			p {
+				padding:20px 0px 0px 15px;
+			}
+			
+			.row > p {
+				padding:0px 0px 0px 15px;
+			}
+			
+			.row > h4 {
+				display:block;
+			}
+				
+			h5 {
+				color:#808080;
+			}
+			
+			h5::before {
+				content:"* ";
+				color:#F00;
+				font-size:150%;
+				vertical-align:text-top;
+			}
+					
+			#header {
+				background-size:100% 150%;
+				padding-top:15px;
+				padding-bottom:25px;	
+			}
+			
+			#lect-table {
+				background-color:#EBEBEB;
+				padding-bottom:100px;
+				border-radius:8px;
+				margin-top:30px;
+			}
+			
+			#second-page {
+				padding:10px;	
+			}
+			
+			#third-page {
+				padding:10px;	
+			}
+
+		
