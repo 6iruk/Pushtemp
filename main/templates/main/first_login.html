@@ -9,7 +9,48 @@
  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script>
 			function next(page){
+								
+				if(page == "second-page-link"){
+					
+					if( document.getElementById("id_title").selectedIndex == 0 ){
+						document.getElementById("id_title_error").innerHTML = "This field is required.";
+						return;	
+					}
+					
+					if( $.trim( $("#id_name").val() ) == "" ){
+						document.getElementById("id_name_error").innerHTML = "This field is required.";
+						return;
+					}
+										
+					if( $.trim( $("#id_last_name").val() ) == "" ){
+						document.getElementById("id_last_name_error").innerHTML = "This field is required.";
+						return;
+					}
+					
+					if( $.trim( $("#id_lect_id").val() ) == "" ){
+						document.getElementById("id_lect_id_error").innerHTML = "This field is required.";
+						return;
+					}
+					
+					if( document.getElementById("id_department").selectedIndex == 0 ){
+						document.getElementById("id_department_error").innerHTML = "This field is required.";
+						return;
+					}
+				}
+				
 				if(page == "third-page-link"){
+					var $checkbox = document.getElementsByName("section"), $checked=0;
+  		
+  					for(var i=0; i < $checkbox.length; i++){
+	    					if($checkbox[i].checked){
+							$checked++; }
+	  				}
+		
+					if($checked < 1 ){
+						document.getElementById("id_section_error").innerHTML = "Choosing at least one section is required.";
+						return;	
+		 			}
+
 					var url = "/api/courses?study_field=7&sections=";
 					
 					$("input:checkbox[name=section]:checked").each(function(){
@@ -19,17 +60,45 @@
 					url = url.slice(0,-1);
 					
 					$.getJSON(url,function(data){
-						var i;			
-						$("#third-page").prepend("</div>");			
-						
+						var i;						
+						var prev_dept = "";
+						var div;
 						for(i=0;i<data.length;i++){
-							$("#third-page").prepend("<p class='col-sm-4'><input name='course' type='checkbox' value=" + data[i].id + " />" + '&nbsp;' + data[i].name + "</p>");	
+							if(data[i].study_field != prev_dept){
+								if(i == 0){
+									div = "<div class='row'>" ;
+								}
+								else {
+									div += "</div>";
+									$("#third-page-row").prepend(div);
+									$("#third-page-row").prepend("<div><h4>" + data[i-1].study_field + "</h4></div>");
+									div = "<div class='row'>" ;
+								}
+								prev_dept = data[i].study_field;
+								
+							}
+							div += "<p class='col-sm-4'><input name='course' type='checkbox' value=" + data[i].id + " />" + '&nbsp;' + data[i].name + "</p>";	
 						}
-						$("#third-page").prepend("<div class='row'");
-						$("#third-page").prepend("<h4>Choose courses you give</h4>");
-						
+						div += "</div>";
+						$("#third-page-row").prepend(div);
+						$("#third-page-row").prepend("<div><h4>" + data[data.length - 1].study_field + "</h4></div>");
 					});		
 				}
+				
+				if(page == "fourth-page-link"){
+					var $checkbox = document.getElementsByName("course"), $checked=0;
+  		
+  					for(var i=0; i < $checkbox.length; i++){
+	    					if($checkbox[i].checked){
+							$checked++; }
+	  				}
+		
+					if($checked < 1 ){
+						document.getElementById("id_course_error").innerHTML = "Choosing at least one course is required.";
+						return;	
+		 			}	
+				}
+								
 				var next_tab = document.getElementById(page);
 				next_tab.click();				
 			}
@@ -62,6 +131,8 @@
         </ul>
         <div class="tab-content">
 			<div id="first-page" class="tab-pane active">
+            	<p id="id_title_error" class="error-msg"></p>
+                
         		<p><label for="id_title">Name:</label>
         		<select id="id_title" name="title">
 					<option value="" selected="selected">---------</option>
@@ -73,17 +144,25 @@
 				</select>
         		</p>
                 
-				<p> 
-            	<input id="id_name" maxlength="100" name="name" placeholder="First Name" type="text" />
+                <p id="id_name_error" class="error-msg"></p>
+				
+                <p> 
+            	<input id="id_name" name="name" placeholder="First Name" type="text" />
                 </p>
                 
+                <p id="id_last_name_error" class="error-msg"></p>
+                
 				<p> 
-                <input id="id_last_name" maxlength="100" name="last_name" placeholder="Last Name" type="text" />
+                <input id="id_last_name" name="last_name" placeholder="Last Name" type="text" />
                 </p>
+                
+                <p id="id_lect_id_error" class="error-msg"></p>
                 
 				<p>
-                <label for="id_lect_id">Teachers ID:</label> <input id="id_lect_id" maxlength="20" name="lect_id" type="text" />
+                <label for="id_lect_id">Teachers ID:</label> <input id="id_lect_id" name="lect_id" type="text" />
                 </p>
+                
+                <p id="id_department_error" class="error-msg"></p>
                 
 				<p><label for="id_department">Department:</label>
                 	<select id="id_department" name="department">
@@ -93,10 +172,12 @@
                     {% endfor %}
                     </select>
                 </p>
-                <p><input  class="btn btn-info" type="button" value="Next" style="float:right;margin-right:20px;" onClick="next('second-page-link')"/></p>
+                <div align="right"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('second-page-link')"/></div>
 			</div>
         
         	<div id="second-page" class="tab-pane">
+            	<p id="id_section_error" class="error-msg text-center"></p>
+                
         		<h4>Choose sections you teach</h4>
                 <div class="row">
                 {% for section in sections %}
@@ -116,23 +197,15 @@
                     <p class="col-sm-3"><input class="section" type="checkbox" name='section' value="{{section.id}}">&nbsp;Section {{section.section_number}}</p>            
                 {% endfor %}
                 </div>
-                <p><input  class="btn btn-info" type="button" value="Next" style="float:right;margin-right:20px;" onClick="next('third-page-link')"/></p>
+                <div align="right"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('third-page-link')"/></div>
         	</div>
                 
             <div id="third-page" class="tab-pane">
-           		
-                <div class="row">
-                {% for course in courses %}
-                	{% ifchanged course.studyfield %}
-                    	</div>
-                    	<h4>{{course.studyfield}}</h4>
-                        <div class="row">
-                    {% endifchanged %}
-                    
-                    <p class="col-sm-4"><input type="checkbox" name='course' value="{{course.id}}">&nbsp;{{course.name}}</p>            
-                {% endfor %}
-                </div>
-                <p><input  class="btn btn-info" type="button" value="Next" style="float:right;margin-right:20px;" onClick="next('fourth-page-link')"/></p>
+            	<p id='id_course_error' class='error-msg text-center'></p>
+                
+                <h4>Choose courses you give</h4>
+            	<div id="third-page-row" style="height:auto;"></div>     
+                <div align="right"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('fourth-page-link')" /></div>
             </div>
             
             <div id="fourth-page" class="tab-pane">

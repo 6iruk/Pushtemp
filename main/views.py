@@ -169,12 +169,15 @@ def first_login(request):
         if (not(request.user.is_authenticated()) or Lecturer.objects.filter(user=request.user).exists()):
                 return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
         if request.method == 'POST':
-                form = Lecturerform(request.POST)
-                #form =request.user
-                if not form.is_valid():
-                        context = {'form':form}
-                        return render(request,'main/first_login.html',context)
-                form.save()
+                lecturer = Lecturer(title=request.POST['title'], user=request.user, name=request.POST['name'], last_name=request.POST['last_name'], lect_id=request.POST['lect_id'], department=Department.objects.get(id=request.POST['department']))
+                courses = [Course.objects.get(id=x)for x in request.POST.getlist('course')]
+                sections = [Section.objects.get(id=x)for x in request.POST.getlist('section')]
+                lecturer.save()
+                for course in courses:
+                        lecturer.course.add(course)
+                for section in sections:
+                        lecturer.section.add(section)
+                lecturer.save()
                 user = User.objects.get(username=request.user)
                 user.username = request.POST['lect_id'].lower()
                 user.set_password(request.POST['new_password'])

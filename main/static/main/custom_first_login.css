@@ -18,12 +18,20 @@
 				display:none;
 			}
 			
+			.error-msg {
+				color:#F00;	
+			}
+				
 			p {
 				padding:20px 0px 0px 15px;
 			}
 			
 			.row > p {
 				padding:0px 0px 0px 15px;
+			}
+			
+			.row > h4 {
+				display:block;
 			}
 				
 			h5 {
