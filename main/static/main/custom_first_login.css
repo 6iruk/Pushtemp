@@ -33,7 +33,11 @@
 			.row > h4 {
 				display:block;
 			}
-				
+			
+			.lect_name {
+				display:inline;	
+			}
+					
 			h5 {
 				color:#808080;
 			}
@@ -65,5 +69,4 @@
 			#third-page {
 				padding:10px;	
 			}
-
-		
+			
