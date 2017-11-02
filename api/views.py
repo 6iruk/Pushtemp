@@ -56,9 +56,9 @@ def courses(request):
 	elif request.GET.get('sections'):
 		section_codes = request.GET.get('sections').split('-')
 		for section_code in section_codes:
-			section = get_object_or_404(Section, code=section_code)
+			section = get_object_or_404(Section, id=section_code)
 			query.add(Q(section=section), Q.OR)
-		courses = Course.objects.filter(query).order_by('studyfield').distinct()
+		courses = Course.objects.filter(query).order_by('studyfield','-name').distinct()
 	elif request.GET.get('ex_section'):
 		section_code = request.GET.get('ex_section')
 		section = get_object_or_404(Section, code=section_code)
@@ -75,8 +75,8 @@ def courses(request):
 	for course in courses:
 		output += "{"
 		output += "\"id\":" + str(course.id) + ","
-		output += "\"name\":" + "\"" + course.name + "\"" #+ ","
-		#output += "\"code\":" + "\"" + study_field.code + "\""
+		output += "\"name\":" + "\"" + course.name + "\"" + ","
+		output += "\"study_field\":" + "\"" + course.studyfield.name + "\""
 		output += "},"
 
 	# remove the last list separator comma
