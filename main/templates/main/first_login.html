@@ -131,9 +131,14 @@
         </ul>
         <div class="tab-content">
 			<div id="first-page" class="tab-pane active">
-            	<p id="id_title_error" class="error-msg"></p>
+            	<div class="row">
+            		<p id="id_title_error" class="error-msg col-sm-4"></p>
+                	<p id="id_name_error" class="error-msg col-sm-4"></p>
+                	<p id="id_last_name_error" class="error-msg col-sm-4"></p>
+                </div>
                 
-        		<p><label for="id_title">Name:</label>
+                <div class="row">
+        		<p class="lect_name col-sm-4" align="center"><label for="id_title">Name:</label>
         		<select id="id_title" name="title">
 					<option value="" selected="selected">---------</option>
 					<option value="Mr.">Mr.</option>
@@ -143,23 +148,22 @@
 					<option value="Prof.">Professor</option>
 				</select>
         		</p>
-                
-                <p id="id_name_error" class="error-msg"></p>
-				
-                <p> 
+                                
+                <p class="lect_name col-sm-4"> 
             	<input id="id_name" name="name" placeholder="First Name" type="text" />
                 </p>
-                
-                <p id="id_last_name_error" class="error-msg"></p>
-                
-				<p> 
+                               
+				<p class="lect_name col-sm-4"> 
                 <input id="id_last_name" name="last_name" placeholder="Last Name" type="text" />
                 </p>
+                
+                </div>
                 
                 <p id="id_lect_id_error" class="error-msg"></p>
                 
 				<p>
                 <label for="id_lect_id">Teachers ID:</label> <input id="id_lect_id" name="lect_id" type="text" />
+                REMEMBER! This will be your user id from now on.
                 </p>
                 
                 <p id="id_department_error" class="error-msg"></p>
