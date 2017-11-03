@@ -134,6 +134,9 @@ def announcements(request):
 	#end of json array
 	output += "]"
 
+        for announcement in announcements:
+                announcement.inc_count()
+        
 	return HttpResponse(output, content_type='application/json')
 
 def materials(request):
