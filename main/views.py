@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from itertools import chain
+from operator import attrgetter
 from main.models import *
 from push_page.models import *
 from main.forms import Lecturerform
@@ -159,7 +161,7 @@ def portal(request):
                 course = Course.objects.filter(lecturer=lecturer)
                 sections = lecturer.section.get_queryset()
                 quote = Quote.objects.get(id=1)
-                prev = Announcement.objects.filter(lecturer=lecturer).order_by('-pub_date')
+                prev = sorted(chain(Announcement.objects.filter(lecturer=lecturer),Material.objects.filter(lecturer=lecturer)),key=attrgetter('pub_date'))
                 context = {'quote':quote,'lecturer':lecturer, 'course':course, 'sections':sections, 'prev':prev, 'success':success}    
                 return render(request, 'main/portal.html', context) 
         else:

@@ -203,13 +203,7 @@
                                 <label class="control-label" for="message">Enter announcement:</label>
                                 <textarea id="message" class="form-control" name="message" rows="5" cols="10" required></textarea>
                             </div>
-                        
-                            <div class="form-group">
-                                <label class="control-label" for="ann-file">Attach Images(Optional):</label>
-                                <input id="ann-file" type="file" name="file" style="padding-left:5%;margin-top:5px;"/>
-                                <input type="file" name="file_" style="padding-left:5%;margin-top:5px;"/>
-                            </div>
-                        
+
                             <div class="checkbox">
                                 <label><input name="urgent" type="checkbox" value="True">This announcement is urgent (make text in red)</label>
                             </div>
@@ -300,16 +294,26 @@
                 </div>
                 
                 <div id="track" class="tab-pane">
-                       {% for pre in prev %}
+                       {% for pre in prev reversed %}
+                       		{% if pre.message %}
                                 <div class="media">
                                     <div class="media-body">
-                                        <h5 class="media-heading"><small>Posted on {{pre.pub_date}}</small></h5>
+                                        <h5 class="media-heading">{{pre.count}} views</h5>
                                         <p>{{pre.message}}</p>
-                                        <h5><small>{{pre.count}} views</small></h5>
+                                        <h5><small>Posted on {{pre.pub_date}}</small></h5>
                                     </div>
                                 </div>
+                            {% else %}
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h5 class="media-heading">{{pre.count}} Download requests</h5>
+                                        <p>{{pre.name}}&nbsp;&nbsp;[.{{pre.ext}}}</p>
+                                        <h5><small>Uploaded on {{pre.pub_date}}</small></h5>
+                                    </div>
+                                </div>                            
+                            {% endif %}
                         {% empty %}
-                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced anything {{lecturer.title}}{{lecturer.name}},<h4 class="text-center">Say something to your students.</h4></h4>                         
+                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced or posted anything {{lecturer.title}}{{lecturer.name}},<h4 class="text-center">Say something to your students.</h4></h4>                         
                        {% endfor %}                  		            
                 </div>                
             </div>

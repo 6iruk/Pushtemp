@@ -12,4 +12,5 @@ urlpatterns = [
 	url(r'^materials', views.materials, name="materials"),
 	url(r'^section_exists', views.section_exists, name="section_exists"),
 	url(r'^sections', views.sections, name="sections"),
+        url(r'^lecturer_id_exists', views.lecturer_id_exists, name="lecturer_id_exists"),
 ]

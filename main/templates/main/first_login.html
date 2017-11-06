@@ -11,7 +11,8 @@
 			function next(page){
 								
 				if(page == "second-page-link"){
-					
+					var response = false;
+										
 					if( document.getElementById("id_title").selectedIndex == 0 ){
 						document.getElementById("id_title_error").innerHTML = "This field is required.";
 						return;	
@@ -36,6 +37,18 @@
 						document.getElementById("id_department_error").innerHTML = "This field is required.";
 						return;
 					}
+					
+					$.getJSON("/api/lecturer_id_exists?lect_id=" + document.getElementById("id_lect_id").value, function(data){
+						if( data.status ){
+							document.getElementById("id_lect_id_error").innerHTML = "This user id is already taken. Try another one.";
+							return;								
+						}
+						
+						var next_tab = document.getElementById("second-page-link");
+						next_tab.click();						
+					});
+					
+					return;
 				}
 				
 				if(page == "third-page-link"){
@@ -97,8 +110,8 @@
 						document.getElementById("id_course_error").innerHTML = "Choosing at least one course is required.";
 						return;	
 		 			}	
-				}
-								
+				}				
+				
 				var next_tab = document.getElementById(page);
 				next_tab.click();				
 			}
@@ -213,13 +226,13 @@
             </div>
             
             <div id="fourth-page" class="tab-pane">
-    		<p><label for="password" >Please enter your new password:</label>
+    		<p class="text-center"><label for="password" >Please enter your new password:</label>
 			<input id="password" type="text" name="new_password" required/></p>        
-			<br><br>
     	    {%csrf_token%}
 			<input  class="btn btn-info" type="submit" value="Submit" style="float:right;margin-right:20px;" />
+            <br>
             </div>
-			<br><br>
+            <br>
         </div>       
 		</form>
 		</td>

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.db.models import Q
-
+from main.models import User
 from main.models import StudyField
 from main.models import Course
 from main.models import Section
@@ -237,3 +237,22 @@ def departments(request):
         output += "]"
 
         return HttpResponse(output, content_type='application/json')
+def lecturer_id_exists(request):
+        if request.GET.get('lect_id'):
+                lect_id = request.GET.get('lect_id').lower()
+        else:
+                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+        
+        #JSON output
+        #Start json array
+        output = "{"        
+
+        if User.objects.filter(username=lect_id).exists():
+                output += " \"status\":true }"
+        else:
+                output += " \"status\":false }"
+
+        return HttpResponse(output, content_type='application/json')
+                
+        
+        
