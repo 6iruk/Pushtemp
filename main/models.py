@@ -102,7 +102,6 @@ class Announcement(models.Model):
       return True
 
 def upload_path(instance, filename):
-   #return """'aaupuh/"""
    return 'aaupush/uploads/' + instance.course.studyfield.department.name + '/' + instance.course.studyfield.name + '/' + instance.course.name + '/' + instance.name + '.' +  instance.ext()
 
 class Material(models.Model):
