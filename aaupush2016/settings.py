@@ -119,5 +119,8 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+#MEDIA_ROOT = "/home/aaupush/aaupush/"
+MEDIA_ROOT = "/home/aaupush"
+MEDIA_URL = "/MEDIA/"
 STATIC_ROOT = "/home/aaupush/aaupush/var/www/static/"
 STATIC_URL = "/static/"
