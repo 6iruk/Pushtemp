@@ -106,7 +106,7 @@ def upload_path(instance, filename):
 
 class Material(models.Model):
    name = models.CharField(max_length=100)
-   description = models.CharField(max_length=100)
+   description = models.CharField(max_length=300)
    file = models.FileField(upload_to=upload_path)
    pub_date = models.DateTimeField('Date Published')
    section = models.ManyToManyField(Section)
