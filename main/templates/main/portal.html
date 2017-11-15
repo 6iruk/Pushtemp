@@ -194,8 +194,27 @@
             	<li><a data-toggle="tab" href="#track">Tracker</a></li>        
         	</ul>
         
-            <div class="tab-content">
+            <div class="tab-content">            	
                 <div id="post" class="tab-pane active">
+  					<button type="button" class="btn btn-link btn-md" data-toggle="modal" data-target="#myModal" style="float:right;">Watch a video on how to post an announcement.</button>
+
+  					<!-- Modal -->
+  					<div class="modal fade" id="myModal" role="dialog">
+    				<div class="modal-dialog">
+    
+     				<!-- Modal content-->
+  				    <div class="modal-content">
+  			    	<div class="modal-header">
+          			<button type="button" class="close" data-dismiss="modal">&times;</button>
+          			<h4 class="modal-title">How to post an announcement</h4>
+        			</div>
+       				 <div class="modal-body">
+         			 <iframe width="560" height="315" src="https://www.youtube.com/embed/RGZyqawMAp0?rel=0" frameborder="0" allowfullscreen></iframe>
+       				 </div>
+     				 </div>
+      
+    				 </div>
+  				     </div>
                         <form enctype='multipart/form-data' action="{% url 'portal' %}" method='post'>
                             <input type='hidden' name='request_type' value='announcement' />
                             {% csrf_token %}
@@ -241,6 +260,25 @@
                 </div>
                 
                 <div id="upload" class="tab-pane">
+  					<button type="button" class="btn btn-link btn-md" data-toggle="modal" data-target="#Modal-upload" style="float:right;">Watch a video on how to upload a material.</button>
+
+  					<!-- Modal -->
+  					<div class="modal fade" id="Modal-upload" role="dialog">
+    				<div class="modal-dialog">
+    
+     				<!-- Modal content-->
+  				    <div class="modal-content">
+  			    	<div class="modal-header">
+          			<button type="button" class="close" data-dismiss="modal">&times;</button>
+          			<h4 class="modal-title">How to upload a material</h4>
+        			</div>
+       				 <div class="modal-body">
+         			 <iframe width="560" height="315" src="https://www.youtube.com/embed/oMaOfwC5krM?rel=0" frameborder="0" allowfullscreen></iframe>
+       				 </div>
+     				 </div>
+      
+    				 </div>
+  				     </div>
                         <form enctype='multipart/form-data' action="{% url 'portal' %}" method="post">
                             <input type='hidden' name='request_type' value='material' />
                             {% csrf_token %}

@@ -58,6 +58,7 @@ class Lecturer(models.Model):
    user = models.OneToOneField(User)
    name = models.CharField(max_length=100)
    last_name = models.CharField(max_length=100)
+   email = models.EmailField(max_length=254, blank=True)
    lect_id = models.CharField(max_length=20)
    department = models.ForeignKey(Department)
    course = models.ManyToManyField(Course)
