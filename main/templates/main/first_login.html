@@ -8,6 +8,24 @@
  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script>
+			function previous(page){
+				
+				if(page == "first-page-link"){
+						var next_tab = document.getElementById("first-page-link");
+						next_tab.click();						
+				}
+				
+				if(page == "second-page-link"){
+						var next_tab = document.getElementById("second-page-link");
+						next_tab.click();						
+				}
+				
+				if(page == "third-page-link"){
+						var next_tab = document.getElementById("third-page-link");
+						next_tab.click();						
+				}				
+			}
+			
 			function next(page){
 								
 				if(page == "second-page-link"){
@@ -53,7 +71,11 @@
 				
 				if(page == "third-page-link"){
 					var $checkbox = document.getElementsByName("section"), $checked=0;
-  		
+  					if(document.getElementById("check-third-page").value == "1"){
+						var next_tab = document.getElementById(page);
+						next_tab.click();
+						return;						
+					}
   					for(var i=0; i < $checkbox.length; i++){
 	    					if($checkbox[i].checked){
 							$checked++; }
@@ -95,6 +117,7 @@
 						div += "</div>";
 						$("#third-page-row").prepend(div);
 						$("#third-page-row").prepend("<div><h4>" + data[data.length - 1].study_field + "</h4></div>");
+						document.getElementById("check-third-page").value = "1";
 					});		
 				}
 				
@@ -114,6 +137,17 @@
 				
 				var next_tab = document.getElementById(page);
 				next_tab.click();				
+			}
+			
+			function password_checker(){
+				var pass = 	document.getElementById("password").value;
+				var pass_conf = document.getElementById("password_conf").value;
+				if(pass === pass_conf){
+					document.getElementById("submit").disabled = false ;		
+				}
+				else{
+					document.getElementById("submit").disabled = true ;
+				}
 			}
 		</script>
     </head>
@@ -194,7 +228,7 @@
                 
 				<p>
                 <label for="id_lect_id">Staff ID:</label> <input id="id_lect_id" name="lect_id" type="text" />
-                REMEMBER! This will be your user id from now on.
+                REMEMBER! You will use this ID to login from now on.
                 </p>
                 
                 <p id="id_department_error" class="error-msg"></p>
@@ -232,22 +266,30 @@
                     <p class="col-sm-3"><input class="section" type="checkbox" name='section' value="{{section.id}}">&nbsp;Section {{section.section_number}}</p>            
                 {% endfor %}
                 </div>
-                <div align="right"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('third-page-link')"/></div>
+                <div align="left" style="display:inline-block; width:49%;"><input  class="btn btn-info" type="button" value="Back" style="margin-left:10px;" onClick="previous('first-page-link')"/></div>
+                <div align="right" style="display:inline-block; width:49%;"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('third-page-link')"/></div>
         	</div>
                 
             <div id="third-page" class="tab-pane">
+            	<input id="check-third-page" type="hidden" value="0">
             	<p id='id_course_error' class='error-msg text-center'></p>
                 
                 <h4>Choose courses you give</h4>
             	<div id="third-page-row" style="height:auto;"></div>     
-                <div align="right"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('fourth-page-link')" /></div>
+                <div align="left" style="display:inline-block; width:49%;"><input  class="btn btn-info" type="button" value="Back" style="margin-left:10px;" onClick="previous('second-page-link')"/></div>
+                <div align="right" style="display:inline-block; width:49%;"><input  class="btn btn-info" type="button" value="Next" style="margin-right:10px;" onClick="next('fourth-page-link')" /></div>
             </div>
             
             <div id="fourth-page" class="tab-pane">
-    		<p class="text-center"><label for="password" >Please enter your new password:</label>
-			<input id="password" type="text" name="new_password" required/></p>        
+            <div style="width:70%;">
+    		<p class="text-right"><label for="password" >New password:</label>
+			<input id="password" type="password" name="new_password" required/></p>
+    		<p class="text-right"><label for="password_conf" >Confirm new password:</label>
+			<input id="password_conf" type="password" onKeyUp="password_checker()" required/></p>
+             </div>              
     	    {%csrf_token%}
-			<input  class="btn btn-info" type="submit" value="Submit" style="float:right;margin-right:20px;" />
+			<input  id="submit" class="btn btn-info" type="submit" value="Submit" style="float:right;margin-right:20px;" disabled/>
+                <div align="left" style="display:inline-block; width:49%;"><input  class="btn btn-info" type="button" value="Back" style="margin-left:10px;" onClick="previous('third-page-link')"/></div>
             <br>
             </div>
             <br>

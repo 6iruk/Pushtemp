@@ -160,8 +160,9 @@
 					
                     <div id="android-app-container">
                     <div id="android-app" class="text-center bg-info">
-                    	<h3 class="text-success">The Android App Is Coming Out! </h3>
-                        <h4>#AndroidApp #ComingOutSoon #SneakPeek</h4>
+                    	<h3 class="text-success">The Android App out! </h3>
+                        {% load static %}
+                        <a href="{% static 'Push/AAUPush_v1.apk' %}"><h4>#AndroidApp #OutNow #DownloadHere</h4></a>
                     	{% load static %}
 						<img src="{% static 'main/app-preview1.png' %}" width="80%">                       
                     </div>
