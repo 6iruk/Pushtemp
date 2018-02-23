@@ -15,8 +15,8 @@
         
         <div class="navigation">
             <div class="flex-container">
-                <div><img width=60px src="{% static 'main/White-Logo.svg' %}"></div>
-                <div><span style="color:white">Section Code: <strong>CSY1S2</strong></span></div> 
+                <div><a href="{% url 'Home' %}"><img width=60px src="{% static 'main/White-Logo.svg' %}"></a></div>
+                <div><span style="color:white">Section Code: <strong>{% block section_code %}{% endblock %}</strong></span></div> 
             </div>
         </div>
         {% block content %}
