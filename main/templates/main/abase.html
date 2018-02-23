@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+	<head>		
+        {% block title %}{% endblock %}
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        {% block script %}{% endblock %}
+		<style>
+			@font-face {
+				font-family:proxima-nova;
+				src:url(/static/main/Regular.otf);	
+			}
+			
+			@font-face {
+				font-family:proxima-nova-light;
+				src:url(/static/main/Light.otf);	
+			}
+			
+			
+			html {				 
+				 height:100%;
+			} 
+		  		
+			body {
+				font-family:proxima-nova;
+				width:100%;
+				height:100%;
+				background-color:#FFF;	
+			}
+			
+			h3 {
+				color:#2D2D2D;
+			}
+			
+			h4 {
+				color:#555;
+			}
+			
+			small {
+				color:#555;	
+			}
+			
+			p {
+				color:#555;
+				font-family:proxima-nova-light;	
+			}
+		      		
+		    a {
+				text-decoration: none;
+		      	color:#555;
+			}
+			
+		    a:hover {
+		      	color:#555;
+			}			
+			
+			q {
+	      		font-family: Copperplate, Papyrus;
+	     		font-size:1.5rem;
+		    }  
+			
+			#main {
+				min-height:100%;
+				position:relative;				
+			}
+			
+			#content {
+				width:80%;
+				position:absolute;
+				right:0px;
+			}
+			
+			.content-table {
+				max-width:100%;
+			}
+						 	
+		    #file {
+		      	color: #799f44;
+		    }
+				
+			#navigation {
+				background-color:#FFF;
+				position:fixed;
+				left:0px;
+				display:table;
+				text-align:center;
+				width:20%;
+				min-height:100%;
+				
+			}
+			
+			#nav-content {
+				display:table-cell;
+				width:100%;
+				min-height:100%;
+				border-right:1px;
+				border-right-style:solid;
+				border-right-color:#808080;
+			}
+			
+			#course-list {
+				margin-top:20px;
+			}
+			
+			#footer {
+				position:absolute;
+				bottom:10px;
+				width:100%;
+			}
+		      	
+		    #switch{
+		      	float:right;
+		    }
+			
+			#quote {
+				margin:0 3px 0 3px	
+			}
+		    
+			#push-pages {
+				position:absolute;
+				left:0;	
+				width:20%;
+				height:85px;
+				margin-top:5%;	
+			}
+				  	
+			.header-content-left {
+				display:inline;
+				width:15%;
+				float:left;
+				padding-top:1%;
+				padding-left:0.5%;
+			}
+			
+			.small {
+				color:#444;	
+			}
+			 
+		    .logo-header {
+				display:table-row;
+				width:100%;
+				height:200px;
+				background:url('/static/main/Gradient.svg');
+				background-size:100% 100%;								
+			}
+			
+			.logo {
+				display:table-cell;
+				vertical-align:middle;
+				margin-top:auto;
+				margin-bottom:auto;	
+			}
+			
+			.course {				
+				padding-left:10px;
+				border-bottom:0.5px;
+				border-bottom-style:solid;
+				border-bottom-color:#D2D2D2;
+				border-collapse:collapse;
+				overflow:hidden;	
+			}
+				
+			.header-content-right {
+				display:inline;
+				width:15%;
+				float:right;
+				margin:0px;
+
+			}
+			
+			.op-sym {
+				opacity:0.1;
+			}
+			
+			.op-sym-lite {
+				opacity:0.05;
+			}
+			
+			.push-page {
+				width:100%;
+				height:20px;
+				border-bottom:1px;
+				border-bottom-color:#FFFBF0;
+				border-bottom-style:solid;
+			}
+			
+			.push-page:hover {
+				width:150%;
+				height:25px;
+				margin-top:2px;
+				margin-bottom:2px;	
+			}
+			
+			.push-page-about-us {
+				background-color:#333;		
+			}
+			
+			.push-page-quick-page {
+				background-color:#4480b7;
+			}
+			
+			.push-page-blog-post-1 {
+				background-color:#cc0000;
+			}
+			
+			.push-page-blog-post-2 {
+				background-color:#799f44;
+			}
+			
+			.cr {
+				font-size:1rem;	
+			}
+				
+			@media only screen and (max-width:500px) {
+				h3 {
+					font-size:1rem;	
+				}
+				
+				h4 {
+					font-size:0.8rem;	
+				}
+				
+				h5 {
+					font-size:0.4rem;
+				}
+				
+				p {
+					font-family:proxima-nova;
+					font-size:0.6rem;	
+				}
+				
+				a {
+					font-size:0.6rem;	
+				}
+				
+				q {
+					font-size:0.6rem;	
+				}
+				
+				img {
+					width:45px;
+					height:35px;
+				}
+				
+				#course-list {
+					margin-top:5px;	
+				}
+				
+				#content {
+					position:static;
+					width:100%;	
+				}
+					
+				#navigation {
+					position:static;
+					width:100%;		
+				}
+
+				span {
+					font-size:0.8rem;	
+				}
+				
+				.logo-header {
+					height:100px;
+				}
+					
+				.cr {
+					font-size:0.7rem;	
+				}
+				
+				.op-sym {
+					opacity:0.5;
+				}
+				
+				.course {
+					border-bottom-width:1px;
+				}
+			}	      	
+  		  </style>
+          
+          {% block style %}{% endblock %}
+</head>
+	
+	<body>
+<div id="main">
+		<div id="navigation"> 
+                <div class="logo-header">
+                	<div class="logo">                
+  						<a href="{% url 'Home' %}">
+                			{% load static %}
+                			<img src="{% static 'main/White-Logo.svg' %}" width="90px" height="70px">
+                		</a>
+                	</div>
+                </div>
+                <div id="nav-content">
+					<div id="course-list" class="text-left">
+    					{% for course in courses %}
+        						<div class="course"><a href="{% url 'course_view' section.code course.get_link_name %}"><h4 class="course-name">{{course.name}}</h4></a></div>
+        				{% endfor %}
+    				</div>
+                	
+	           		<div id="push-pages">
+
+            		</div> 
+                                      
+				<!--	<div id="footer" class="text-center">
+        				<div id="quote">
+							<q>{{quote.quote}}</q><br><p>- {{quote.author}}</p><br>
+                            <p class="cr"><span class="glyphicon glyphicon-copyright-mark cr"></span> AAU Push 2017</p>
+            			</div>
+    				</div> -->
+                </div>
+        </div>
+        <div id="content">
+        	<div class="container-fluid">
+  				{% block content %}
+  				{% endblock %}
+        	</div>
+        </div>	
+
+      	</div>
+	</body>
+</html>
