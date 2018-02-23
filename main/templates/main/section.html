@@ -1,113 +1,44 @@
 {% extends "main/base.html" %}
 
 {% block title %}
-<title>AAU Push | {{section.code}}</title>
+	<title>AAU Push | {{section.code}}</title>
 {% endblock %}
 
 {% block style %}
-<style>	
-	#announcements {
-				
-	}
-	
-	#materials {
-		width:100%;
-		padding-bottom:30px;
-		padding-top:2px;
-		background-color:#eee;
-			
-	}
-	
-	.announcement {
-	}
-	
-	.announcement-message {
-		padding-left:1.5%;	
-	}
-	
-	.material {
-		width:80%;
-		min-width:80px;
-		margin-left:auto;
-		margin-right:auto;
-		margin-bottom:10px;
-		border-bottom-style:solid;
-		border-bottom-width:1px;
-		border-bottom-color:#F00;
-	}
-	
-	.material-course {
-		margin-bottom:3px;	
-	}
-	
-	.material-name a {
-		color:#135CE6;			
-	}
-	
-	.material-name a:hover {
-		color:#2A3F55;
-		text-decoration:none;			
-	}
-	
-	@media only screen and (max-width:500px) {
-		#materials {
-			padding-bottom:5px;
-			width:80%;
-			margin-left:auto;
-			margin-right:auto;
-		}
-		
-		.material {
-			margin:5px;	
-		}
-		
-	}
-</style>
 {% endblock %}
 
-{% block section_code %}
-Year {{section.year}} | Section {{section.section_number}} | Code: {{section.code}}
-{% endblock %}
-
-{% block extra %}
-
-{% endblock%}
+{% block section_code %} {{section.code}} {% endblock %}
 
 {% block content %}
-<div class="table content-table">
-<div class="row"><div class="col-sm-9">
-	<h5 class="text-capitalize mark"><a href="{% url 'Home' %}">{{section.studyfield}} </a><span class="glyphicon glyphicon-chevron-right"></span>  <a href="{% url 'Section' section.code %}">{{section.code}}</a></h5>
-<div id="announcements">
-	<h3 class="page-header text-center">Announcements</h3>
-	{% for announcement in announcements %}
-	<div class="announcement media">
-    	<div class="media-body">
-        	<h4 class="media-heading">{{announcement.lecturer}}<small> - Posted on {{announcement.pub_date}}</small> </h4>
-            {% if announcement.is_urgent %}
-            <p class="announcement-message"><font color="#F3252B">{{announcement.message}}</font></p>
-            {% else %}
-            <p class="announcement-message">{{announcement.message}}</p>
-            {% endif %}
-        </div>
-    </div>
-    {% 	empty %}
-    <h2 class="text-center"><span class="glyphicon glyphicon-list-alt op-sym"></span><h4 class="text-center">No announcements right now, check later.</h4></h2>
-    {% endfor %}
-</div>
-</div><div  class="col-sm-3">
-<div id="materials">
-	<h3 class="text-center">Uploads this week</h3>
-        
-    {% for upload in this_week %}
-    	<div class="material">
-        	<h4 class="material-course">{{upload.course}}</h4>
-            <p class="material-description">{{upload.description}}[.{{upload.ext}}]</p>            
-            <p class="material-name"><a href="{% url 'File' upload.id %}"><span class="glyphicon glyphicon-save-file"></span>&nbsp;{{upload.name | capfirst}}&nbsp; [.{{upload.ext}}]</a><span class="small">&nbsp;&nbsp; ({{upload.file.size | filesizeformat }})</span></p>
-            <h4 class="material-pub_date"><small>Uploaded on {{upload.pub_date}}</small></h4>
-        </div>
-    {% 	empty %}
-    <h2 class="text-center"><span class="glyphicon glyphicon-folder-close op-sym op-sym-lite"></span><h4 class="text-center">No materials were uploaded in the past 7 days.</h4></h2>
-    {% endfor %}
-</div></div></div>
-</div>
+	<div class="spacer"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4">
+				<h1 class="title">Announcements</h1>
+				{% for announcement in announcements %}
+					<h2 class="subtitle">{{announcement.lecturer}}</h2>
+					<p class="detail">{{announcement.message}}</p>
+					<p class="meta">{{announcement.pub_date}}</p>
+					{% 	empty %}
+					<h2 class="detail">No announcements right now!</h2>
+				{% endfor %}
+			</div>
+			<div class="col-md-4">
+				<h1 class="title">Latest Uploads</h1>
+				{% for upload in this_week %}
+					<a class="subtitle link" href="{% url 'File' upload.id %}">{{upload.name | capfirst}}</a>
+					<p class="detail">{{upload.file.size | filesizeformat }} [{{upload.ext}}] by {{upload.lecturer}}</p>
+					<p class="meta">{{upload.pub_date}}</p>
+					{% 	empty %}
+					<h2 class="detail">No uploads right now!</h2>
+				{% endfor %}
+			</div>
+			<div class="col-md-4">
+				<h1 class="title">Courses</h1>
+				{% for course in courses %}
+					<a class="detail link" href="{% url 'course_view' section.code course.get_link_name %}">{{course.name | capfirst}}</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 {% endblock %}
