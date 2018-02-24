@@ -11,19 +11,23 @@
 
 {% block content %}
 	<div class="spacer"></div>
-	<div class="container-fluid">
+	<div class="container-fluid push-container">
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-12">
 				<h1 class="title">Announcements</h1>
 				{% for announcement in announcements %}
 					<h2 class="subtitle">{{announcement.lecturer}}</h2>
 					<p class="detail">{{announcement.message}}</p>
 					<p class="meta">{{announcement.pub_date}}</p>
+					<div class="spacer2"></div>
 					{% 	empty %}
 					<h2 class="detail">No announcements right now!</h2>
 				{% endfor %}
 			</div>
-			<div class="col-md-4">
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-6">
 				<h1 class="title">Latest Uploads</h1>
 				{% for upload in this_week %}
 					<a class="subtitle link" href="{% url 'File' upload.id %}">{{upload.name | capfirst}}</a>
@@ -32,11 +36,13 @@
 					{% 	empty %}
 					<h2 class="detail">No uploads right now!</h2>
 				{% endfor %}
+				<div class="spacer2"></div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-6">
 				<h1 class="title">Courses</h1>
 				{% for course in courses %}
 					<a class="detail link" href="{% url 'course_view' section.code course.get_link_name %}">{{course.name | capfirst}}</a>
+					<div class="spacer1"></div>
 				{% endfor %}
 			</div>
 		</div>
