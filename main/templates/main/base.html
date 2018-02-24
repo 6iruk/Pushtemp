@@ -14,16 +14,23 @@
     <body>
         
         <div class="navigation">
-            <div class="flex-container">
+            <div class="flex-container push-container">
                 <div><a href="{% url 'Home' %}"><img width=60px src="{% static 'main/White-Logo.svg' %}"></a></div>
                 <div><span style="color:white">Section Code: <strong>{% block section_code %}{% endblock %}</strong></span></div> 
             </div>
         </div>
         {% block content %}
         {% endblock %}
-        <div>   <a href="#" class="meta link">Android App</a> <span> - </span>
-                <a href="#" class="meta link">Send Feedback</a> <span> - </span>
-                <a href="#" class="meta link">Teacher's Login</a>
+        <div class="container-fluid push-container">
+            <div class="row footer">
+                <div class="col-md-12">
+                    <div class="spacer2"></div>
+                    <a href="#" class="meta link">Android App</a> <span> - </span>
+                    <a href="#" class="meta link">Send Feedback</a> <span> - </span>
+                    <a href="#" class="meta link">Teacher's Login</a>
+                    <div class="spacer1"></div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
