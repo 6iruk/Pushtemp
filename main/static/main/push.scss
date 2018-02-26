@@ -1,0 +1,135 @@
+@import "css3-mixins.scss";
+
+/* Start Global variables */
+
+$pushColor1: #00cfbf;
+$pushColor2: #00d9e8;
+$pushColor3: #00cbff;
+$pushColor4: #0099e8;
+
+$textColor: #929292;
+$metaColor: #D6D5D5;
+
+/* End Global Variables */
+@font-face {
+    font-family: Proxima;
+    src: url(regular.otf);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Proxima;
+    src: url(regular_italic.otf);
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Proxima;
+    src: url(semibold.otf);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Proxima;
+    src: url(semibold_italic.otf);
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Proxima;
+    src: url(bold.otf);
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: Proxima;
+    src: url(bold_italic.otf);
+    font-weight: 800;
+    font-style: italic;
+}
+
+html, body {
+    font-family: Proxima, sans-serif;
+    font-size: 100%;
+    color: $textColor;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
+}
+
+.container-fluid, .row, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-weight: 800;
+    font-size: 2.5em;
+    display: block;
+}
+
+.subtitle {
+    font-weight: 600;
+    font-size: 1.7em;
+    display: block;
+    margin: 0;
+}
+
+.detail {
+    font-weight: 400;
+    font-size: 1.3em;
+    display: block;
+    margin: 0;
+}
+
+.meta {
+    font-weight: 400;
+    font-size: 0.8em;
+    color: $metaColor;
+    margin: 0;
+}
+
+.link {
+    color: $pushColor4;
+}
+
+.spacer1 {
+    height: 10px;
+}
+
+.spacer2 {
+    padding: 17px;
+}
+
+.navigation {
+    height: 70px;
+    @include background-horizontal($pushColor1, $pushColor2, $pushColor3, $pushColor4);
+}
+
+.flex-container {
+    height: 100%;
+    margin: auto;
+    display: flex;
+	justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.push-container {
+    max-width: 90%;
+}
+
+.footer {
+    text-align: center;
+}
+
+hr {
+    margin: 20px 0;
+}
