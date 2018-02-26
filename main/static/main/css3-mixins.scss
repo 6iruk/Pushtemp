@@ -15,6 +15,7 @@
 
 ////
 /// @author Matthieu Aussaguel
+/// @modified by Addismiraph Abebe
 /// @group sass-css3-mixins
 ////
 
@@ -50,18 +51,14 @@
 
 
 /// Background Horizontal
-/// @param {Color} $startColor [#3C3C3C] - Start Color
-/// @param {Color} $endColor [#999999] - End Color
 
-@mixin background-horizontal($startColor: #3C3C3C, $endColor: #999999) {
-    background-color: $startColor;
-    background-image: -webkit-gradient(linear, left top, right top, from($startColor), to($endColor));
-    background-image: -webkit-linear-gradient(left, $startColor, $endColor);
-    background-image:    -moz-linear-gradient(left, $startColor, $endColor);
-    background-image:     -ms-linear-gradient(left, $startColor, $endColor);
-    background-image:      -o-linear-gradient(left, $startColor, $endColor);
-    background-image:         linear-gradient(left, $startColor, $endColor);
-    filter:            progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$startColor}', endColorStr='#{$endColor}', gradientType='1');
+@mixin background-horizontal($color1, $color2, $color3, $color4) {
+    background-color: $color3;
+    background-image: -webkit-linear-gradient(left, $color1, $color2, $color3, $color4);
+    background-image:    -moz-linear-gradient(left, $color1, $color2, $color3, $color4);
+    background-image:     -ms-linear-gradient(left, $color1, $color2, $color3, $color4);
+    background-image:      -o-linear-gradient(left, $color1, $color2, $color3, $color4);
+    background-image:         linear-gradient(left, $color1, $color2, $color3, $color4);
 }
 
 
