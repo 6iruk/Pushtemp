@@ -1,127 +1,118 @@
-@font-face {
-    font-family: Proxima;
-    src: url(regular.otf);
-    font-weight: 400;
-}
+/* -------------------------------------------------------------
+  Sass CSS3 Mixins! The Cross-Browser CSS3 Sass Library
+  By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
 
-@font-face {
-    font-family: Proxima;
-    src: url(regular_italic.otf);
-    font-weight: 400;
-    font-style: italic;
-}
+  List of CSS3 Sass Mixins File to be @imported and @included as you need
 
-@font-face {
-    font-family: Proxima;
-    src: url(semibold.otf);
-    font-weight: 600;
-}
+  The purpose of this library is to facilitate the use of CSS3 on different browsers avoiding HARD TO READ and NEVER
+  ENDING css files
 
-@font-face {
-    font-family: Proxima;
-    src: url(semibold_italic.otf);
-    font-weight: 600;
-    font-style: italic;
-}
+  note: All CSS3 Properties are being supported by Safari 5
+  more info: http://www.findmebyip.com/litmus/#css3-properties
 
+------------------------------------------------------------- */
+/* Start Global variables */
+/* End Global Variables */
 @font-face {
-    font-family: Proxima;
-    src: url(bold.otf);
-    font-weight: 800;
-}
-
+  font-family: Proxima;
+  src: url(regular.otf);
+  font-weight: 400; }
 @font-face {
-    font-family: Proxima;
-    src: url(bold_italic.otf);
-    font-weight: 800;
-    font-style: italic;
-}
-
+  font-family: Proxima;
+  src: url(regular_italic.otf);
+  font-weight: 400;
+  font-style: italic; }
+@font-face {
+  font-family: Proxima;
+  src: url(semibold.otf);
+  font-weight: 600; }
+@font-face {
+  font-family: Proxima;
+  src: url(semibold_italic.otf);
+  font-weight: 600;
+  font-style: italic; }
+@font-face {
+  font-family: Proxima;
+  src: url(bold.otf);
+  font-weight: 800; }
+@font-face {
+  font-family: Proxima;
+  src: url(bold_italic.otf);
+  font-weight: 800;
+  font-style: italic; }
 html, body {
-    font-family: Proxima, sans-serif;
-    font-size: 100%;
-    color: #929292;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    left: 0;
-    top: 0;
-}
+  font-family: Proxima, sans-serif;
+  font-size: 100%;
+  color: #929292;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0; }
 
 .container-fluid, .row, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
-    padding-right: 0px;
-    padding-left: 0px;
-    margin-left: auto;
-    margin-right: auto;
-}
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-left: auto;
+  margin-right: auto; }
 
 .title {
-    font-weight: 800;
-    font-size: 2.5em;
-    display: block;
-    margin: 40px 0;
-}
+  font-weight: 800;
+  font-size: 2.5em;
+  display: block; }
 
 .subtitle {
-    font-weight: 600;
-    font-size: 1.7em;
-    display: block;
-    margin: 0;
-}
+  font-weight: 600;
+  font-size: 1.7em;
+  display: block;
+  margin: 0; }
 
 .detail {
-    font-weight: 400;
-    font-size: 1.3em;
-    display: block;
-    margin: 0;
-}
+  font-weight: 400;
+  font-size: 1.3em;
+  display: block;
+  margin: 0; }
 
 .meta {
-    font-weight: 400;
-    font-size: 0.8em;
-    color: #D6D5D5;
-    margin: 0;
-}
+  font-weight: 400;
+  font-size: 0.8em;
+  color: #D6D5D5;
+  margin: 0; }
 
 .link {
-    color: #0E93D8;
-}
+  color: #0099e8; }
 
 .spacer1 {
-    height: 10px;
-}
+  height: 10px; }
 
 .spacer2 {
-    padding: 20px;
-}
+  padding: 17px; }
 
 .navigation {
-    height: 70px;
-    background: #00cbff; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(right, #00cfbf, #00d9e8, #00cbff, #0099e8); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(right, #00cfbf, #00d9e8, #00cbff, #0099e8); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to right, #00cfbf, #00d9e8, #00cbff, #0099e8); /* Standard syntax (must be last) */
-}
+  height: 70px;
+  background-color: #00cbff;
+  background-image: -webkit-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: -moz-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: -ms-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: -o-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8); }
 
 .flex-container {
-    height: 100%;
-    margin: auto;
-    display: flex;
-	justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-}
+  height: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center; }
 
 .push-container {
-    max-width: 90%;
-}
+  max-width: 90%; }
 
 .footer {
-    text-align: center;
-}
+  text-align: center; }
 
 hr {
-    margin: 0;
-}
+  margin: 20px 0; }
+
+/*# sourceMappingURL=push.css.map */
