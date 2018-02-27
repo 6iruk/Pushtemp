@@ -4,24 +4,42 @@
 	<title>AAU Push | {{course.name}}</title>
 {% endblock %}
 
-{% block section_code %} {{section.code}} {% endblock %}
+{% block extra %} Section Code: <strong>{{section.code}}</strong> {% endblock %}
 
 {% block content %}
     <div class="container-fluid push-container">
         <div class="row">
             <div class="col-md-6">
-                <h1 class="title">{{ course.name }}</h1>
-                {% if materials %}<a class="meta link" href="#">Multiple Download Mode</a>{% endif %}
-                <div class="spacer2"></div>
-                {% for material in materials %}
-                    <a class="subtitle link" href="{% url 'File' material.id %}">{{ material.name }}</a>
-                    <p class="detail">{{material.description}}</p>
-                    <p class="meta">{{material.file.size | filesizeformat }} [{{material.ext | upper}}] by {{material.lecturer}} on {{material.pub_date | date:"N"}}&nbsp;{{material.pub_date | date:"j"}}, {{material.pub_date | date:"o"}}</p>
+                
+                <form action="{% url 'course_view' section.code course.get_link_name %}" method="post">
+                    {% csrf_token %}  
+                    <h1 class="title">{{ course.name }}</h1>
+                    
+                    {% if materials %}<p class="meta">Check the files you need to download in a ZIP file.</p>{% endif %}
+                    
                     <div class="spacer2"></div>
-                {% empty %}
-                    <p class="detail">No materials have been uploaded.</p>
-                    <div class="spacer2"></div>
-                {% endfor %}
+                    
+                    {% for material in materials %}
+                        <div class="checkbox">
+                            <a class="subtitle link" href="{% url 'File' material.id %}">{{ material.name }}</a>
+                            <label>
+                                <input type="checkbox" name={{material.id}} />
+                                <p class="detail">{{material.description}}</p>
+                                <p class="meta">{{material.file.size | filesizeformat }} [{{material.ext | upper}}] by {{material.lecturer}} on {{material.pub_date | date:"N"}}&nbsp;{{material.pub_date | date:"j"}}, {{material.pub_date | date:"o"}}</p>
+                            </label>
+                        </div>
+                        <div class="spacer1"></div>
+                        {% empty %}
+                        <p class="detail">No materials have been uploaded.</p>
+                    {% endfor %}
+
+                    {% if materials %}
+                        <div class="spacer1"></div>
+                        <input class="btn-default" type="submit" value="Download ZIP"/>
+                    {% endif %}
+                </form>
+                
+                <div class="spacer2"></div>    
                 <a class="detail link" href="{% url 'Section' section.code %}">Back to Announcements</a>
                 <div class="spacer2"></div>
             </div>
