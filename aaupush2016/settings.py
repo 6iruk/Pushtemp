@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'push_page',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE_CLASSES = [
