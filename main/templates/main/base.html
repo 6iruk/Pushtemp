@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <html>
 	<head>		
         {% block title %}{% endblock %}
@@ -7,7 +8,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link rel="stylesheet" href="{% static 'main/push.css' %}">
-        {% block script %}{% endblock %}
         {% block style %}{% endblock %}
     </head>
 
@@ -26,12 +26,14 @@
             <div class="row footer">
                 <div class="col-md-12">
                     <div class="spacer2"></div>
-                    <a href="#" class="meta link">Android App</a> <span> - </span>
+                    {% load static %}
+                    <a href="{% static 'Push/AAUPush_v1.apk' %}" class="meta link">Android App</a> <span> - </span>
                     <a href="#" class="meta link">Send Feedback</a> <span> - </span>
-                    <a href="#" class="meta link">Teacher's Login</a>
+                    <a href="{% url 'login' %}" class="meta link">Teacher's Login</a>
                     <div class="spacer1"></div>
                 </div>
             </div>
         </div>
+        {% block script %}{% endblock %}
     </body>
 </html>
