@@ -1,5 +1,7 @@
 {% extends "main/base.html" %}
 
+{% load humanize %}
+
 {% block title %}
 	<title>AAU Push | {{section.code}}</title>
 {% endblock %}
@@ -19,7 +21,7 @@
 				{% for announcement in announcements %}
 					<h2 class="subtitle">{{announcement.lecturer}}</h2>
 					<p class="detail">{{announcement.message}}</p>
-					<p class="meta">{{announcement.pub_date}}</p>
+					<p class="meta">{{announcement.pub_date | naturaltime}}</p>
 					<div class="spacer2"></div>
 					{% 	empty %}
 					<h2 class="detail">No announcements right now!</h2>
@@ -34,7 +36,7 @@
 				{% for upload in this_week %}
 					<a class="subtitle link" href="{% url 'File' upload.id %}">{{upload.name | capfirst}}</a>
 					<p class="detail">{{upload.file.size | filesizeformat }} [{{upload.ext | upper}}] by {{upload.lecturer}}</p>
-					<p class="meta">{{upload.pub_date}}</p>
+					<p class="meta">{{upload.pub_date | naturalday}}</p>
 					<div class="spacer2"></div>
 					{% 	empty %}
 					<h2 class="detail">No uploads right now!</h2>

@@ -1,5 +1,7 @@
 {% extends "main/base.html" %}
 
+{% load humanize %}
+
 {% block title %}
 	<title>AAU Push | {{course.name}}</title>
 {% endblock %}
@@ -25,7 +27,7 @@
                             <label>
                                 <input type="checkbox" name={{material.id}} />
                                 <p class="detail">{{material.description}}</p>
-                                <p class="meta">{{material.file.size | filesizeformat }} [{{material.ext | upper}}] by {{material.lecturer}} on {{material.pub_date | date:"N"}}&nbsp;{{material.pub_date | date:"j"}}, {{material.pub_date | date:"o"}}</p>
+                                <p class="meta">{{material.file.size | filesizeformat }} [{{material.ext | upper}}] by {{material.lecturer}} | {{material.pub_date | naturalday}}</p>
                             </label>
                         </div>
                         <div class="spacer1"></div>
