@@ -1,179 +1,59 @@
-<!DOCTYPE html>
-<html>
-	<head>
- 		<title>AAU Push</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
- 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'main/custom.css' %}">                 		
-		<script> 
-				
-		</script>
-        
- 		<style>
-			@font-face {
-				font-family:proxima-nova;
-				src:url(/static/main/Regular.otf);	
-			}
-			
-			@font-face {
-				font-family:proxima-nova-light;
-				src:url(/static/main/Light.otf);	
-			}
-			
-			body {
-				max-width:100%;
-				font-family:proxima-nova;
-				width:100%;
-				margin:0px;
-			}
-			
-			li {
-				list-style:none;	
-			}
-			
-			.section {
-				 border-collapse: collapse;
-				 margin-left:auto;
-				 margin-right:auto;
-			}
-			
-		  	tr.section { 
-				display: block; 
-				float:left;
-			}
-		  	
-		  	th.section { 
-				text-align:center; 
-				width:80px; 
-				padding:8px; 
-			}
-		  	
-		  	td.section { 
-				display: block;
-				text-align:center;
-				width:80px; 
-				padding:8px; 
-			}	
-				
-		    a {
-				text-decoration: none;
-		      	color: #4480b7;
-			}	
-							
-			#header {
-				position:relative;
-				background-size:100% 150%;
-				padding-top:15px;
-				padding-bottom:25px;	
-			}
-			
-			#teachers-login {
-				color:#808080;	
-			}
-				
-			#content {
-				width:100%;	
-			}
-			
-			#content-body {
-				width:100%;					
-			}
-			
-			#content-container {
-				
-			}
+{% extends "main/base.html" %}
 
-			#android-app-container {
-				max-width:100%;
-				min-width:330px;
-				display:inline-flex;
-				width:49%;
-			}
-				
-			#dropdowns {
-				margin-top:20px;
-			}
-				
-			#sections {
-				max-width:100%;
-				display:inline-block;
-				width:49%;			
-			}
-			
-			#android-app {
-				max-width:100%;
-				display:inline-block;				
-				width:100%;							
-			}
-			
-			@media only screen and (max-width:500px) {
-				#teachers-login {
-					display:none;
-				}
-			}
-		</style>
-	</head>
-    
-	<body>
- 		{% load static %}
- 		<div id="header" style="background:url({% static 'main/Gradient.svg' %})">
-			{% load static %}
- 			<center><img src="{% static 'main/White-Logo.svg' %}" width="160px" height="100px"></center>
-			<h5 style="position:absolute;top:0px;right:10px;"><a  class="btn btn-default" id="teachers-login" href="{% url 'login' %}">Teacher's Login</a></h5>
- 		</div>
-        
-    	<div id="content">
-    		<div class="container">
-            	<div id="content-header">
-        			<h3 class="page-header text-center">Welcome, to the new push. Get all announcements and materials in one place!</h3>
-                	
-            	</div>
-                
-                <div id="content-body">
-                	<table width="100%">
+{% block title %}
+	<title>AAU Push</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+            padding: 8px 0;
+            border: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block extra %} <a class="meta link btn btn-default hidden-xs" href="{% url 'login' %}">Teacher's Login</a> {% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid push-container">
+        <div class="row">
+            <div class="col-md-6"> 
+                <h1 class="title">Computer Science Department</h1>
+                <p class="detail"> Click on your section to proceed.</p>
+                <div class="spacer2"></div>
+                <table class="table" style="border: 0px;">
                     <tr>
-                    <td width="100%" style="text-align:center">
-                    <div id="content-container">
-                	<div id="sections" class="text-center">
-                    	<h4>Computer Science Department</h4>
-                        <div id="dropdowns">
-							<table class="section">
-                            	<caption class="text-center"> Click On Your Section To Proceed. </caption>
-								<tr class="section">
-     								{% for section in sections %}
-										{% ifchanged section.year %}
-          									</tr><tr class="section">
-          									<th class="section bg-primary">Year {{section.year}}</th>
-        								{% endifchanged %}
-                                        
-       									<td class="section">
-       										<p><a href="{% url 'Section' section.code%}">Section {{section.section_number}}</a></p>
-       									</td>
-	 								{%endfor%}	
-     							</tr>
-							</table>
-                        </div>
-                    </div>
-					
-                    <div id="android-app-container">
-                    <div id="android-app" class="text-center bg-info">
-                    	<h3 class="text-success">The Android App out! </h3>
-                        {% load static %}
-                        <a href="{% static 'Push/AAUPush_v1.apk' %}"><h4>#AndroidApp #OutNow #DownloadHere</h4></a>
-                    	{% load static %}
-						<img src="{% static 'main/app-preview1.png' %}" width="80%">                       
-                    </div>
-                    </div>
-                    </div>
-                    </td>
+                    {% for section in sections %}
+                        {% ifchanged section.year %}
+                            </tr><tr>
+                            <td class="detail">Year {{section.year}}</td>
+                        {% endifchanged %}
+                        <td><a class="detail link" href="{% url 'Section' section.code%}">Section {{section.section_number}}</a></td>
+                    {%endfor%}
                     </tr>
-                    </table>
+                </table>
+                <hr class="hidden-md hidden-lg">
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <h1 class="title">The Android App out!</h1>
+                <div class="row">
+                    <div class="col-md-6">
+                        {% load static %}
+                        <a href="{% static 'Push/AAUPush_v1.apk' %}" class="subtitle link">Direct Download</a>
+                        <div class="spacer2"></div>
+                        <p class="detail">Stay up to date. <br> It's simple, it's a life saver.<br><br> Get notifications the second you get online. Add the extra courses you are taking. Save PDFs and files directly to your phone.</p>
+                        <div class="spacer2"></div>
+                    </div>
+                    <div class="col-md-6">
+                        {% load static %}
+                        <img src="{% static 'main/app-preview1.png' %}" width="100%">
+                    </div>
                 </div>
             </div>
-		</div>
-           
-    </body>
-</html>
+        </div>
+    </div>
+
+{% endblock %}
