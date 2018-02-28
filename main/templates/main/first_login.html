@@ -86,7 +86,7 @@
 						return;	
 		 			}
 
-					var url = "/api/courses?study_field=7&sections=";
+					var url = "/api/get_courses?study_field=" + document.getElementById("id_department").selectedIndex.value + "&sections=";
 					
 					$("input:checkbox[name=section]:checked").each(function(){
 						url += $(this).val() + "-";	
@@ -96,27 +96,27 @@
 					
 					$.getJSON(url,function(data){
 						var i;						
-						var prev_dept = "";
+						var prev_section = "";
 						var div;
 						for(i=0;i<data.length;i++){
-							if(data[i].study_field != prev_dept){
+							if(data[i].section != prev_section){
 								if(i == 0){
 									div = "<div class='row'>" ;
 								}
 								else {
 									div += "</div>";
 									$("#third-page-row").prepend(div);
-									$("#third-page-row").prepend("<div><h4>" + data[i-1].study_field + "</h4></div>");
+									$("#third-page-row").prepend("<div><h4>" + data[i-1].section + "</h4></div>");
 									div = "<div class='row'>" ;
 								}
-								prev_dept = data[i].study_field;
+								prev_dept = data[i].section;
 								
 							}
-							div += "<p class='col-sm-4'><input name='course' type='checkbox' value=" + data[i].id + " />" + '&nbsp;' + data[i].name + "</p>";	
+							div += "<p class='col-sm-4'><input name='course' type='checkbox' value=" + data[i].id + "-" + data[i].section +" />" + '&nbsp;' + data[i].name + "</p>";	
 						}
 						div += "</div>";
 						$("#third-page-row").prepend(div);
-						$("#third-page-row").prepend("<div><h4>" + data[data.length - 1].study_field + "</h4></div>");
+						$("#third-page-row").prepend("<div><h4>" + data[data.length - 1].section + "</h4></div>");
 						document.getElementById("check-third-page").value = "1";
 					});		
 				}
