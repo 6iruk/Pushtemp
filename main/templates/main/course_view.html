@@ -23,11 +23,11 @@
                     
                     {% for material in materials %}
                         <div class="checkbox">
-                            <a class="subtitle link" href="{% url 'File' material.id %}">{{ material.name }}</a>
+                            <a class="subtitle link" href="{% url 'File' material.material.id %}">{{ material.material.name }}</a>
                             <label>
-                                <input type="checkbox" name={{material.id}} />
-                                <p class="detail">{{material.description}}</p>
-                                <p class="meta">{{material.file.size | filesizeformat }} [{{material.ext | upper}}] by {{material.lecturer}} | {{material.pub_date | naturalday}}</p>
+                                <input type="checkbox" name={{material.material.id}} />
+                                <p class="detail">{{material.material.description}}</p>
+                                <p class="meta">{{material.material.file.size | filesizeformat }} [{{material.material.ext | upper}}] by {{material.to.lecturer}} | {{material.material.pub_date | naturalday}}</p>
                             </label>
                         </div>
                         <div class="spacer1"></div>

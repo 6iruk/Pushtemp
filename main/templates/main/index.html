@@ -28,9 +28,9 @@
                     {% for section in sections %}
                         {% ifchanged section.year %}
                             </tr><tr>
-                            <td class="detail">Year {{section.year}}</td>
+                            <td class="detail">Year {{section.year}}</td>	
                         {% endifchanged %}
-                        <td><a class="detail link" href="{% url 'Section' section.code%}">Section {{section.section_number}}</a></td>
+                        <td><a class="detail link" href="{% url 'Section' section.code%}">Section {{section.number}}</a></td>
                     {%endfor%}
                     </tr>
                 </table>
