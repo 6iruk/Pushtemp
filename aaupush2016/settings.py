@@ -80,10 +80,9 @@ WSGI_APPLICATION = 'aaupush2016.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'aaupush$aaupush',
-        'USER': 'aaupush',
-        'PASSWORD': 'letsdoit123',
-        'HOST': 'aaupush.mysql.pythonanywhere-services.com'
+        'OPTIONS': {
+            'read_default_file': os.path.join(BASE_DIR, 'push.cnf'),
+        }
     }
 }
 
