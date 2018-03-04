@@ -7,7 +7,7 @@
  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    	
         <style>
-					@font-face {
+			@font-face {
 				font-family:proxima-nova;
 				src:url(/static/main/Regular.otf);	
 			}
@@ -16,10 +16,12 @@
 				font-family:proxima-nova-light;
 				src:url(/static/main/Light.otf);	
 			}
-		body {
+			
+			body {
 			font-family:proxima-nova;
-		}
-					h2 {
+			}
+			
+			h2 {
 				color:#2D2D2D;	
 			}
 			
@@ -28,14 +30,14 @@
 				font-weight:600;
 			}
 
-        	td {				
-				padding-top:10px;	
-			}
-			
 			#header {
 				background-size:100% 150%;
 				padding-top:15px;
 				padding-bottom:25px;	
+			}
+			
+			.buttons {
+				margin-top:10px;	
 			}
         </style>
     </head>
@@ -61,28 +63,31 @@
         <td width="50%">
 		<table align="center">
 			<tr>
-				<td>
-					<label for='username'><h5>Staff ID:</h5></label> 
-				</td>
-				<td>
-					<input class="log" type='text' name='username' /></br>
+            	<td colspan="2">			
+				<label for='username'><h5>Email:</h5></label>
+                </td>
+			</tr>
+            <tr>
+				<td colspan="2">
+				<input class="log" type='text' name='username' /></br>
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<label  for = 'password'><h5>Password:</h5></label>
+				<td colspan="2">
+				<label  for = 'password'><h5>Password:</h5></label>
 				</td>
-				<td>
-					<input class="log" type='password' name='password' /></br>
+            </tr>
+            <tr>
+				<td colspan="2">
+				<input class="log" type='password' name='password' /></br>
 				</td>
 			</tr>
 			<tr>
-            	<td align='right'>
-					
+            	<td colspan="1" align='left'>
+                <input class="btn btn-link btn-md buttons" data-toggle="tooltip" data-placement="left" title="Contact Addis 0913350082" type="button" value="Help" />					
 				</td>
-				<td colspan="2" align='center'>
-                	<input class="btn btn-link btn-md" data-toggle="tooltip" data-placement="left" title="Contact Addis 0913350082" type="button" value="Help" />
-					<input class="btn btn-info btn-md" type="submit" value="Login" />
+				<td colspan="1" align='right'>
+				<input class="btn btn-info btn-sm buttons" type="submit" value="Login" />
 				</td>
 			</tr>
 		</table>

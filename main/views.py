@@ -97,14 +97,13 @@ def portal(request):
                 
                 if(request.POST['request_type'] == 'announcement'):
                         message = request.POST.get('message')
-                        teacher = Teacher.objects.get(user=request.user)
                         pub_date = datetime.datetime.now()
                         exp_date = pub_date + datetime.timedelta(days=int(request.POST.get('duration')))
                         ann =  Announcement(pub_date = pub_date, exp_date = exp_date, message = message, count = 0)
                         ann.save()
 
                         for section in request.POST.getlist('sections'):
-                                to = Announcement_To(to = Teacher_Teaches.objects.get(section__code = section, teacher__user = request.user), announcement = ann)
+                                to = Announcement_To(to = Teacher_Teaches.objects.get(section__id = int(section), teacher__user = request.user), announcement = ann, pub_date = pub_date)
                                 to.save()                        
                         success = True
                         
@@ -113,11 +112,11 @@ def portal(request):
                         description = request.POST.get('description')   
                         file = request.FILES.get('file_data')
                         pub_date = datetime.datetime.now()
-                        material = Material(name = name, description = description, file = file, pub_date = pub_date, count = 0)
+                        material = Material(name = name, description = description, file = file, pub_date = pub_date, teacher = Teacher.objects.get(user=request.user), count = 0)
                         material.save()
                         
-                        for section in request.POST.getlist('sections'):
-                                to = Material_To(to = Teacher_Teaches.objects.get(section__code = section, teacher__user = request.user), material = material)
+                        for section in request.POST.getlist('mat_sections'):
+                                to = Material_To(to = Teacher_Teaches.objects.get(section_id = int(section), teacher__user = request.user), material = material, pub_date = pub_date)
                                 to.save() 
                         success = True
 
@@ -138,7 +137,7 @@ def first_login(request):
         if (not(request.user.is_authenticated()) or Teacher.objects.filter(user=request.user).exists()):
                 return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
         if request.method == 'POST':
-                teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['name'], last_name = request.POST['last_name'], email = request.POST['email'], department = Department.objects.get(id=request.POST['department']))
+                teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
                 teacher.save()
                 
                 for pair in request.POST.getlist('section-course'):

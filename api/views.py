@@ -24,10 +24,10 @@ def courses(request):
                 courses = [Section.objects.get(code=x).take for x in request.POST.getlist('sections')]
 
                 if request.GET.get('department'):
-                        courses = courses.filter(department__id=int(request.GET.get('department')))
+                        courses = courses.filter(department__code=request.GET.get('department'))
                         
         elif request.GET.get('department'):
-                courses = Course.objects.filter(department__id=int(request.GET.get('department')))
+                courses = Course.objects.filter(department__code=request.GET.get('department'))
 
         else :
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
@@ -42,6 +42,7 @@ def courses(request):
                 output += "\"id\":" + str(course.id) + ","
                 output += "\"name\":" + "\"" + course.name + "\"" + ","
                 output += "\"department\":" + "\"" + course.department.name + "\"" + ","
+                output += "\"code\":" + "\"" + course.code + "\"" + ","
                 output += "\"course_code\":" + "\"" + course.course_code + "\""
                 output += "},"
 
@@ -62,11 +63,11 @@ def announcements(request):
                 for section_code in section_codes:
                         section = get_object_or_404(Section, code=section_code)
                         query.add(Q(to__section=section), Q.OR)
-        elif request.GET.get('course_section'):
-                course_section_list = request.GET.get('course_section').split('-')
+        elif request.GET.get('section_course'):
+                course_section_list = request.GET.get('section_course').split('-')
                 for course_section in course_section_list:
-                        course = get_object_or_404(Course, pk=int(course_section.split(':')[0]))
-                        section = get_object_or_404(Section, code=course_section.split(':')[-1])
+                        course = get_object_or_404(Course, code=course_section.split(':')[-1])
+                        section = get_object_or_404(Section, code=course_section.split(':')[0])
                         query.add(Q(to__section=section,to__course=course), Q.OR)
         else:
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
@@ -108,8 +109,8 @@ def materials(request):
         if request.GET.get('section_course'):
                 course_section_list = request.GET.get('section_course').split('-')
                 for course_section in course_section_list:
-                        course = get_object_or_404(Course, pk=int(course_section.split(':')[0]))
-                        section = get_object_or_404(Section, code=course_section.split(':')[-1])
+                        course = get_object_or_404(Course, code=course_section.split(':')[-1])
+                        section = get_object_or_404(Section, code=course_section.split(':')[0])
                         query.add(Q(to__section=section,to__course=course),Q.OR)
         elif request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
@@ -197,7 +198,8 @@ def departments(request):
         for department in departments:
                 output += "{"
                 output += "\"id\":" + str(department.id) + ","
-                output += "\"name\":" + "\"" + department.name + "\""
+                output += "\"name\":" + "\"" + department.name + "\"" + ","
+                output += "\"code\":" + "\"" + department.code + "\""
                 output += "},"
 
         # remove the last list separator comma
@@ -231,16 +233,18 @@ def get_courses(request):
         else :
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
         if request.GET.get('sections'):
-                section_codes = request.GET.getlist('sections').split('-')
+                section_codes = request.GET.get('sections').split('-')
                 output = "["
                 for section_code in section_codes:
-                        section = get_object_or_404(Section, id=section_code)
+                        section = get_object_or_404(Section, id=int(section_code))
                         courses = section.take.filter(department__id = department_id)
                         for course in courses:
                                 output += "{"
                                 output += "\"id\":" + str(course.id) + ","
                                 output += "\"name\":" + "\"" + course.name + "\"" + ","
-                                output += "\"section\":" + "\"" + section.code + "\""
+                                output += "\"section\":" + str(section.id) + ","
+                                output += "\"year\":" + str(section.year) + ","
+                                output += "\"number\":" + str(section.number)
                                 output += "},"                                
 
                 output = output[::-1].replace(",", "", 1)[::-1]

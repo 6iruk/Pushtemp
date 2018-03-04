@@ -119,7 +119,10 @@ class Material(models.Model):
 class Material_To(models.Model):
    to = models.ForeignKey(Teacher_Teaches)
    material = models.ForeignKey(Material)
-
+   pub_date = models.DateTimeField('Date Published', null= True)
+   
 class Announcement_To(models.Model):
    to = models.ForeignKey(Teacher_Teaches)
    announcement = models.ForeignKey(Announcement)
+   pub_date = models.DateTimeField('Date Published', null= True)
+   

@@ -180,7 +180,7 @@
     
     <div id="content">
     	<div class="container">
-  			<h3 id="greeting" style="text-align:center;">Welcome, {{lecturer.title}} {{lecturer.name}}</h3>
+  			<h3 id="greeting" style="text-align:center;">Welcome, {{lecturer.title}} {{lecturer.first_name}}</h3>
         	<p></p>
         	{% if success %}
         		<div class="alert alert-success">
@@ -222,39 +222,17 @@
                                 <label class="control-label" for="message">Enter announcement:</label>
                                 <textarea id="message" class="form-control" name="message" rows="5" cols="10" required></textarea>
                             </div>
-
-                            <div class="checkbox">
-                                <label><input name="urgent" type="checkbox" value="True">This announcement is urgent (make text in red)</label>
+                            
+                            <div class="form-group">
+                                <p>This announcement should expire in <input name="duration" type="number" required/>&nbsp;days from now</p>
                             </div>
                         
-                            <div class="form-group">
-                                <p>This announcement should expire in <input name="duration" type="number" required/>days from now</p>
-                            </div>
-                        
-                            <p class="lead">Send announcement:</p>
-                        
-                            <div class="form-group">
-                                <div class="radio">
-                                    <label><input type="radio" name="ann_type" value="course" required onclick="myotherFunction('course','section')"/>To all students taking the following course(s):</label>
-                                </div>
-                            
-                                <div id="course-check" style="padding-left:5%">
-                                    {% for cor in course %} 
-                                        <label class="checkbox-inline"><input type="checkbox" name='course' value="{{cor.name}}" onchange="myFunction('course')" required="required" disabled="True">{{cor}}</label>
-                                    {% endfor %}
-                                </div>
-                            
-                                <div class="radio">
-                                    <label><input type="radio" name="ann_type" value="section" required onclick="myotherFunction('section','course')"/>To all students in the following section/sections:</label>
-                                </div>
-                            
-                                <div id="section-check" style="padding-left:5%">
+                            <p class="lead">Post announcement for:</p>
+                                <div id="section-check" style="padding-bottom:10px;">
                                     {% for section in sections %} 
-                                        <label class="checkbox-inline"><input type="checkbox" name='section' value="{{section}}" onchange="myFunction('section')" required="required" disabled="True">{{section}}</label>
+                                        <label class="checkbox-inline"><input type="checkbox" name='sections' value="{{section.section.id}}" onchange="myFunction('sections')" required="required">Year&nbsp;{{section.section.year}}&nbsp;Section&nbsp;{{section.section.number}}</label>
                                     {% endfor %}
-                                </div>                                                                     
-                            </div>
-                        
+                                </div>                                                                    
                             <input class="btn btn-primary" type='submit' value='Post Announcement'/>
                         </form>              	
                 </div>
@@ -297,61 +275,37 @@
                                 <textarea id="description" class="form-control" name='description' rows="3" cols="50" required/></textarea>
                             </div>
                         
-                            <p class="lead">Choose a course:</p>
-                        
-                            <div class="form-group">
-                                <div id="course-radio">
-                                    {% for cor in course %} 
-                                            <label class="radio-inline"><input type="radio" name='course' value="{{cor.id}}" required="required">{{cor}}</label>
-                                    {% endfor %}
-                                </div>
-                            
-                                <div id="radio-container" style="padding-left:2%">
-                                    <div class="radio">
-                                        <label><input type="radio" name="mat_type" value="all" required onclick="myotherFunction('none','mat_section')"/>To all the students taking the course</label>
-                                    </div>
-                            
-                                    <div class="radio">
-                                        <label><input type="radio" name="mat_type" value="my" required onclick="myotherFunction('none','mat_section')"/>To all the students I give the course to</label>
-                                    </div>
-                             
-                                    <div class="radio">
-                                        <label><input type="radio" name="mat_type" value="section" required onclick="myotherFunction('mat_section','none')"/>To all the students in the following section/sections:</label>
-                                    </div>
-                                </div>
-                                                 
-                                <div id="section-check-mat" style="padding-left:5%">
+                            <p class="lead">Upload Material For:</p>           
+                                <div id="section-check-mat" style="padding-bottom:10px;">
                                     {% for section in sections%}
-                                            <label class="checkbox-inline"><input name="mat_section" type="checkbox" value="{{section}}"  onchange="myFunction('mat_section')" required="required" disabled="True"/>{{section}}</label>
+                                            <label class="checkbox-inline"><input name="mat_sections" type="checkbox" value="{{section.section.id}}"  onchange="myFunction('mat_sections')" required="required"/>Year&nbsp;{{section.section.year}}&nbsp;Section&nbsp;{{section.section.number}}</label>
                                     {%endfor%}
                                 </div>                                                                     
-                            </div>
-                             
                             <input class="btn btn-primary" type='submit' value='Upload Material'/>
                         </form>            
                 </div>
                 
                 <div id="track" class="tab-pane">
                        {% for pre in prev reversed %}
-                       		{% if pre.message %}
+                       		{% if pre.announcement %}
                                 <div class="media">
                                     <div class="media-body">
-                                        <h5 class="media-heading">{{pre.count}} views</h5>
-                                        <p>{{pre.message}}</p>
-                                        <h5><small>Posted on {{pre.pub_date}}</small></h5>
+                                        <h5 class="media-heading">{{pre.announcement.count}} views</h5>
+                                        <p>{{pre.announcement.message}}</p>
+                                        <h5><small>Posted on {{pre.announcement.pub_date}}</small></h5>
                                     </div>
                                 </div>
                             {% else %}
                                 <div class="media">
                                     <div class="media-body">
-                                        <h5 class="media-heading">{{pre.count}} Download requests</h5>
-                                        <p>{{pre.name}}&nbsp;&nbsp;[.{{pre.ext}}}</p>
-                                        <h5><small>Uploaded on {{pre.pub_date}}</small></h5>
+                                        <h5 class="media-heading">{{pre.material.count}} Download requests</h5>
+                                        <p>{{pre.material.name}}&nbsp;&nbsp;[.{{pre.material.ext}}}</p>
+                                        <h5><small>Uploaded on {{pre.material.pub_date}}</small></h5>
                                     </div>
                                 </div>                            
                             {% endif %}
                         {% empty %}
-                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced or posted anything {{lecturer.title}}{{lecturer.name}},<h4 class="text-center">Say something to your students.</h4></h4>                         
+                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced or posted anything {{lecturer.title}}{{lecturer.first_name}},<h4 class="text-center">Say something to your students.</h4></h4>                         
                        {% endfor %}                  		            
                 </div>                
             </div>
@@ -359,7 +313,6 @@
     </div>
     
     <div id="footer" class="text-center">
-		<q>{{quote.quote}}</q><br>- {{quote.author}}<br>
         <P id="help"><span class="glyphicon glyphicon-copyright-mark cr"></span> AAU Push 2017 - If there are any problems(even minor ones) or if you have any feedbacks, please contact Addis 0913350082.</P>
     </div>
 	

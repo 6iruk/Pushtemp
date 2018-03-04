@@ -45,37 +45,16 @@
 						document.getElementById("id_last_name_error").innerHTML = "This field is required.";
 						return;
 					}
-					
-					if( $.trim( $("#id_lect_id").val() ) == "" ){
-						document.getElementById("id_lect_id_error").innerHTML = "This field is required.";
-						return;
-					}
-					
+
 					if( document.getElementById("id_department").selectedIndex == 0 ){
 						document.getElementById("id_department_error").innerHTML = "This field is required.";
 						return;
 					}
-					
-					$.getJSON("/api/lecturer_id_exists?lect_id=" + document.getElementById("id_lect_id").value, function(data){
-						if( data.status ){
-							document.getElementById("id_lect_id_error").innerHTML = "This user id is already taken. Try another one.";
-							return;								
-						}
-						
-						var next_tab = document.getElementById("second-page-link");
-						next_tab.click();						
-					});
-					
-					return;
 				}
 				
 				if(page == "third-page-link"){
-					var $checkbox = document.getElementsByName("section"), $checked=0;
-  					if(document.getElementById("check-third-page").value == "1"){
-						var next_tab = document.getElementById(page);
-						next_tab.click();
-						return;						
-					}
+					var $checkbox = document.getElementsByName("sections"), $checked=0;
+
   					for(var i=0; i < $checkbox.length; i++){
 	    					if($checkbox[i].checked){
 							$checked++; }
@@ -85,10 +64,16 @@
 						document.getElementById("id_section_error").innerHTML = "Choosing at least one section is required.";
 						return;	
 		 			}
-
-					var url = "/api/get_courses?study_field=" + document.getElementById("id_department").selectedIndex.value + "&sections=";
 					
-					$("input:checkbox[name=section]:checked").each(function(){
+  					if(document.getElementById("check-third-page").value == "1"){
+						var next_tab = document.getElementById(page);
+						next_tab.click();
+						return;						
+					}
+					
+					var url = "/api/get_courses?department=" + document.getElementById("id_department").value + "&sections=";
+					
+					$("input:checkbox[name=sections]:checked").each(function(){
 						url += $(this).val() + "-";	
 					});
 					
@@ -106,23 +91,23 @@
 								else {
 									div += "</div>";
 									$("#third-page-row").prepend(div);
-									$("#third-page-row").prepend("<div><h4>" + data[i-1].section + "</h4></div>");
+									$("#third-page-row").prepend("<div><h4>Year " + data[i-1].year + " Section " + data[i-1].number + "</h4></div>");
 									div = "<div class='row'>" ;
 								}
 								prev_section = data[i].section;
 								
 							}
-							div += "<p class='col-sm-4'><input name='course' type='checkbox' value=" + data[i].id + "-" + data[i].section +" />" + '&nbsp;' + data[i].name + "</p>";	
+							div += "<p class='col-sm-4'><input name='section-course' type='checkbox' value=" + data[i].section + "-" + data[i].id +" />" + '&nbsp;' + data[i].name + "</p>";	
 						}
 						div += "</div>";
 						$("#third-page-row").prepend(div);
-						$("#third-page-row").prepend("<div><h4>" + data[data.length - 1].section + "</h4></div>");
+						$("#third-page-row").prepend("<div><h4>Year " + data[data.length - 1].year + " Section " + data[data.length - 1].number + "</h4></div>");
 						document.getElementById("check-third-page").value = "1";
 					});		
 				}
 				
 				if(page == "fourth-page-link"){
-					var $checkbox = document.getElementsByName("course"), $checked=0;
+					var $checkbox = document.getElementsByName("section-course"), $checked=0;
   		
   					for(var i=0; i < $checkbox.length; i++){
 	    					if($checkbox[i].checked){
@@ -132,7 +117,8 @@
 					if($checked < 1 ){
 						document.getElementById("id_course_error").innerHTML = "Choosing at least one course is required.";
 						return;	
-		 			}	
+		 			}
+						
 				}				
 				
 				var next_tab = document.getElementById(page);
@@ -215,7 +201,7 @@
         		</p>
                                 
                 <p class="lect_name col-sm-4"> 
-            	<input id="id_name" name="name" placeholder="First Name" type="text" />
+            	<input id="id_name" name="first_name" placeholder="First Name" type="text" />
                 </p>
                                
 				<p class="lect_name col-sm-4"> 
@@ -223,13 +209,6 @@
                 </p>
                 
                 </div>
-                
-                <p id="id_lect_id_error" class="error-msg"></p>
-                
-				<p>
-                <label for="id_lect_id">Staff ID:</label> <input id="id_lect_id" name="lect_id" type="text" />
-                REMEMBER! You will use this ID to login from now on.
-                </p>
                 
                 <p id="id_department_error" class="error-msg"></p>
                 
@@ -247,15 +226,15 @@
         	<div id="second-page" class="tab-pane">
             	<p id="id_section_error" class="error-msg text-center"></p>
                 
-        		<h4>Choose sections you teach</h4>
+        		<h4>Choose the sections you teach</h4>
                 <div class="row">
                 {% for section in sections %}
                 	{% ifchanged section.year %}
                     	</div>
                     {% endifchanged %}
                     
-                	{% ifchanged section.studyfield %}
-                    	<h4>{{section.studyfield}}</h4>
+                	{% ifchanged section.department %}
+                    	<h4>{{section.department}}</h4>
                     {% endifchanged %}
                     
                 	{% ifchanged section.year %}
@@ -263,7 +242,7 @@
                         <div class="row">
                     {% endifchanged %}
                     
-                    <p class="col-sm-3"><input class="section" type="checkbox" name='section' value="{{section.id}}">&nbsp;Section {{section.section_number}}</p>            
+                    <p class="col-sm-3"><input class="section" type="checkbox" name='sections' value="{{section.id}}">&nbsp;Section {{section.number}}</p>            
                 {% endfor %}
                 </div>
                 <div align="left" style="display:inline-block; width:49%;"><input  class="btn btn-info" type="button" value="Back" style="margin-left:10px;" onClick="previous('first-page-link')"/></div>
@@ -281,10 +260,12 @@
             </div>
             
             <div id="fourth-page" class="tab-pane">
-            <div style="width:70%;">
-    		<p class="text-right"><label for="password" >New password:</label>
+            <div style="width:70%;margin:auto;text-align:center;">
+    		<p class="text-left"><label for="email" >Email:</label><br>
+			<input id="email" type="email" name="email" required/></p>
+    		<p class="text-left"><label for="password" >New password:</label><br>
 			<input id="password" type="password" name="new_password" required/></p>
-    		<p class="text-right"><label for="password_conf" >Confirm new password:</label>
+    		<p class="text-left"><label for="password_conf" >Confirm new password:</label><br>
 			<input id="password_conf" type="password" onKeyUp="password_checker()" required/></p>
              </div>              
     	    {%csrf_token%}
