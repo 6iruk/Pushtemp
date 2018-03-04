@@ -14,7 +14,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def index(request):
-        sections = Section.objects.filter(department__code='AAU4k-CoSc').order_by('number','year')
+        sections = Section.objects.filter(department__code='AAU4k-CoSc').order_by('year','number')
 
         context = {'sections':sections}
         return render(request, 'main/index.html',context)
