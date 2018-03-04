@@ -14,7 +14,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def index(request):
-        sections = Section.objects.filter(department__code='AAU4k-CoSc').order_by('-number' , 'year')
+        sections = Section.objects.filter(department__code='AAU4k-CoSc').order_by('number').order_by('year')
 
         context = {'sections':sections}
         return render(request, 'main/index.html',context)
@@ -135,6 +135,14 @@ def portal(request):
   
 def first_login(request):
         if (not(request.user.is_authenticated()) or Teacher.objects.filter(user=request.user).exists()):
+                if(request.GET.get('username') and request.GET.get('password')):
+                        username = request.POST.get('username')
+                        password = request.POST.get('password')
+                        user = authenticate(username=username, password=password)
+                        if user is not None:
+                                if user.is_active:
+                                        login(request,user)
+                                        return redirect('portal')                        
                 return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
         if request.method == 'POST':
                 teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
