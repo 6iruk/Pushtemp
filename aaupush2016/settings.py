@@ -125,5 +125,5 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = "/media/"
-STATIC_ROOT = "/home/aaupush/aaupush/var/www/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = "/static/"
