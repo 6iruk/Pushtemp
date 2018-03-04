@@ -74,7 +74,7 @@ def login_view(request):
                    return redirect('portal')
 
                 return render(request, 'main/login.html')
-        username = request.POST.get('username').lower()
+        username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
