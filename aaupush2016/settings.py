@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'push_page',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -78,8 +79,11 @@ WSGI_APPLICATION = 'aaupush2016.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'aaupush$aaupush',
+        'USER': 'aaupush',
+        'PASSWORD': 'letsdoit123',
+        'HOST': 'aaupush.mysql.pythonanywhere-services.com'
     }
 }
 
@@ -119,7 +123,7 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-MEDIA_ROOT = "/home/aaupush"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = "/media/"
-STATIC_ROOT = "/home/aaupush/aaupush/var/www/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = "/static/"

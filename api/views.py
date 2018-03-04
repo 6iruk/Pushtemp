@@ -3,69 +3,34 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.db.models import Q
 from main.models import User
-from main.models import StudyField
+from main.models import University
+from main.models import Department
 from main.models import Course
 from main.models import Section
+from main.models import Teacher
+from main.models import Teacher_Teaches
 from main.models import Announcement
 from main.models import Material
-from main.models import Lecturer
-from main.models import Department
+from main.models import Announcement_To
+from main.models import Material_To
 
 # Create your views here.
 def index(request):
         return HttpResponse("Welcome to aau push APIs.")
 
-def study_fields(request):
-        all_study_fields = StudyField.objects.all()
-
-        if request.GET.get('id'):
-                all_study_fields = all_study_fields.filter(department__id=request.GET.get('id'))
-        #JSON output
-        #Start json array
-        output = "[";
-
-        # Loop through every study field and add them as a json object
-        for study_field in all_study_fields:
-                output += "{"
-                output += "\"id\":" + str(study_field.id) + ","
-                output += "\"name\":" + "\"" + study_field.name + "\"" + ","
-                output += "\"code\":" + "\"" + study_field.code + "\""
-                output += "},"
-
-        # remove the last list separator comma
-        output = output[::-1].replace(",", "", 1)[::-1]
-
-        #end of json array
-        output += "]"
-
-
-        return HttpResponse(output, content_type='application/json')
-
 def courses(request):
-        # Check if study_field exists, exit if it doesn't
-        query = Q()
-        if request.GET.get('study_field'):
-                study_field_id = int(request.GET.get('study_field'))
+        if request.GET.get('sections'):
+                section_codes = request.GET.get('sections').split('-')
+                courses = [Section.objects.get(code=x).take for x in request.POST.getlist('sections')]
+
+                if request.GET.get('department'):
+                        courses = courses.filter(department__code=request.GET.get('department'))
+                        
+        elif request.GET.get('department'):
+                courses = Course.objects.filter(department__code=request.GET.get('department'))
+
         else :
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
-
-        if request.GET.get('section'):
-                section_code = request.GET.get('section')
-                section = get_object_or_404(Section, code=section_code)
-                courses = Course.objects.filter(section = section).filter(studyfield__id=study_field_id)
-        elif request.GET.get('sections'):
-                section_codes = request.GET.get('sections').split('-')
-                for section_code in section_codes:
-                        section = get_object_or_404(Section, id=section_code)
-                        query.add(Q(section=section), Q.OR)
-                courses = Course.objects.filter(query).order_by('studyfield','-name').distinct()
-        elif request.GET.get('ex_section'):
-                section_code = request.GET.get('ex_section')
-                section = get_object_or_404(Section, code=section_code)
-                courses = Course.objects.exclude(section = section).filter(studyfield__id=study_field_id)
-        else:
-                courses = Course.objects.filter(studyfield__id=study_field_id)
-
 
         #JSON output
         #Start json array
@@ -76,7 +41,9 @@ def courses(request):
                 output += "{"
                 output += "\"id\":" + str(course.id) + ","
                 output += "\"name\":" + "\"" + course.name + "\"" + ","
-                output += "\"study_field\":" + "\"" + course.studyfield.name + "\""
+                output += "\"department\":" + "\"" + course.department.name + "\"" + ","
+                output += "\"code\":" + "\"" + course.code + "\"" + ","
+                output += "\"course_code\":" + "\"" + course.course_code + "\""
                 output += "},"
 
         # remove the last list separator comma
@@ -90,27 +57,26 @@ def courses(request):
 def announcements(request):
         #filter query
         query = Q()
+        
         if request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
                 for section_code in section_codes:
                         section = get_object_or_404(Section, code=section_code)
-                        query.add(Q(section=section), Q.OR)
-        elif request.GET.get('course_section'):
-                course_section_list = request.GET.get('course_section').split('-')
+                        query.add(Q(to__section=section), Q.OR)
+        elif request.GET.get('section_course'):
+                course_section_list = request.GET.get('section_course').split('-')
                 for course_section in course_section_list:
-                        course = get_object_or_404(Course, pk=int(course_section.split(':')[0]))
-                        section = get_object_or_404(Section, code=course_section.split(':')[-1])
-                        lecturers = Lecturer.objects.filter(course=course)
-                        if len(lecturers) < 1:
-                                continue
-                        for lecturer in lecturers:
-                                query.add(Q(lecturer = lecturer,section=section), Q.OR)
+                        course = get_object_or_404(Course, code=course_section.split(':')[-1])
+                        section = get_object_or_404(Section, code=course_section.split(':')[0])
+                        query.add(Q(to__section=section,to__course=course), Q.OR)
         else:
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+
         # Apply filter
-        announcements = Announcement.objects.filter(query).order_by('pub_date').distinct()
         if request.GET.get('id'):
-                announcements = announcements.filter(id__gt=int(request.GET.get('id')))
+                announcements = Announcement_To.objects.filter(id__gt=int(request.GET.get('id'))).filter(query).order_by('announcement.pub_date').distinct()
+        else:
+                announcements = Announcement_To.objects.filter(query).order_by('announcement.pub_date').distinct()
 
         #JSON output
         #Start json array
@@ -119,13 +85,10 @@ def announcements(request):
         for announcement in announcements:
                 output += "{"
                 output += "\"id\":" + str(announcement.id) + ","
-                output += "\"message\":" + "\"" + announcement.message + "\"" + ","
-                output += "\"lecturer_name\":" + "\"" + announcement.lecturer.name + "\"" + ","
-                output += "\"post_date\":" + "\"" + str(announcement.pub_date) + "\"" + ","
-                output += "\"exp_date\":" + "\"" + str(announcement.exp_date) + "\"" + ","
-                output += "\"file_one\":" + "\"" + str(announcement.get_link_one()) + "\"" + ","
-                output += "\"file_two\":" + "\"" + str(announcement.get_link_two()) + "\"" + ","
-                output += "\"is_urgent\":" + str(int(announcement.is_urgent))  #+ ","
+                output += "\"message\":" + "\"" + announcement.announcement.message + "\"" + ","
+                output += "\"lecturer_name\":" + "\"" + announcement.to.teacher + "\"" + ","
+                output += "\"pub_date\":" + "\"" + str(announcement.announcement.pub_date) + "\"" + ","
+                output += "\"exp_date\":" + "\"" + str(announcement.announcement.exp_date) + "\"" + ","
                 output += "},"
 
         # remove the last list separator comma
@@ -135,35 +98,33 @@ def announcements(request):
         output += "]"
 
         for announcement in announcements:
-                announcement.inc_count()
+                announcement.announcement.inc_count()
         
         return HttpResponse(output, content_type='application/json')
 
 def materials(request):
         #Filter query
         query = Q()
-        if request.GET.get('course_section'):
-                course_section_list = request.GET.get('course_section').split('-')
+        
+        if request.GET.get('section_course'):
+                course_section_list = request.GET.get('section_course').split('-')
                 for course_section in course_section_list:
-                        course = get_object_or_404(Course, pk=int(course_section.split(':')[0]))
-                        section = get_object_or_404(Section, code=course_section.split(':')[-1])
-                        query.add(Q(section=section,course=course),Q.OR)
+                        course = get_object_or_404(Course, code=course_section.split(':')[-1])
+                        section = get_object_or_404(Section, code=course_section.split(':')[0])
+                        query.add(Q(to__section=section,to__course=course),Q.OR)
         elif request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
                 for section_code in section_codes:
                         section = get_object_or_404(Section, code = section_code)
-                        query.add(Q(section=section),Q.OR)
-        elif request.GET.get('courses'):
-                course_ids = request.GET.get('courses').split('-')
-                for course_id in course_ids:
-                        course = get_object_or_404(Course, pk=int(course_id))
-                        query.add(Q(course=course), Q.OR)
+                        query.add(Q(to__section=section),Q.OR)
         else:
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+
         #Apply filter
-        materials = Material.objects.filter(query).order_by('pub_date').distinct()
         if request.GET.get('id'):
-                materials = materials.filter(id__gt=int(request.GET.get('id')))
+                materials = Material_To.objects.filter(id__gt=int(request.GET.get('id'))).filter(query).order_by('material.pub_date').distinct()
+        else:
+                materials = Material_To.objects.filter(query).order_by('material.pub_date').distinct()
 
         #JSON output
         #Start json array
@@ -172,12 +133,12 @@ def materials(request):
         for material in materials:
                 output += "{"
                 output += "\"id\":" + str(material.id) + ","
-                output += "\"name\":" + "\"" + material.name + "\"" + ","
-                output += "\"description\":" + "\"" + material.description + "\"" + ","
-                output += "\"pub_date\":" + "\"" + str(material.pub_date) + "\"" + ","
-                output += "\"file_format\":" + "\"" + material.ext() + "\"" + ","
-                output += "\"file_size\":" + str(material.file_size()) + ","
-                output += "\"course_id\":" + str(material.course.id)
+                output += "\"name\":" + "\"" + material.material.name + "\"" + ","
+                output += "\"description\":" + "\"" + material.material.description + "\"" + ","
+                output += "\"pub_date\":" + "\"" + str(material.material.pub_date) + "\"" + ","
+                output += "\"file_format\":" + "\"" + material.material.ext() + "\"" + ","
+                output += "\"file_size\":" + str(material.material.file_size()) + ","
+                output += "\"course_id\":" + str(material.to.course.id)
                 output += "},"
 
         # remove the last list separator comma
@@ -191,15 +152,23 @@ def materials(request):
 def section_exists(request):
         section_code = request.GET.get('section_code')
 
+        #JSON output
+        #Start json array
+        output = "{"
+        
         if Section.objects.filter(code=section_code).count() < 1:
-                return HttpResponse("false")
+                output += " \"status\":false }"
         else:
-                return HttpResponse("true")
+                output += " \"status\":true }"
+
+        return HttpResponse(output, content_type='application/json')
 
 def sections(request):
-        study_field = get_object_or_404(StudyField, pk=int(request.GET.get('study_field_id')))
-
-        sections = Section.objects.filter(studyfield = study_field)
+        if request.GET.get('department'):
+                department = get_object_or_404(StudyField, pk=int(request.GET.get('department')))
+                sections = Section.objects.filter(department = department)
+        else:
+                sections = Section.objects.all()        
 
         #JSON output
         #Start json array
@@ -207,6 +176,7 @@ def sections(request):
 
         for section in sections:
                 output += "{"
+                output += "\"id\":" + str(section.id) + ","
                 output += "\"code\":" + section.code
                 output += "},"
 
@@ -217,6 +187,7 @@ def sections(request):
         output += "]"
 
         return HttpResponse(output, content_type='application/json')
+
 def departments(request):
         departments = Department.objects.all()
         
@@ -227,7 +198,8 @@ def departments(request):
         for department in departments:
                 output += "{"
                 output += "\"id\":" + str(department.id) + ","
-                output += "\"name\":" + "\"" + department.name + "\""
+                output += "\"name\":" + "\"" + department.name + "\"" + ","
+                output += "\"code\":" + "\"" + department.code + "\""
                 output += "},"
 
         # remove the last list separator comma
@@ -237,9 +209,10 @@ def departments(request):
         output += "]"
 
         return HttpResponse(output, content_type='application/json')
-def lecturer_id_exists(request):
-        if request.GET.get('lect_id'):
-                lect_id = request.GET.get('lect_id').lower()
+
+def email_exists(request):
+        if request.GET.get('email'):
+                email = request.GET.get('email')
         else:
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
         
@@ -247,12 +220,36 @@ def lecturer_id_exists(request):
         #Start json array
         output = "{"        
 
-        if User.objects.filter(username=lect_id).exists():
+        if User.objects.filter(username=email).exists():
                 output += " \"status\":true }"
         else:
                 output += " \"status\":false }"
 
         return HttpResponse(output, content_type='application/json')
                 
-        
-        
+def get_courses(request):
+        if request.GET.get('department'):
+                department_id = int(request.GET.get('department'))
+        else :
+                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+        if request.GET.get('sections'):
+                section_codes = request.GET.get('sections').split('-')
+                output = "["
+                for section_code in section_codes:
+                        section = get_object_or_404(Section, id=int(section_code))
+                        courses = section.take.filter(department__id = department_id)
+                        for course in courses:
+                                output += "{"
+                                output += "\"id\":" + str(course.id) + ","
+                                output += "\"name\":" + "\"" + course.name + "\"" + ","
+                                output += "\"section\":" + str(section.id) + ","
+                                output += "\"year\":" + str(section.year) + ","
+                                output += "\"number\":" + str(section.number)
+                                output += "},"                                
+
+                output = output[::-1].replace(",", "", 1)[::-1]
+                output += "]"
+        else :
+                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")        
+
+        return HttpResponse(output, content_type='application/json')

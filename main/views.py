@@ -9,30 +9,28 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from django.core import serializers
 import datetime, zipfile, io
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def index(request):
-        daily = timezone.now().day
-        quote = Quote.objects.get(id=1)
-        studyfield = StudyField.objects.get(code='CoSc')
-        sections = studyfield.section_set.order_by('year')
-        context = {'quote':quote,'sections':sections}
+        sections = Section.objects.filter(department__code='AAU4k-CoSc').order_by('year')
+
+        context = {'sections':sections}
         return render(request, 'main/index.html',context)
 
 def section(request,section_code):
         section = Section.objects.get(code=section_code)
-        courses = section.course.order_by('name')
-        material_count = []
-        for course in courses:
-                material_count.append(course.get_material_count(section))
-        quote = Quote.objects.get(id=1)
+        section_takes = section.take.order_by('name')
         now = datetime.datetime.now()
-        announcements = section.announcement_set.order_by('-pub_date').filter(exp_date__gt = now)
+        announcements = Announcement_To.objects.filter(to__section = section, announcement__exp_date__gt = now).order_by('-announcement__pub_date')
         for announcement in announcements:
-                announcement.inc_count()
+                announcement.announcement.inc_count()
         this_week = []
         a_week_ago = now - datetime.timedelta(days=7)
-        this_week = section.material_set.order_by('-pub_date').filter(pub_date__range=(a_week_ago , now))
-        context = {'section':section,'courses':courses, 'quote':quote, 'announcements':announcements, 'this_week':this_week}
+        uploads_this_week = Material_To.objects.filter(to__section = section, material__pub_date__range=(a_week_ago , now)).order_by('-material__pub_date')
+
+        context = {'section':section,'courses':section_takes, 'announcements':announcements, 'this_week':uploads_this_week}
         return render(request,'main/section.html',context)
 
 def course_view(request,section_code,course_name):
@@ -45,7 +43,7 @@ def course_view(request,section_code,course_name):
                 strio = io.BytesIO()    
                 newzip = zipfile.ZipFile(strio,'a')
                 for material in matter:
-                        newzip.write("%s"%material.file.name, material.name + '.%s'%material.ext())
+                        newzip.write(os.path.join(BASE_DIR, "uploads/%s"%material.file.name), material.name + '.%s'%material.ext())
                         material.inc_count()
                 newzip.close()
                 response = HttpResponse(strio.getvalue(), content_type='application/x-zip-compressed')
@@ -53,11 +51,11 @@ def course_view(request,section_code,course_name):
                 return response             
         else:
                 section = Section.objects.get(code=section_code)
-                courses = section.course.order_by('name')
+                section_takes = section.take.order_by('name')
                 course = Course.objects.get(name=course_name.replace('_', ' '))
-                materials = course.material_set.order_by('-pub_date').filter(section=section)
-                quote = Quote.objects.get(id=1)
-                context = {'section':section, 'course':course, 'courses':courses, 'materials':materials, 'quote':quote}
+                materials_for_course = Material_To.objects.filter(to__section = section, to__course = course).order_by('-material__pub_date')
+
+                context = {'section':section, 'course':course, 'courses':section_takes, 'materials':materials_for_course}
                 return render(request,'main/course_view.html',context)
 
 def file_request(request, material_id):
@@ -74,8 +72,8 @@ def login_view(request):
         if not request.POST:
                 if request.user.is_authenticated():
                    return redirect('portal')
-                quote = Quote.objects.get(id=1)
-                return render(request, 'main/login.html',{'quote':quote})
+
+                return render(request, 'main/login.html')
         username = request.POST.get('username').lower()
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
@@ -85,12 +83,10 @@ def login_view(request):
                         return redirect('portal')
                 else:
                         message = 'Your user account is not active.'
-                        quote = Quote.objects.get(id=1)
-                        return render(request, 'main/login.html', {'message':message, 'quote':quote})
+                        return render(request, 'main/login.html', {'message':message})
         else:
                 message = 'You have entered invalid username or password. Contact Addis - 0913350082 for help.'
-                quote = Quote.objects.get(id=1)
-                return render(request, 'main/login.html', {'message':message, 'quote':quote})
+                return render(request, 'main/login.html', {'message':message})
         
 def portal(request):
         success = False
@@ -101,92 +97,63 @@ def portal(request):
                 
                 if(request.POST['request_type'] == 'announcement'):
                         message = request.POST.get('message')
-                        if request.POST.get('ann_type') == 'section':
-                                section = [Section.objects.get(code=x) for x in request.POST.getlist('section')]
-                        elif request.POST.get('ann_type') == 'course':
-                                section = [Section.objects.filter(course__name=x) for x in request.POST.getlist('course')]
-                        lecturer = Lecturer.objects.get(user=request.user)
-                        is_urgent = bool(request.POST.get('urgent'))
                         pub_date = datetime.datetime.now()
                         exp_date = pub_date + datetime.timedelta(days=int(request.POST.get('duration')))
-                        if request.FILES.get('file'):
-                                file1 = request.FILES.get('file')
-                                if request.FILES.get('file_'):
-                                        file2 = request.FILES.get('file_')  
-                                        ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, file2=file2, pub_date=pub_date, exp_date=exp_date,count=0)  
-                                else:
-                                        ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, pub_date=pub_date, exp_date=exp_date,count=0)
-                        elif request.FILES.get('file_'):
-                                file1 = request.FILES.get('file_')
-                                ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, file1=file1, pub_date=pub_date, exp_date=exp_date,count=0)
-                        else:
-                                ann =  Announcement(lecturer=lecturer, message=message, is_urgent=is_urgent, pub_date=pub_date, exp_date=exp_date,count=0)
+                        ann =  Announcement(pub_date = pub_date, exp_date = exp_date, message = message, count = 0)
                         ann.save()
-                        if request.POST.get('ann_type') == 'section':
-                                for sec in section:
-                                        ann.section.add(sec)
-                        if request.POST.get('ann_type') == 'course':
-                                for sec in section:
-                                        for s in sec:
-                                                ann.section.add(s)
-                        ann.save()                
+
+                        for section in request.POST.getlist('sections'):
+                                to = Announcement_To(to = Teacher_Teaches.objects.get(section__id = int(section), teacher__user = request.user), announcement = ann, pub_date = pub_date)
+                                to.save()                        
                         success = True
                         
-                if (request.POST['request_type'] =='material'):
+                if (request.POST['request_type'] == 'material'):
                         name = request.POST.get('name')
                         description = request.POST.get('description')   
                         file = request.FILES.get('file_data')
                         pub_date = datetime.datetime.now()
-                        lecturer = Lecturer.objects.get(user=request.user)
-                        course = Course.objects.get(id=request.POST.get('course'))
-                        material = Material(name=name,description=description,file=file,pub_date=pub_date,lecturer=lecturer,course=course,count=0)
-                        material.save() 
-                        if request.POST.get('mat_type') == 'all':
-                                sections = Section.objects.filter(course=course).distinct()
-                        elif request.POST.get('mat_type') == 'my':
-                                sections = set(Section.objects.filter(course=course)).intersection(lecturer.section.all())
-                        elif request.POST.get('mat_type') == 'section':
-                                sections = [Section.objects.get(code=x)for x in request.POST.getlist('mat_section')]
-
-                        for section in sections:
-                                material.section.add(section)
+                        material = Material(name = name, description = description, file = file, pub_date = pub_date, teacher = Teacher.objects.get(user=request.user), count = 0)
                         material.save()
+                        
+                        for section in request.POST.getlist('mat_sections'):
+                                to = Material_To(to = Teacher_Teaches.objects.get(section_id = int(section), teacher__user = request.user), material = material, pub_date = pub_date)
+                                to.save() 
                         success = True
 
         if request.user.is_authenticated():
                 user = request.user
-                if not Lecturer.objects.filter(user=user).exists():
+                if not Teacher.objects.filter(user=user).exists():
                          return redirect('first_login')
-                lecturer = get_object_or_404(Lecturer, user=user)   
-                course = Course.objects.filter(lecturer=lecturer)
-                sections = lecturer.section.get_queryset()
-                quote = Quote.objects.get(id=1)
-                prev = sorted(chain(Announcement.objects.filter(lecturer=lecturer),Material.objects.filter(lecturer=lecturer)),key=attrgetter('pub_date'))
-                context = {'quote':quote,'lecturer':lecturer, 'course':course, 'sections':sections, 'prev':prev, 'success':success}    
+                teacher = get_object_or_404(Teacher, user=user)
+                teachs = Teacher_Teaches.objects.filter(teacher = teacher)
+                prev = sorted(chain(Announcement_To.objects.filter(to__teacher = teacher),Material_To.objects.filter(to__teacher = teacher)),key=attrgetter('pub_date'))
+
+                context = {'lecturer':teacher, 'sections':teachs, 'prev':prev, 'success':success}    
                 return render(request, 'main/portal.html', context) 
         else:
                 return redirect('login')
   
 def first_login(request):
-        if (not(request.user.is_authenticated()) or Lecturer.objects.filter(user=request.user).exists()):
+        if (not(request.user.is_authenticated()) or Teacher.objects.filter(user=request.user).exists()):
                 return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
         if request.method == 'POST':
-                lecturer = Lecturer(title=request.POST['title'], user=request.user, name=request.POST['name'], last_name=request.POST['last_name'], lect_id=request.POST['lect_id'], department=Department.objects.get(id=request.POST['department']))
-                courses = [Course.objects.get(id=x)for x in request.POST.getlist('course')]
-                sections = [Section.objects.get(id=x)for x in request.POST.getlist('section')]
-                lecturer.save()
-                for course in courses:
-                        lecturer.course.add(course)
-                for section in sections:
-                        lecturer.section.add(section)
-                lecturer.save()
+                teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
+                teacher.save()
+                
+                for pair in request.POST.getlist('section-course'):
+                        pair_arr = pair.split('-')
+                        teaches = Teacher_Teaches(teacher = teacher, section = Section.objects.get(id = int(pair_arr[0])), course = Course.objects.get(id = int(pair_arr[1])))
+                        teaches.save()
+
                 user = User.objects.get(username=request.user)
-                user.username = request.POST['lect_id'].lower()
+                user.username = request.POST['email']
                 user.set_password(request.POST['new_password'])
                 user.save()
+                
                 return redirect('login')
         else:
                 departments = Department.objects.all()
                 sections = Section.objects.all()
+                
                 context = {'user':request.user,'departments':departments, 'sections':sections}
                 return render(request,'main/first_login.html',context)
