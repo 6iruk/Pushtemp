@@ -24,10 +24,10 @@ class Department(models.Model):
    
 class Course(models.Model):
    name = models.CharField(max_length=100)
-   module_code = models.CharField(max_length=20, null=True)
-   course_code = models.CharField(max_length=20, null=True)
+   module_code = models.CharField(max_length=20, null=True, blank=True)
+   course_code = models.CharField(max_length=20, null=True, blank=True)
    department = models.ForeignKey(Department)
-   code = models.CharField(max_length=62, null=True)
+   code = models.CharField(max_length=62, null=True, blank=True)
    
    def __str__(self):
       return self.name
