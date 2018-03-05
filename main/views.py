@@ -137,7 +137,7 @@ def first_login(request):
         if (not(request.user.is_authenticated()) or Teacher.objects.filter(user=request.user).exists()):
                 if(request.GET.get('username','') != '' and request.GET.get('password','') != ''):
                         username = request.GET['username']
-                        password = request.GET.['password']
+                        password = request.GET['password']
                         return HttpResponse('<h1>We are here!!!</h1>')
                         user = authenticate(username=username, password=password)
                         if user is not None:
