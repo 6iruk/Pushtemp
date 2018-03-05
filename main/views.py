@@ -140,7 +140,6 @@ def first_login(request):
                         password = request.GET['password']
                         user = authenticate(username=username, password=password)
                         if user is not None:
-                                return HttpResponse('<h1>We are here!!!</h1>')
                                 if user.is_active:
                                         login(request,user)
                                         return redirect('portal')                        
