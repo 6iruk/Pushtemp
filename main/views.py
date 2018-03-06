@@ -145,7 +145,7 @@ def first_login(request):
                                         return redirect('portal')                        
                 return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
         if request.method == 'POST':
-                teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], email = request.POST['staffid'], department = Department.objects.get(id=int(request.POST['department'])))
+                teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], staff_id = request.POST['staffid'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
                 teacher.save()
                 
                 for pair in request.POST.getlist('section-course'):

@@ -58,7 +58,8 @@ class Teacher(models.Model):
    user = models.OneToOneField(User)
    first_name = models.CharField(max_length=50)
    last_name = models.CharField(max_length=50)
-   email = models.EmailField(max_length=254)
+   staff_id = models.CharField(max_length=50, null=True)
+   email = models.EmailField(max_length=254, null=True)
    department = models.ForeignKey(Department)
 
    def __str__(self):
