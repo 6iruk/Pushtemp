@@ -161,7 +161,7 @@ def first_login(request):
                 return redirect('login')
         else:
                 departments = Department.objects.all()
-                sections = Section.objects.all()
+                sections = Section.objects.all().order_by('year')
                 
                 context = {'user':request.user,'departments':departments, 'sections':sections}
                 return render(request,'main/first_login.html',context)
