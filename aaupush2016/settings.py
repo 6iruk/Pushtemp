@@ -25,7 +25,7 @@ SECRET_KEY = '&t_qp-3u+aa!n1j-q8-d6blu(nup^h04_he^u*bm9lnviaj3dx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['http://www.aaupush.com']
+ALLOWED_HOSTS = ['www.aaupush.com']
 
 
 # Application definition
