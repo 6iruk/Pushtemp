@@ -21,13 +21,13 @@ def index(request):
 def courses(request):
         if request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
-                courses = [Section.objects.get(code=x).take for x in request.POST.getlist('sections')]
+                courses = [Section.objects.get(id=int(x)).take for x in request.POST.getlist('sections')]
 
                 if request.GET.get('department'):
-                        courses = courses.filter(department__code=request.GET.get('department'))
+                        courses = courses.filter(department__id=int(request.GET.get('department')))
                         
         elif request.GET.get('department'):
-                courses = Course.objects.filter(department__code=request.GET.get('department'))
+                courses = Course.objects.filter(department__id=int(request.GET.get('department')))
 
         else :
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
@@ -61,13 +61,13 @@ def announcements(request):
         if request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
                 for section_code in section_codes:
-                        section = get_object_or_404(Section, code=section_code)
+                        section = get_object_or_404(Section, id=int(section_code))
                         query.add(Q(to__section=section), Q.OR)
         elif request.GET.get('section_course'):
                 course_section_list = request.GET.get('section_course').split('-')
                 for course_section in course_section_list:
-                        course = get_object_or_404(Course, code=course_section.split(':')[-1])
-                        section = get_object_or_404(Section, code=course_section.split(':')[0])
+                        course = get_object_or_404(Course, id=int(course_section.split(':')[-1]))
+                        section = get_object_or_404(Section, id=int(course_section.split(':')[0]))
                         query.add(Q(to__section=section,to__course=course), Q.OR)
         else:
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
@@ -109,13 +109,13 @@ def materials(request):
         if request.GET.get('section_course'):
                 course_section_list = request.GET.get('section_course').split('-')
                 for course_section in course_section_list:
-                        course = get_object_or_404(Course, code=course_section.split(':')[-1])
-                        section = get_object_or_404(Section, code=course_section.split(':')[0])
+                        course = get_object_or_404(Course, id=int(course_section.split(':')[-1]))
+                        section = get_object_or_404(Section, id=int(course_section.split(':')[0]))
                         query.add(Q(to__section=section,to__course=course),Q.OR)
         elif request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
                 for section_code in section_codes:
-                        section = get_object_or_404(Section, code = section_code)
+                        section = get_object_or_404(Section, id = int(section_code))
                         query.add(Q(to__section=section),Q.OR)
         else:
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
@@ -165,7 +165,7 @@ def section_exists(request):
 
 def sections(request):
         if request.GET.get('department'):
-                department = get_object_or_404(StudyField, pk=int(request.GET.get('department')))
+                department = get_object_or_404(StudyField, id=int(request.GET.get('department')))
                 sections = Section.objects.filter(department = department)
         else:
                 sections = Section.objects.all()        
