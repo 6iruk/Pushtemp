@@ -21,7 +21,7 @@ def index(request):
 def courses(request):
         if request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
-                courses = [Section.objects.get(id=int(x)).take for x in section_codes]
+                courses = [Section.objects.get(id=int(x)).take.all() for x in section_codes]
 
                 if request.GET.get('department'):
                         courses = courses.filter(department__id=int(request.GET.get('department')))
