@@ -87,8 +87,8 @@ def announcements(request):
                 output += "\"id\":" + str(announcement.id) + ","
                 output += "\"message\":" + "\"" + announcement.announcement.message + "\"" + ","
                 output += "\"lecturer_name\":" + "\"" + announcement.to.teacher + "\"" + ","
-                output += "\"pub_date\":" + "\"" + str(announcement.announcement.pub_date) + "\"" + ","
-                output += "\"exp_date\":" + "\"" + str(announcement.announcement.exp_date) + "\"" + ","
+                output += "\"pub_date\":" + str(announcement.announcement.pub_date) + ","
+                output += "\"exp_date\":" + str(announcement.announcement.exp_date) + ","
                 output += "},"
 
         # remove the last list separator comma
@@ -165,7 +165,7 @@ def section_exists(request):
 
 def sections(request):
         if request.GET.get('department'):
-                department = get_object_or_404(StudyField, id=int(request.GET.get('department')))
+                department = get_object_or_404(Department, id=int(request.GET.get('department')))
                 sections = Section.objects.filter(department = department)
         else:
                 sections = Section.objects.all()        
@@ -177,7 +177,7 @@ def sections(request):
         for section in sections:
                 output += "{"
                 output += "\"id\":" + str(section.id) + ","
-                output += "\"code\":" + section.code
+                output += "\"code\":" + "\"" + section.code + "\""
                 output += "},"
 
         # remove the last list separator comma
