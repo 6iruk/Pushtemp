@@ -19,14 +19,16 @@ def index(request):
         return HttpResponse("Welcome to aau push APIs.")
 
 def courses(request):
+        if request.GET.get('sections') and request.GET.get('department'):
+                section_codes = request.GET.get('sections').split('-')
+                courses_list = [Section.objects.get(id=int(x)).take.all().filter(department__id = int(request.GET.get('department'))) for x in section_codes]
+                courses = [y for x in courses_list for y in x]                
+                
         if request.GET.get('sections'):
                 section_codes = request.GET.get('sections').split('-')
                 courses_list = [Section.objects.get(id=int(x)).take.all() for x in section_codes]
                 courses = [y for x in courses_list for y in x]
-                
-                if request.GET.get('department'):
-                        courses = courses.filter(department__id=int(request.GET.get('department')))
-                        
+
         elif request.GET.get('department'):
                 courses = Course.objects.filter(department__id=int(request.GET.get('department')))
 
