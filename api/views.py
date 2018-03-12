@@ -77,9 +77,9 @@ def announcements(request):
 
         # Apply filter
         if request.GET.get('id'):
-                announcements = Announcement_To.objects.filter(id__gt=int(request.GET.get('id'))).filter(query).order_by('announcement.pub_date').distinct()
+                announcements = Announcement_To.objects.filter(id__gt=int(request.GET.get('id'))).filter(query).order_by('announcement__pub_date').distinct()
         else:
-                announcements = Announcement_To.objects.filter(query).order_by('announcement.pub_date').distinct()
+                announcements = Announcement_To.objects.filter(query).order_by('announcement__pub_date').distinct()
 
         #JSON output
         #Start json array
