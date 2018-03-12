@@ -125,9 +125,9 @@ def materials(request):
 
         #Apply filter
         if request.GET.get('id'):
-                materials = Material_To.objects.filter(id__gt=int(request.GET.get('id'))).filter(query).order_by('material.pub_date').distinct()
+                materials = Material_To.objects.filter(id__gt=int(request.GET.get('id'))).filter(query).order_by('material__pub_date').distinct()
         else:
-                materials = Material_To.objects.filter(query).order_by('material.pub_date').distinct()
+                materials = Material_To.objects.filter(query).order_by('material__pub_date').distinct()
 
         #JSON output
         #Start json array
