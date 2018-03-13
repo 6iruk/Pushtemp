@@ -91,7 +91,7 @@ def announcements(request):
                 output += "\"message\":" + "\"" + announcement.announcement.message + "\"" + ","
                 output += "\"lecturer_name\":" + "\"" + announcement.to.teacher.title + " " + announcement.to.teacher.first_name + "\"" + ","
                 output += "\"pub_date\":" + "\"" + str(announcement.announcement.pub_date) + "\"" + ","
-                output += "\"exp_date\":" + "\"" + str(announcement.announcement.exp_date) + "\"" + ","
+                output += "\"exp_date\":" + "\"" + str(announcement.announcement.exp_date) + "\""
                 output += "},"
 
         # remove the last list separator comma
