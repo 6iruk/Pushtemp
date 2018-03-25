@@ -13,4 +13,5 @@ urlpatterns = [
 	url(r'^sections', views.sections, name="sections"),
         url(r'^email_exists', views.email_exists, name="email_exists"),
         url(r'^get_courses', views.get_courses, name="get_courses"),
+        url(r'^get_latest_app_version', views.get_latest_app_version, name="get_latest_app_version"),
 ]
