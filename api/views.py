@@ -256,3 +256,13 @@ def get_courses(request):
                 return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")        
 
         return HttpResponse(output, content_type='application/json')
+
+def get_latest_app_version(request):
+        
+        #JSON output
+        #Start json array
+        output = "{"        
+
+        output += " \"version\": 1.2 }"
+        
+        return HttpResponse(output, content_type='application/json')
