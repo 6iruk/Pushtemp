@@ -263,6 +263,7 @@ def get_latest_app_version(request):
         #Start json array
         output = "{"        
 
-        output += " \"version\": 1.2 }"
+        output += " \"version_name\": \"1.03\" ,"
+        output += " \"version_code\": 9 }"
         
         return HttpResponse(output, content_type='application/json')
