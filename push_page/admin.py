@@ -3,7 +3,7 @@ from .models import *
 
 # Register your models here.
 
-models = {ContactInfo,PushPage}
+models = {PushPage,Post,Picture}
 
 for model in models:
     admin.site.register(model)

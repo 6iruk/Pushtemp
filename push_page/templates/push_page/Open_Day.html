@@ -1,0 +1,29 @@
+<!DOCTYPE html>	
+    <head>
+     <title></title>
+     
+     <style>
+
+     </style>
+
+    </head>   
+   
+   
+    <body>
+	<h3>How to get posts and pictures for this page</h3>
+	<h4>page.post_set.all --> posts for that page</h4>
+	<h4>post.picture_set.all --> pictures for that post</h4>
+	
+	{{page.event}}
+	<br>
+	{% for post in page.post_set.all %}
+		{{post.content}}
+		<br>
+		{% for picture in post.picture_set.all %}
+			<img src="{{picture.image.url}}" width=500 height=500>
+		{% endfor %}
+	{% endfor %}
+
+    </body>
+ 
+</html>

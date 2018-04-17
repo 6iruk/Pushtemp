@@ -3,8 +3,9 @@ from .models import *
 
 # Create your views here.
 
-def Push_Page(request,quick_page):
-    archives = PushPage.objects.all()
-    page = PushPage.objects.get(id=quick_page)
-    context = {'page':page,'archives':archives}
-    return render(request,'push_page/Push_Page.html',context)
+def Push_Page(request,push_page):
+    page = PushPage.objects.get(event=push_page)
+    page_template = page.template
+    
+    context = {'page':page}
+    return render(request,'push_page/%s'%page_template,context)
