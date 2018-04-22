@@ -10,6 +10,17 @@
             padding: 8px 0;
             border: 0px;
         }
+		
+		#open-day-poster {
+			border:solid 1px #326929;
+			background-color:#F4F4F4;
+			padding:20px;
+		}
+		
+		#poster-image {
+			border:solid 1px #464646;
+			box-shadow: -4px 7px 5px 1px;
+		}
     </style>
 {% endblock %}
 
@@ -38,20 +49,11 @@
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-5">
-                <h1 class="title">The Android App out!</h1>
-                <div class="row">
-                    <div class="col-md-6">
-                        {% load static %}
-                        <a href="{% static 'Push/AAUPush_v1.apk' %}" class="subtitle link">Direct Download</a>
-                        <div class="spacer2"></div>
-                        <p class="detail">Stay up to date. <br> It's simple, it's a life saver.<br><br> Get notifications the second you get online. Add the extra courses you are taking. Save PDFs and files directly to your phone.</p>
-                        <div class="spacer2"></div>
-                    </div>
-                    <div class="col-md-6">
-                        {% load static %}
-                        <img src="{% static 'main/app-preview1.png' %}" width="100%">
-                    </div>
+				<div id="open-day-poster">
+                {% load static %}
+                <img id="poster-image" width=100% src="{% static 'main/open_day.jpg' %}">
                 </div>
+                <h4>Submit your work through this <a href="https://goo.gl/forms/wG49096p7AbS0Rh82">application form</a>.</h4>
             </div>
         </div>
     </div>
