@@ -10,17 +10,6 @@
             padding: 8px 0;
             border: 0px;
         }
-		
-		#open-day-poster {
-			border:solid 1px #326929;
-			background-color:#F4F4F4;
-			padding:20px;
-		}
-		
-		#poster-image {
-			border:solid 1px #464646;
-			box-shadow: -4px 7px 5px 1px;
-		}
     </style>
 {% endblock %}
 
@@ -49,11 +38,13 @@
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-5">
-				<div id="open-day-poster">
+                <h1 class="title">Get inspired!</h1>
                 {% load static %}
-                <img id="poster-image" width=100% src="{% static 'main/open_day.jpg' %}">
-                </div>
-                <h4>Submit your work through this <a href="https://goo.gl/forms/wG49096p7AbS0Rh82">application form</a>.</h4>
+                <img src="{% static 'main/openday.jpg' %}" width="100%">
+                <div class="spacer2"></div>
+                <p class="detail"> The Department of Computer Science is having a “Computer Science Open Day Event” during the Research Week of AAU.
+                    Our aim is to increase & enhance exposure of works done by students of our department.
+                    Di erent attendees from the computer-related industry and media will be attending the event.</p>
             </div>
         </div>
     </div>
