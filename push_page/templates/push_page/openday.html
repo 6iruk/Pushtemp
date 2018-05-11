@@ -1,0 +1,94 @@
+{% extends "push_page/base.html" %}
+
+{% block title %}
+	<title>{{page.event}} - Push Page</title>
+{% endblock %}
+
+{% block style %}
+  {% load static %}
+  <style>
+
+    body {
+        background: rgb(253, 253, 253);
+    }
+	.navigation{
+        background-image: url("{% static 'Push_Page/04.jpg' %}");
+        height: 140px;
+    }
+
+    .whitebg {
+        background: white;
+    }
+
+    .white {
+        color: white;
+    }
+
+    div.img {
+        margin: 5px;
+        width: 300px;
+    }
+
+    div.img img {
+        width: 100%;
+        height: auto;
+    }
+
+    div.desc {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .shadow {
+        box-shadow: 1px 1px 5px grey;
+    }
+
+    .align-left {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    @media screen and (max-width: 480px){
+        div.img {
+        width: 100%;
+    }
+    }
+  </style>
+{% endblock %}
+
+{% block header %}
+  <p class="white title">{{page.event}}</p>
+  <p class="white detail">Live Updates</p>
+{% endblock %}
+
+{% block content %}
+    {% for post in page.post_set.all %}
+        <div class="shadow whitebg">
+            <div class="container-fluid push-container">
+                <div class="spacer2"></div>
+                <div class="flex-container align-left">
+                        {% for picture in post.picture_set.all %}
+                            <div class="img">
+                                <a target="_blank" href="{{picture.image.url}}">
+                                    <img src="{{picture.image.url}}" width="500" height="500">
+                                </a>
+                                {% if picture.description %}
+                                    <div class="desc">{{picture.description}}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                </div>
+                <div class="spacer2"></div>
+                <div>
+                    <p class="detail">{{post.content}}</p>
+                    <p class="meta">{{post.pub_date}}</p>
+                </div>
+                </div>
+                <div class="spacer2"></div>
+            </div>
+            <div class="spacer2"></div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

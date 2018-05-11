@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from itertools import chain
 from operator import attrgetter
 from main.models import *
+from main.models import Section as main_section
 from push_page.models import *
 from main.forms import Lecturerform
 from django.contrib.auth import authenticate, login, logout
@@ -10,12 +11,25 @@ from django.utils import timezone
 from django.core import serializers
 import datetime, zipfile, io
 import os
+import sendgrid
+from sendgrid.helpers.mail import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def index(request):
-        sections = Section.objects.filter(department__code='AAU4k-CoSc').order_by('year','number')
+        sections = main_section.objects.filter(department__code='AAU4k-CoSc').order_by('year','number')
 
+##        sg = sendgrid.SendGridAPIClient(apikey="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")
+##        from_email = Email("AAU Push <aaupush@gmail.com>")
+##        to_email = Email("genioaddis@gmail.com")
+##        subject = "Sending with SendGrid is Fun"
+##        content = Content("text/plain", "and easy to do anywhere, even with Python")
+##        mail = Mail(from_email, subject, to_email, content)
+##        response = sg.client.mail.send.post(request_body=mail.get())
+##        print(response.status_code)
+##        print(response.body)
+##        print(response.headers)
+        
         context = {'sections':sections}
         return render(request, 'main/index.html',context)
 
@@ -165,3 +179,5 @@ def first_login(request):
                 
                 context = {'user':request.user,'departments':departments, 'sections':sections}
                 return render(request,'main/first_login.html',context)
+def forgot_password(request):
+        return render(request,'main/forgot_password.html')

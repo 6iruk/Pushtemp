@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+	<head>		
+        {% block title %}{% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{% static 'main/push.css' %}">
+        {% block style %}{% endblock %}
+    </head>
+
+    <body>
+        
+        <div class="navigation">
+            <div class="flex-container push-container">
+                {% block header %}{% endblock %}
+            </div>
+        </div>
+        <div class="spacer2"></div>
+        {% block content %}
+        {% endblock %}
+        <div class="container-fluid push-container">
+            <div class="row footer">
+                <div class="col-md-12">
+                    <div class="spacer2"></div>
+                    {% load static %}
+                    <a href="{% url 'Home' %}" class="meta link">Back to Push</a>
+                    <div class="spacer1"></div>
+                </div>
+            </div>
+        </div>
+        {% block script %}{% endblock %}
+    </body>
+</html>
