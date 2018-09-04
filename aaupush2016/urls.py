@@ -21,13 +21,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     url(r'^$' ,views.index, name='Home'),
-    url(r'^section/', include('main.urls')),
-    url(r'^file/(?P<material_id>[0-9a-zA-Z]+)/$',views.file_request, name='File'),
-    url(r'^forgot_password/$',views.forgot_password, name='forgot_password'),
-    url(r'^login/$',views.login_view, name='login'),
-    url(r'^portal/$',views.portal, name='portal'),
-    url(r'^first_login/$',views.first_login, name='first_login'),
+    # url(r'^section/', include('main.urls')),
+    # url(r'^file/(?P<material_id>[0-9a-zA-Z]+)/$',views.file_request, name='File'),
+    # url(r'^forgot_password/$',views.forgot_password, name='forgot_password'),
+    # url(r'^login/$',views.login_view, name='login'),
+    # url(r'^portal/$',views.portal, name='portal'),
+    # url(r'^first_login/$',views.first_login, name='first_login'),
     url(r'^Push_Page/', include('push_page.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('api.urls')),
+    url(r'^json/', include('api.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

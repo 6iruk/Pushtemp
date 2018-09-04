@@ -8,27 +8,27 @@
         <link rel="stylesheet" href="{% static 'main/custom_portal.css ' %}">
  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
- 		
-		<script> 
+
+		<script>
 			function myFunction(name){
   				var $checkbox = document.getElementsByName(name), $checked=0;
-  		
+
   				for(var i=0; i < $checkbox.length; i++){
 	    					if($checkbox[i].checked){
 							$checked++; }
 	  			}
-		
+
 				if($checked > 0){
-					for (var i = 0; i < $checkbox.length; i++){ 
+					for (var i = 0; i < $checkbox.length; i++){
 		    				$checkbox[i].required = false; }
-		 		}	
-		 
+		 		}
+
 		 		else{
 				 	for (var i = 0; i < $checkbox.length; i++){
 			 				$checkbox[i].required = true;}
 			 	}
 			}
-		
+
 			function myotherFunction(enable,disable){
  				var $enable = document.getElementsByName(enable),
 		 		$disable = document.getElementsByName(disable);
@@ -37,7 +37,7 @@
 		 				$enable[i].disabled = false;
 			 			$enable[i].required = true;
 				}
-				
+
 				for(var i=0; i < $disable.length; i++){
 		 				$disable[i].disabled = true;
 		 				$disable[i].checked = false;
@@ -45,95 +45,95 @@
 			}
 			function prev_click(){
  				var $link = document.getElementById("show");
-				
+
 				if($link.innerHTML == "Show more"){
-					$link.innerHTML = "Show less"	
+					$link.innerHTML = "Show less"
 				}
 				else{
-					$link.innerHTML = "Show more"	
+					$link.innerHTML = "Show more"
 				}
-			}				
+			}
 		</script>
-        
+
  		<style>
 				@font-face {
 					font-family:proxima-nova;
-					src:url(/static/main/Regular.otf);	
+					src:url(/static/main/Regular.otf);
 				}
-			
+
 				@font-face {
 					font-family:proxima-nova-light;
-					src:url(/static/main/Light.otf);	
+					src:url(/static/main/Light.otf);
 				}
-				
+
 				html {
 					min-height:100%;
-					position:relative;	
+					position:relative;
 				}
-				
+
 				body {
 					height:100%;
-					font-family:proxima-nova;	
+					font-family:proxima-nova;
 				}
-				
+
 				#greeting {
-					font-family:proxima-nova-light;	
+					font-family:proxima-nova-light;
 				}
-				
+
 				q {
 		      		font-family: Copperplate, Papyrus;
 		      		font-size: 1.5rem;
 		      	}
-				
+
 				a {
 					text-decoration:none;
 		      		color:#4480b7;
-				} 
-								
+				}
+
 				#header {
 					position:relative;
 					background-color:rgba(68,128,183,1);
 
-					box-shadow:0px 1px 3px #081D33;	
+					box-shadow:0px 1px 3px #081D33;
 				}
-				
+
 				#header-logo-container {
 					width:80%;
 					margin-left:auto;
-					margin-right:auto;	
+					margin-right:auto;
 				}
-					
+
 				#header-logo {
 					width:12%;
 					height:150px;
 					margin-right:auto;
 				}
-				
+
 				#logout {
 					position:absolute;
 					top:5px;
-					right:10px;						
+					right:10px;
 				}
-				
+
 				#logout > .btn {
-					color:#FFFBF0;	
+					color:#FFFBF0;
 				}
-				
+
 				#logout > .btn:hover {
-					color:#804040;	
+					color:#804040;
 				}
-						
+
 				#content {
 					position:relative;
 					width:100%;
 					height:100%;
 					margin-bottom:150px;
 				}
-				
+
 				li a {
-					
+
 				}
-					
+
 				.tab-content {
 					background-color:#eee;
 					border-style:solid;
@@ -141,43 +141,43 @@
 					border-color:#ddd;
 					border-top-style:solid;
 					border-top-width:0px;
-					border-top-color:#FFF;			
+					border-top-color:#FFF;
 					padding:15px;
 				}
-					
+
 				#help {
 					margin-top:20px;
 					opacity:0.8;
-					font-size:0.9rem;	
+					font-size:0.9rem;
 				}
-				
+
 				#footer {
 					width:100%;
 					position:absolute;
 					bottom:0px;
 				}
-					
+
 		</style>
 	</head>
-    
+
 	<body style="margin:0px;">
  	{% load static %}
  	<div id="header">
     	{% load static %}
         <div id="header-logo-container">
-    		<div id="header-logo" style="background-image:url({% static 'main/Logo-03.svg' %});">			
-        	
-            </div>    	
-        </div>	
-        
+    		<div id="header-logo" style="background-image:url({% static 'main/Logo-03.svg' %});">
+
+            </div>
+        </div>
+
  	 	<form  id="logout" action="{% url 'portal' %}" method='post' >
 			{% csrf_token %}
 			<input type="hidden" name="request_type" value='Logout'/>
 			<input class="btn btn-link btn-md" type="submit" name='logout' value='Logout'/>
 		</form>
-        
+
  	</div>
-    
+
     <div id="content">
     	<div class="container">
   			<h3 id="greeting" style="text-align:center;">Welcome, {{lecturer.title}} {{lecturer.first_name}}</h3>
@@ -187,21 +187,21 @@
             		<h4 class="text-center"><b>Success!</b></h4>
            		</div>
         	{% endif %}
-        
+
         	<ul class="nav nav-tabs">
         		<li class="active"><a data-toggle="tab" href="#post">Post an announcement</a></li>
             	<li><a data-toggle="tab" href="#upload">Upload a material</a></li>
-            	<li><a data-toggle="tab" href="#track">Tracker</a></li>        
+            	<li><a data-toggle="tab" href="#track">Tracker</a></li>
         	</ul>
-        
-            <div class="tab-content">            	
+
+            <div class="tab-content">
                 <div id="post" class="tab-pane active">
   					<button type="button" class="btn btn-link btn-md" data-toggle="modal" data-target="#myModal" style="float:right;">Watch a video on how to post an announcement.</button>
 
   					<!-- Modal -->
   					<div class="modal fade" id="myModal" role="dialog">
     				<div class="modal-dialog">
-    
+
      				<!-- Modal content-->
   				    <div class="modal-content">
   			    	<div class="modal-header">
@@ -212,7 +212,7 @@
          			 <iframe width="560" height="315" src="https://www.youtube.com/embed/RGZyqawMAp0?rel=0" frameborder="0" allowfullscreen></iframe>
        				 </div>
      				 </div>
-      
+
     				 </div>
   				     </div>
                         <form enctype='multipart/form-data' action="{% url 'portal' %}" method='post'>
@@ -222,28 +222,28 @@
                                 <label class="control-label" for="message">Enter announcement:</label>
                                 <textarea id="message" class="form-control" name="message" rows="5" cols="10" required></textarea>
                             </div>
-                            
+
                             <div class="form-group">
                                 <p>This announcement should expire in <input name="duration" type="number" required/>&nbsp;days from now</p>
                             </div>
-                        
+
                             <p class="lead">Post announcement for:</p>
                                 <div id="section-check" style="padding-bottom:10px;">
-                                    {% for section in sections %} 
+                                    {% for section in sections %}
                                         <label class="checkbox-inline"><input type="checkbox" name='sections' value="{{section.section.id}}" onchange="myFunction('sections')" required="required">Year&nbsp;{{section.section.year}}&nbsp;Section&nbsp;{{section.section.number}}</label>
                                     {% endfor %}
-                                </div>                                                                    
+                                </div>
                             <input class="btn btn-primary" type='submit' value='Post Announcement'/>
-                        </form>              	
+                        </form>
                 </div>
-                
+
                 <div id="upload" class="tab-pane">
   					<button type="button" class="btn btn-link btn-md" data-toggle="modal" data-target="#Modal-upload" style="float:right;">Watch a video on how to upload a material.</button>
 
   					<!-- Modal -->
   					<div class="modal fade" id="Modal-upload" role="dialog">
     				<div class="modal-dialog">
-    
+
      				<!-- Modal content-->
   				    <div class="modal-content">
   			    	<div class="modal-header">
@@ -254,7 +254,7 @@
          			 <iframe width="560" height="315" src="https://www.youtube.com/embed/oMaOfwC5krM?rel=0" frameborder="0" allowfullscreen></iframe>
        				 </div>
      				 </div>
-      
+
     				 </div>
   				     </div>
                         <form enctype='multipart/form-data' action="{% url 'portal' %}" method="post">
@@ -264,34 +264,34 @@
                                 <label class="control-label" for="name">Enter file name:</label>
                                 <input id="name" class="form-control" type='text' name='name' required/>
                             </div>
-                        
+
                             <div class="form-group">
                                 <label class="control-label" for="file-data">Choose file:</label>
                                 <input id="file_data" type='file' name='file_data' style="padding-left:2%" required/>
                             </div>
-                        
+
                             <div class="form-group">
                                 <label class="control-label" for="description">Write short description</label>
                                 <textarea id="description" class="form-control" name='description' rows="3" cols="50" required/></textarea>
                             </div>
-                        
-                            <p class="lead">Upload Material For:</p>           
+
+                            <p class="lead">Upload Material For:</p>
                                 <div id="section-check-mat" style="padding-bottom:10px;">
                                     {% for section in sections%}
                                             <label class="checkbox-inline"><input name="mat_sections" type="checkbox" value="{{section.section.id}}"  onchange="myFunction('mat_sections')" required="required"/>Year&nbsp;{{section.section.year}}&nbsp;Section&nbsp;{{section.section.number}}</label>
                                     {%endfor%}
-                                </div>                                                                     
+                                </div>
                             <input class="btn btn-primary" type='submit' value='Upload Material'/>
-                        </form>            
+                        </form>
                 </div>
-                
+
                 <div id="track" class="tab-pane">
                        {% for pre in prev reversed %}
                        		{% if pre.announcement %}
                                 <div class="media">
                                     <div class="media-body">
                                         <h5 class="media-heading">{{pre.announcement.count}} views</h5>
-                                        <p>{{pre.announcement.message}}</p>
+                                        <textarea id="message" class="form-control" name="message" cols="10" disabled>{{pre.announcement.message}}</textarea>
                                         <h5><small>Posted on {{pre.announcement.pub_date}}</small></h5>
                                     </div>
                                 </div>
@@ -302,19 +302,19 @@
                                         <p>{{pre.material.name}}&nbsp;&nbsp;[.{{pre.material.ext}}}</p>
                                         <h5><small>Uploaded on {{pre.material.pub_date}}</small></h5>
                                     </div>
-                                </div>                            
+                                </div>
                             {% endif %}
                         {% empty %}
-                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced or posted anything {{lecturer.title}}{{lecturer.first_name}},<h4 class="text-center">Say something to your students.</h4></h4>                         
-                       {% endfor %}                  		            
-                </div>                
+                        <h2 class="text-center"><span class="glyphicon glyphicon-list-alt" style="opacity:0.05;"></span><h4 class="text-center">You haven't announced or posted anything {{lecturer.title}}{{lecturer.first_name}},<h4 class="text-center">Say something to your students.</h4></h4>
+                       {% endfor %}
+                </div>
             </div>
     	</div>
     </div>
-    
+
     <div id="footer" class="text-center">
         <P id="help"><span class="glyphicon glyphicon-copyright-mark cr"></span> AAU Push 2017 - If there are any problems(even minor ones) or if you have any feedbacks, please contact Addis 0913350082.</P>
     </div>
-	
+
     </body>
 </html>
