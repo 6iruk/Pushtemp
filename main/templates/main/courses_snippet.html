@@ -1,8 +1,0 @@
-<div class={{class}}>
-        <h1 class="title">Courses</h1>
-        <div class="spacer2"></div>
-        {% for course in courses %}
-            <a class="detail link" href="{% url 'course_view' section.code course.get_link_name %}">{{course.name | capfirst}}</a>
-            <div class="spacer1"></div>
-        {% endfor %}
-    </div>

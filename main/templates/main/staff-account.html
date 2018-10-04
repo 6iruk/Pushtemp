@@ -1,0 +1,405 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+<title>Your Account</title>
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/staff-account.css' %}">
+{% endblock %}
+
+{% block side_nav %}
+<div id="side-nav">
+	<div class="side-nav-sections">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Post"/>
+	</div>
+
+	<div class="side-nav-sections">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Tracker"/>
+	</div>
+
+	<div class="side-nav-sections">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Group Chat"/>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	<div class="spacer_50px"></div>
+
+	<div id="news">
+
+	</div>
+
+	<div id="post-form">
+		<form method="post">
+		<div id="post-header">
+			<div id="header-left">
+				<div class="header-left">
+					<h3>Post</h3>
+				</div>
+			</div>
+
+			<div class="vertical-line-in"></div>
+
+			<div id="header-right">
+				<div class="header-left">
+					<h3>Recipient</h3>
+				</div>
+			</div>
+		</div>
+
+		<div id="post-info">
+			<div id="post-data">
+				<div class="division-line">
+					<hr>
+				</div>
+
+				<div id="post-content">
+					<textarea name="post-content" placeholder="Write your message here..."></textarea>
+				</div>
+
+				<div id="images-header">
+					<h4>Any images you want to attach?</h4>
+				</div>
+
+				<div id="post-images">
+					<div class="image">
+						<div class="image-preview">
+							<h1>+</h1>
+						</div>
+
+						<input name="image-1" type="file" accept="image/*" hidden/>
+					</div>
+
+					<div class="image">
+						<div class="image-preview">
+							<h1>+</h1>
+						</div>
+
+						<input name="image-2" type="file" accept="image/*" hidden/>
+					</div>
+				</div>
+
+				<div id="files-header">
+					<h4>How about files?</h4>
+				</div>
+
+				<div id="post-files">
+					<div class="file">
+						<div class="file-name">
+							<input name="file-name-1" type="text"/>
+						</div>
+
+						<div class="file-data">
+							<input name="file-1" type="file"/>
+						</div>
+					</div>
+
+					<div class="file">
+						<div class="file-name">
+							<input name="file-name-2" type="text"/>
+						</div>
+
+						<div class="file-data">
+							<input name="file-2" type="file"/>
+						</div>
+					</div>
+
+					<div class="file">
+						<div class="file-name">
+							<input name="file-name-3" type="text"/>
+						</div>
+
+						<div class="file-data">
+							<input name="file-3" type="file"/>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="vertical-line-200px"></div>
+
+			<div id="post-recipient">
+				<div class="division-line">
+					<hr>
+				</div>
+
+				{% if staff.get_classes %}
+				<div class="class-recipient">
+					<div class="list-header">
+						<h4>Classes you teach</h4>
+					</div>
+
+					<div class="recipient-list">
+						<div class="dummy-class"><div class="dummy-class"><div class="dummy-class"><div class="dummy-class"><div class="dummy-class"><div class="dummy-class">
+						{% for teaches in staff.get_classes %}
+						{% ifchanged teaches.section.department_in %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="recipient-data">
+							<div class="recipient-selection">
+								<div class="check-box">
+									<input name="dept-{{teaches.section.department_in.id}}" type="checkbox" />
+								</div>
+
+								<div class="drop-down-arrow">
+									<span>></span>
+								</div>
+
+								<div class="recipient-name">
+									{{teaches.section.department_in.name}}
+								</div>
+							</div>
+
+							<div class="recipient-data-hidden">
+								<div class="recipient-list">
+									<div class="recipient-data">
+										<div class="recipient-selection">
+											<div class="check-box">
+												<input name="year-{{teaches.section.department_in.id}}-{{teaches.section.year}}" type="checkbox" />
+											</div>
+
+											<div class="drop-down-arrow">
+												<span>></span>
+											</div>
+
+											<div class="recipient-name">
+												Year&nbsp;{{teaches.section.year}}
+											</div>
+										</div>
+
+										<div class="recipient-data-hidden">
+											<div class="recipient-list">
+												<div class="recipient-data">
+													<div class="recipient-selection">
+														<div class="check-box">
+															<input name="section-{{teaches.section.id}}" type="checkbox" />
+														</div>
+
+														<div class="recipient-name">
+															Section&nbsp;{{teaches.section.section_id}}
+														</div>
+													</div>
+												</div>
+						{% else %}
+						{% ifchanged teaches.section.year %}
+											</div>
+										</div>
+									</div>
+
+									<div class="recipient-data">
+										<div class="recipient-selection">
+											<div class="check-box">
+												<input name="year-{{teaches.section.department_in.id}}-{{teaches.section.year}}" type="checkbox" />
+											</div>
+
+											<div class="drop-down-arrow">
+												<span>></span>
+											</div>
+
+											<div class="recipient-name">
+												Year&nbsp;{{teaches.section.year}}
+											</div>
+										</div>
+
+										<div class="recipient-data-hidden">
+											<div class="recipient-list">
+												<div class="recipient-data">
+													<div class="recipient-selection">
+														<div class="check-box">
+															<input name="section-{{teaches.section.id}}" type="checkbox" />
+														</div>
+
+														<div class="recipient-name">
+															Section&nbsp;{{teaches.section.section_id}}
+														</div>
+													</div>
+												</div>
+												{% endifchanged %}
+												{% endifchanged %}
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endif %}
+
+				<div class="section-recipient">
+					<div class="list-header">
+						<h4>{{staff.department_in.name}}</h4>
+					</div>
+
+					<div class="recipient-list">
+						{% for section in staff.department_in.section_set.all %}
+						{% if forloop.first %}
+									<div class="recipient-data">
+										<div class="recipient-selection">
+											<div class="check-box">
+												<input name="year-{{section.department_in.id}}-{{section.year}}" type="checkbox" />
+											</div>
+
+											<div class="drop-down-arrow">
+												<span>></span>
+											</div>
+
+											<div class="recipient-name">
+												Year&nbsp;{{section.year}}
+											</div>
+										</div>
+
+										<div class="recipient-data-hidden">
+											<div class="recipient-list">
+												<div class="recipient-data">
+													<div class="recipient-selection">
+														<div class="check-box">
+															<input name="section-{{section.id}}" type="checkbox" />
+														</div>
+
+														<div class="recipient-name">
+															Section&nbsp;{{section.section_id}}
+														</div>
+													</div>
+												</div>
+												{% else %}
+												{% ifchanged section.year %}
+											</div>
+										</div>
+									</div>
+
+									<div class="recipient-data">
+										<div class="recipient-selection">
+											<div class="check-box">
+												<input name="year-{{section.department_in.id}}-{{section.year}}" type="checkbox" />
+											</div>
+
+											<div class="drop-down-arrow">
+												<span>></span>
+											</div>
+
+											<div class="recipient-name">
+												Year&nbsp;{{section.year}}
+											</div>
+										</div>
+
+										<div class="recipient-data-hidden">
+											<div class="recipient-list">
+												<div class="recipient-data">
+													<div class="recipient-selection">
+														<div class="check-box">
+															<input name="section-{{section.id}}" type="checkbox" />
+														</div>
+
+														<div class="recipient-name">
+															Section&nbsp;{{section.section_id}}
+														</div>
+													</div>
+												</div>
+												{% else %}
+												<div class="recipient-data">
+													<div class="recipient-selection">
+														<div class="check-box">
+															<input name="section-{{section.id}}" type="checkbox" />
+														</div>
+
+														<div class="recipient-name">
+															Section&nbsp;{{section.section_id}}
+														</div>
+													</div>
+												</div>
+												{% endifchanged %}
+												{% endif %}
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+				<div class="submit">
+					<input type="submit" value="Ok"/>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+
+	<div id="post-tracker" hidden>
+		<div id="post-list">
+			{% for post in posts %}
+			<div class="post-container">
+
+				<div class="post">
+					<div class="post-header">
+						<h4>To {{post.recipients_string}}</h4>
+					</div>
+
+					<div class="post-content">
+						<p>{{post}}</p>
+					</div>
+
+					<div class="post-tracking">
+						<div class="tracking-delivered">
+							{{post.delivered}}
+						</div>
+
+						<div class="tracking-read">
+							{{post.read}}
+						</div>
+					</div>
+				</div>
+
+				<div class="post-detail">
+					<div class="post-detial-header">
+						<h3>Posted to</h3>
+					</div>
+
+					<div class="detail-recipients">
+						{% for recipient in post.post_to_class_set.all %}
+							<div class="recipient">
+								{{recipient.recipient}}
+							</div>
+							{% endfor %}
+						</div>
+
+						<div class="division-line">
+							<hr>
+						</div>
+
+						<div class="detail-files">
+							{% for file in post.files.all %}
+							<div class="file-detail">
+								<div class="file-detail-name">
+									{{file.name}}
+								</div>
+
+								<div class="file-tracking">
+									{{file.downloads}}
+								</div>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+		</div>
+
+
+	</div>
+
+</div>
+{% endblock %}

@@ -16,7 +16,7 @@ def Educational_Institution(request):
 
     #JSON output
     #Start json array
-    output = "[";
+    output = "["
 
     # Loop through every Educational Institution and add them as a json object
     for Institution in models.Educational_Institution.objects.all():
@@ -62,7 +62,7 @@ def Department(request):
     for Department in Departments:
         output += "{"
         output += "\"id\":" + str(Department.id) + ","
-        output += "\"university_in\":" + "\"" + Department.university_in + "\"" + ","
+        output += "\"university_in\":" + "\"" + Department.university_in.name + "\"" + ","
         output += "\"name\":" + "\"" + Department.name + "\"" + ","
         output += "\"field\":" + "\"" + Department.field + "\""
         output += "},"
@@ -85,13 +85,13 @@ def Section(request):
     if request.GET.get('by-educational-institution'):
 
         #Get all sections in that specific Educational Institution(THE 'ID' ATTRIBUTE SHOULD BE SENT/USED TO SPECIFY THE INSTANCE)
-        Sections = models.Section.objects.filter(department__university_in__id = int(request.GET.get('by-educational-institution')))
+        Sections = models.Section.objects.filter(department_in__university_in__id = int(request.GET.get('by-educational-institution')))
 
     #Check if the api request is based on a specific Department
     elif request.GET.get('by-department'):
 
         #Get all sections in that specific Department(THE 'ID' ATTRIBUTE SHOULD BE SENT/USED TO SPECIFY THE INSTANCE)
-        Sections = models.Section.objects.filter(department__id = int(request.GET.get('by-department')))
+        Sections = models.Section.objects.filter(department_in__id = int(request.GET.get('by-department')))
 
     #Get all sections
     else :
@@ -106,18 +106,19 @@ def Section(request):
     for Section in Sections:
         output += "{"
         output += "\"id\":" + str(Section.id) + ","
-        output += "\"department_in\":" + "\"" + Section.department_in + "\"" + ","
+        output += "\"department_in\":" + "\"" + Section.department_in.name + "\"" + ","
         output += "\"year\":" + str(Section.year) + ","
         output += "\"section_id\":" + "\"" + Section.section_id + "\"" + ","
         output += "\"section_takes\":" + "["
 
-        for Course in Section.section_takes:
+        # Loop through every course the section takes and add them as a json object
+        for Course in Section.section_takes.all():
             output += "{"
             output += "\"id\":" + str(Course.id) + ","
             output += "\"name\":" + "\"" + Course.name + "\"" + ","
             output += "\"course_code\":" + "\"" + Course.course_code + "\"" + ","
             output += "\"module_code\":" + "\"" + Course.module_code + "\"" + ","
-            output += "\"given_by\":" + "\"" + Course.given_by + "\""
+            output += "\"given_by\":" + "\"" + Course.given_by.name + "\""
             output += "},"
 
         # remove the last list separator comma
@@ -143,10 +144,10 @@ def Section(request):
 # The GET variables must be used with every request
 def Course(request):
 
-    #Check if the api request is for courses given by that Department
+    #Check if the api request is for courses given by a Department
     if request.GET.get('by-department'):
 
-        #Get all courses given by that specific Department(THE 'ID' ATTRIBUTE SHOULD BE SENT/USED TO SPECIFY THE INSTANCE)
+        #Get all courses given by the Department(THE 'ID' ATTRIBUTE SHOULD BE SENT/USED TO SPECIFY THE INSTANCE)
         Courses = models.Course.objects.filter(given_by__id = int(request.GET.get('by-department')))
 
     #Check if the api request is for courses taken by a student
@@ -155,9 +156,15 @@ def Course(request):
         #Get the student instance of the logged in user/student
         student = models.Student.objects.get(user = request.user)
 
-        #Get all courses taken by a specific student[THE 'ID' ATTRIBUTE ISN'T NEEDED FOR THIS REQUEST, ASSIGN ANY VALUE YOU WANT TO 'by-student']
-        Courses = models.Student_Takes.objects.filter(student = student)
+        #Get the ids of the courses the student takes
+        ids = student.class_in.values_list('course', flat=True)
 
+        #Get all courses taken by a the student[THE 'ID' ATTRIBUTE ISN'T NEEDED FOR THIS REQUEST, ASSIGN ANY VALUE YOU WANT TO 'by-student']
+        Courses = models.Course.objects.filter(pk__in=set(ids))
+
+    #The request wasn't based on department or student, return nothing
+    else:
+        Courses = {}
 
     #JSON output
     #Start json array
@@ -170,7 +177,7 @@ def Course(request):
         output += "\"name\":" + "\"" + Course.name + "\"" + ","
         output += "\"course_code\":" + "\"" + Course.course_code + "\"" + ","
         output += "\"module_code\":" + "\"" + Course.module_code + "\"" + ","
-        output += "\"given_by\":" + "\"" + Course.given_by + "\""
+        output += "\"given_by\":" + "\"" + Course.given_by.name + "\""
         output += "},"
 
     # remove the last list separator comma
@@ -192,7 +199,7 @@ def Post(request):
     student = models.Student.objects.get(user = request.user)
 
     #Get the classes the student takes part in
-    classes_in = models.Student_Takes.objects.filter(student = student)
+    classes_in = student.class_in.all()
 
     #A query to filter posts from Post_To_Class
     query = Q()
@@ -201,7 +208,7 @@ def Post(request):
     for class_in in classes_in:
 
         #Add every class the student takes to the query
-        query.add( Q( post_to = class_in.class_in ), Q.OR )
+        query.add( Q( post_to = class_in ), Q.OR )
 
     #A query to filter posts from Post_To_Section
     query2 = Q()
@@ -210,13 +217,20 @@ def Post(request):
     for section in classes_in:
 
         #Add every section the student is in to the query
-        query2.add( Q( post_to = class_in.class_in.section ), Q.OR )
+        query2.add( Q( post_to = section.section ), Q.OR )
 
-    #Get all the posts and append them using union
-    posts = models.Post_To_Class.objects.filter(query) | models.Post_To_Section.objects.filter(query2) | models.Post_To_Student.objects.filter( post_to = student )
+    #Get class posts
+    posts_to_class = models.Post_To_Class.objects.filter(query).filter( post__id__gt = int(request.GET.get('by-post')))
 
-    #Get Posts with ID greater than the specified Post ID
-    posts = posts.filter( id__gt = int(request.GET.get('by-post')))
+    #Get section posts
+    posts_to_section =  models.Post_To_Section.objects.filter(query2).filter( post__id__gt = int(request.GET.get('by-post')))
+
+    #Get student posts
+    posts_to_student =  models.Post_To_Student.objects.filter( post_to = student ).filter( post__id__gt = int(request.GET.get('by-post')))
+
+    #Get all the posts and append them
+    Posts = list(posts_to_class) + list(posts_to_section) + list(posts_to_student)
+    #sorted_things = sorted(all_things, key=lambda x: x.date)
 
 
     #JSON output
@@ -226,18 +240,18 @@ def Post(request):
     # Loop through every Post and add them as a json object
     for Post in Posts:
         output += "{"
-        output += "\"id\":" + str(Course.id) + ","
-        output += "\"content\":" + "\"" + Post.content + "\"" + ","
+        output += "\"id\":" + str(Post.post.id) + ","
+        output += "\"content\":" + "\"" + Post.post.content + "\"" + ","
 
         #Start json array for Post files
         output += "\"files\":" + "["
 
-        for File in Post.files:
+        for File in Post.post.files.all():
             output += "{"
             output += "\"id\":" + str(File.id) + ","
             output += "\"name\":" + "\"" + File.name + "\"" + ","
             output += "\"extension\":" + "\"" + File.extension + "\"" + ","
-            output += "\"post_by\":" + "\"" + File.post_by + "\""
+            output += "\"post_by\":" + "\"" + File.post_by.__str__() + "\""
             output += "},"
 
         # remove the last list separator comma
@@ -249,10 +263,10 @@ def Post(request):
         #Start json array for Post images
         output += "\"images\":" + "["
 
-        for Image in Post.images:
+        for Image in Post.post.images.all():
             output += "{"
             output += "\"id\":" + str(Image.id) + ","
-            output += "\"post_by\":" + "\"" + Image.post_by + "\""
+            output += "\"post_by\":" + "\"" + Image.post_by.__str__() + "\""
             output += "},"
 
         # remove the last list separator comma
@@ -261,9 +275,9 @@ def Post(request):
         #Close images array
         output += "],"
 
-        output += "\"post_type\":" + "\"" + Post.post_type + "\"" + ","
-        output += "\"post_by\":" + "\"" + Post.post_by + "\"" + ","
-        output += "\"pub_date\":" + str(Post.pub_date)
+        output += "\"post_type\":" + str(Post.post.post_type) + ","
+        output += "\"post_by\":" + "\"" + Post.post.post_by.__str__() + "\"" + ","
+        output += "\"pub_date\":" + str(Post.post.pub_date)
         output += "},"
 
     # remove the last list separator comma
@@ -322,6 +336,26 @@ def Reminder(request):
     output += "]"
 
     return HttpResponse(output, content_type='application/json')
+
+
+
+def login(request):
+
+        if request.GET.get('email'):
+                email = request.GET.get('email')
+        else:
+                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+
+        #JSON output
+        #Start json array
+        output = "{"
+
+        if User.objects.filter(username=email).exists():
+                output += " \"status\":true }"
+        else:
+                output += " \"status\":false }"
+
+        return HttpResponse(output, content_type='application/json')
 
 
 

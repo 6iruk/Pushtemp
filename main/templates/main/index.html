@@ -1,52 +1,64 @@
-{% extends "main/base.html" %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Welcome to Push</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% load static %}
+		<link rel="stylesheet" href="{% static 'main/index.css' %}">
+	</head>
 
-{% block title %}
-	<title>AAU Push</title>
-{% endblock %}
+	<body>
+		<div id="container">
+			<div id="header">
+				<div id="header-logo">
+					{% load static %}
+					<img width=60px src="{% static 'main/White-Logo.svg' %}" alt="Logo"/>
+				</div>
 
-{% block style %}
-    <style>
-        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-            padding: 8px 0;
-            border: 0px;
-        }
-    </style>
-{% endblock %}
+				<div id="header-login">
+					<a><button type="button">Log In</button></a>
 
-{% block extra %} <a class="meta link btn btn-default hidden-xs" href="{% url 'login' %}">Teacher's Login</a> {% endblock %}
+					<p>or</p>
 
-{% block content %}
+					<hr>
 
-    <div class="container-fluid push-container">
-        <div class="row">
-            <div class="col-md-6"> 
-                <h1 class="title">Computer Science Department</h1>
-                <p class="detail"> Click on your section to proceed.</p>
-                <div class="spacer2"></div>
-                <table class="table table-striped">
-                    <tr>
-                    {% for section in sections %}
-                        {% ifchanged section.year %}
-                            </tr><tr>
-                            <td class="detail">Year {{section.year}}</td>	
-                        {% endifchanged %}
-                        <td><a class="detail link" href="{% url 'Section' section.code%}">Section {{section.number}}</a></td>
-                    {%endfor%}
-                    </tr>
-                </table>
-                <hr class="hidden-md hidden-lg">
-            </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-5">
-                <h1 class="title">Get inspired!</h1>
-                {% load static %}
-                <img src="{% static 'main/openday.jpg' %}" width="100%">
-                <div class="spacer2"></div>
-                <p class="detail"> The Department of Computer Science is having a “Computer Science Open Day Event” during the Research Week of AAU.
-                    Our aim is to increase & enhance exposure of works done by students of our department.
-                    Di erent attendees from the computer-related industry and media will be attending the event.</p>
-            </div>
-        </div>
-    </div>
+					<a href="#"><button type="button">Sign Up For Students</button></a>
+				</div>
+			</div>
 
-{% endblock %}
+			<div id="content">
+				<div id="content-top">
+					<div id="content-push">
+						<p>A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.</p>
+					</div>
+
+					<div id="content-stat">
+						<h3>124</h3>
+						<h3>Posts</h3>
+
+						<h3>74</h3>
+						<h3>Files</h3>
+					</div>
+				</div>
+
+				<hr>
+
+				<div id="content-bottom">
+					<div id="content-vision">
+						<p>A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.</p>
+					</div>
+
+					<hr>
+
+					<div id="content-contribute">
+						<p>A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.</p>
+					</div>
+				</div>
+			</div>
+
+			<div id="footer">
+
+			</div>
+		</div>
+	</body>
+</html>

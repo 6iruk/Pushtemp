@@ -1,39 +1,53 @@
 <!DOCTYPE html>
-{% load static %}
-
 <html>
-	<head>		
+
+	<head>
         {% block title %}{% endblock %}
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="{% static 'main/push.css' %}">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
         {% block style %}{% endblock %}
-    </head>
+	</head>
 
-    <body>
-        
-        <div class="navigation">
-            <div class="flex-container push-container">
-                <div><a href="{% url 'Home' %}"><img width=60px src="{% static 'main/White-Logo.svg' %}"></a></div>
-                <div><span style="color:white">{% block extra %}{% endblock %}</span></div> 
-            </div>
-        </div>
-        <div class="spacer2"></div>
-        {% block content %}
-        {% endblock %}
-        <div class="container-fluid push-container">
-            <div class="row footer">
-                <div class="col-md-12">
-                    <div class="spacer2"></div>
-                    {% load static %}
-                    <a href="{% static 'Push/AAUPush_v1.apk' %}" class="meta link">Android App</a> <span> - </span>
-                    <a href="#" class="meta link">Send Feedback</a> <span> - </span>
-                    <a href="{% url 'login' %}" class="meta link">Teacher's Login</a>
-                    <div class="spacer1"></div>
-                </div>
-            </div>
-        </div>
-        {% block script %}{% endblock %}
-    </body>
+
+  <body>
+				<div id="app">
+					<div id="header">
+						<div id="header-content">
+							<div id="header-logo">
+								{% load static %}
+								<a href="{% url 'Home' %}"><img width=60px src="{% static 'main/White-Logo.svg' %}" alt="Home Page"/></a>
+							</div>
+						</div>
+					</div>
+
+					{% block side_nav %}{% endblock %}
+
+					<div id="content-background"></div>
+					
+					<div id="content-container">
+						{% block content %}{% endblock %}
+					</div>
+
+					<div id="footer">
+						<div id="footer-content">
+							<div id="copyright">
+								<span>Copyright 2018</span>
+							</div>
+
+							<div id="footer-nav">
+								<a href="">About Us</a>
+								<a href="">Feedback</a>
+								<a href="">Terms Of Service</a>
+							</div>
+
+							<div id="built-with-passion">
+								{% load static %}
+								<img src="{% static '' %}" alt="PUSH"/>
+							</div>
+						</div>
+					</div>
+				</div>
+  </body>
+
 </html>

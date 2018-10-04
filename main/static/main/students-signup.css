@@ -1,0 +1,108 @@
+html {
+  color: #929292;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+}
+
+body {
+  color: #929292;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 2% 0px 0px 0px;
+  left: 0;
+  top: 0;
+  position: relative;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+hr {
+  margin-bottom: 32px;
+}
+
+option[disabled] {
+  background-color: #000000
+}
+
+h1 {
+  margin: 8px 0px 0px 0px;
+}
+
+h5 {
+  margin-top: 6px;
+  color: #aaaaaa;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #cccccc;
+}
+
+.input {
+  margin-bottom: 12px;
+}
+
+#container {
+  padding-bottom: 40px;
+}
+
+#signup {
+  width: 40%;
+  background-color: #eeeeee;
+  padding: 0px 36px 8px 36px;
+  border-radius: 18px;
+  margin: auto;
+}
+
+#signup-header {
+  padding-top: 20px;
+}
+
+#push-logo  {
+  text-align: center;
+}
+
+#signup-form {
+
+}
+
+#form-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+#form-right {
+  width: 50%;
+}
+
+#form-left {
+  width: 50%;
+}
+
+#form-bottom {
+  width: 100%;
+}
+
+#signup-footer {
+  margin-top: 12px;
+  text-align: center;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0;
+  right: 0;
+	width: 100%;
+	height: 20px;
+	background-color: #252525;
+}
+
+#footer-content {
+	display: flex;
+	justify-content: space-around;
+}

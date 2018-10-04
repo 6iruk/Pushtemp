@@ -1,0 +1,177 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+<title>Your Account</title>
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/student-account.css' %}">
+{% endblock %}
+
+{% block side_nav %}
+<div id="side-nav">
+	<div class="side-nav-sections">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Push Board"/>
+	</div>
+
+	<div class="side-nav-sections">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Your Wall"/>
+	</div>
+
+	<div class="side-nav-sections">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Course Bucket"/>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	<div id="push-board-content">
+		{% for post in wall %}
+		<div class="post">
+			<div class="post-header">
+				<div class="post-icon">
+					<h1>@</h1>
+				</div>
+
+				<div class="post-by">
+					<div class="by-name">
+						{{ post.post.post_by }}
+					</div>
+
+					<div class="by-role">
+						{{ post.post.post_by.role }}
+					</div>
+				</div>
+
+				<div class="post-date">
+					{{ post.post.pub_date }}
+				</div>
+			</div>
+
+			<div class="post-content">
+				<p>{{ post.post }}</p>
+			</div>
+
+			<div class="post-images">
+				{% for image in post.post.images.all %}
+				<div class="image">
+					<img width="100%" src="/media/{{image.image}}"/>
+				</div>
+				{% endfor %}
+			</div>
+
+			<div class="post-files">
+				{% for file in post.post.files.all %}
+				<div class="file">
+					<div class="file-link">
+						<a href="/media/{{file.file}}">{{ file.name }}</a>
+					</div>
+
+					<div class="file-description">
+						<p>File Type: {{ file.extension | upper }} &emsp; &emsp; File Size: {{ file.file.size | filesizeformat}}</p>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<div id="your-wall-content">
+		<div class="post">
+			<div class="post-header">
+				<div class="post-icon">
+
+				</div>
+
+				<div class="post-by">
+
+				</div>
+
+				<div class="post-date">
+
+				</div>
+			</div>
+
+			<div class="post-content">
+
+			</div>
+
+			<div class="post-images">
+				<div class="imag">
+
+				</div>
+
+				<div class="imag">
+
+				</div>
+			</div>
+
+			<div class="post-files">
+				<div class="file">
+					<div class="file-link">
+
+					</div>
+
+					<div class="file-description">
+
+					</div>
+				</div>
+
+				<div class="file">
+					<div class="file-link">
+
+					</div>
+
+					<div class="file-description">
+
+					</div>
+				</div>
+
+				<div class="file">
+					<div class="file-link">
+
+					</div>
+
+					<div class="file-description">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="reminder-container">
+	<div id="reminder">
+		{% for rem in reminder %}
+		<div class="reminder">
+			<div class="reminder-header">
+				<h5>{{ rem.reminder.title }}</h5>
+			</div>
+
+			<div class="reminder-content">
+				<div class="reminder-note">
+					<p>{{ rem.reminder.note }}</p>
+				</div>
+
+				<div class="reminder-due">
+					<div class="reminder-venue">
+						<p>Venue:{{ rem.reminder.place }}</p>
+					</div>
+					<div class="reminder-date">
+						<p>Date:{{ rem.reminder.due_date | date:"D"}},&nbsp{{ rem.reminder.due_date | date:"SHORT_DATE_FORMAT"}}</p>
+						<p>Time:{{ rem.reminder.due_date | date:"f A"}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

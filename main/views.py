@@ -4,7 +4,6 @@ from itertools import chain
 from operator import attrgetter
 from main.models import *
 from main.models import Section as main_section
-from push_page.models import *
 ##from main.forms import Lecturerform
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
@@ -13,6 +12,7 @@ import datetime, zipfile, io
 import os
 ##import sendgrid
 ##from sendgrid.helpers.mail import *
+from django.db.models import Count, Q
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,27 +22,38 @@ def index(request):
 
 def students_signup_page(request):
 
-    return render(request, 'main/index.html')
+    departments = Department.objects.all()
+
+    context = {'departments':departments}
+    return render(request, 'main/students-signup.html', context)
 
 def login_page(request):
 
-    return render(request, 'main/index.html')
+    return render(request, 'main/login.html')
 
 def student_account_page(request):
 
-    return render(request, 'main/index.html')
+    wall = Post_To_Class.objects.all()
+    reminder = Reminder_To_Class.objects.all()
+
+    context = {'wall':wall, 'reminder':reminder}
+    return render(request, 'main/student-account.html', context)
 
 def staff_account_page(request):
 
-    return render(request, 'main/index.html')
+    posts = Post.objects.all()
+    staff = Staff.objects.first()
+
+    context = {'posts':posts, 'staff':staff}
+    return render(request, 'main/staff-account.html', context)
 
 def forgot_password_page(request):
 
-    return render(request, 'main/index.html')
+    return render(request, 'main/forgot-password.html')
 
 def feedback_page(request):
 
-    return render(request, 'main/index.html')
+    return render(request, 'main/feedback.html')
 
 
 ##def section(request,section_code):

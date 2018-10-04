@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sign Up</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% load static %}
+		<link rel="stylesheet" href="{% static 'main/students-signup.css' %}">
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="signup">
+				<div id="signup-header">
+					<div id="push-logo">
+						{% load static %}
+						<img width=120px src="{% static 'main/Colored-logo.svg' %}" alt="Logo"/>
+					</div>
+					<h1>Sign Up</h1>
+					<h5>Get all announcements and files in one place by simply creating an account!</h5>
+
+				</div>
+
+				<div id="signup-form">
+					<form method="post">
+					<div id="form-top">
+					<div id="form-left">
+					<div class="textinput input">
+						<label for="firstname">First Name<br></label>
+						<input id="firstname" type="text" required/>
+					</div>
+
+					<div class="textinput input">
+						<label for="lastname">Last Name<br></label>
+						<input id="lastname" type="text" required/>
+					</div>
+
+					<div class="textinput input">
+						<label for="phonenum">Phone number<br></label>
+						<input id="phonenum" type="tel" required/>
+					</div>
+
+					<div class="textinput input">
+						<label for="email">Email<br></label>
+						<input id="email" type="email" required/>
+					</div>
+					</div>
+
+					<div id="form-right">
+					<div class="textinput input">
+						<label for="department">Choose your department<br></label>
+						<select id="department">
+							<option value="" disabled selected>Click to select</option>
+							{% for department in departments %}
+							{% ifchanged department.university_in %}
+							<option value="" disabled>{{department.university_in}}</option>
+							{% endifchanged %}
+							<option value="{{department.id}}">{{department.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="textinput input">
+						<label for="year">Year<br></label>
+						<input id="year" type="number" required/>
+					</div>
+
+					<div class="textinput input">
+						<label for="section">Section<br></label>
+						<input id="section" type="text" required/>
+					</div>
+
+					<div class="textinput input">
+						<label for="regid">Registration Number<br></label>
+						<input id="regid" type="text" required/>
+					</div>
+					</div>
+					</div>
+
+					<div id="form-bottom">
+					<hr>
+
+					<div class="textinput input">
+						<label for="password">Enter your password<br></label>
+						<input id="password" type="password" required/>
+					</div>
+
+					<div class="textinput input">
+						<label for="repass">Re-enter your password<br></label>
+						<input id="repass" type="password" required/>
+					</div>
+
+					<div class="submitinput input">
+						<input id="login-button" type="submit" value="Get Me Signed Up"/>
+					</div>
+					</div>
+				</form>
+				</div>
+
+				<div id="signup-footer">
+					<p>Already have an account? <br> Sign in <a href="#">here</a></p>
+				</div>
+			</div>
+
+			<div id="footer">
+				<div id="footer-content">
+					<div id="copyright">
+						<span>Copyright 2018</span>
+					</div>
+
+					<div id="footer-nav">
+						<a href="">About Us</a>
+						<a href="">Feedback</a>
+						<a href="">Terms Of Service</a>
+					</div>
+
+					<div id="built-with-passion">
+						{% load static %}
+						<img src="{% static '' %}" alt="PUSH"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

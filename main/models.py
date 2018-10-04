@@ -76,7 +76,7 @@ class Section(models.Model):
    section_takes = models.ManyToManyField('Course')
 
    def __str__(self):
-      return self.department + '-' + self.year + '-' + self.section_id  ##correct this - output as a long string
+      return self.department_in.name + '-' + str(self.year) + '-' + self.section_id  ##correct this - output as a long string
 
 
 
@@ -111,7 +111,7 @@ def upload_path_file(instance, filename):
 
 #The upload path for an image
 def upload_path_image(instance, filename):
-   return 'Image' + '/' + instance.post_by.department_in.university_in.name + '/' + instance.post_by.department_in.name + '/' + instance.post_by.title + instance.post_by.first_name + " " + instance.post_by.last_name + '/' + instance.name + '.' +  instance.extension
+   return 'Image' + '/' + instance.post_by.department_in.university_in.name + '/' + instance.post_by.department_in.name + '/' + instance.post_by.title + instance.post_by.first_name + " " + instance.post_by.last_name + '/' + filename
 
 
 
@@ -132,7 +132,10 @@ class File(models.Model):
    def __str__(self):
       return self.name
 
+   def downloads(self):
+      count = self.download_set.count()
 
+      return count
 
 class Image(models.Model):
 
@@ -152,10 +155,10 @@ class Post(models.Model):
    content = models.TextField()
 
    #The files attached to the post
-   files = models.ManyToManyField(File)
+   files = models.ManyToManyField(File, blank=True, null=True, default=None)
 
    #The images attached to the post
-   images = models.ManyToManyField(Image)  ##did you mean to name this 'images'?
+   images = models.ManyToManyField(Image, blank=True, null=True, default=None)  ##did you mean to name this 'images'?
 
    #The type of the post. Notice = 1, Announcement = 2, Specific = 3, Group Message = 4, Staff Message = 5.
    post_type = models.IntegerField()
@@ -169,6 +172,22 @@ class Post(models.Model):
    def __str__(self):
       return self.content
 
+   def delivered(self):
+      count = self.tracking_set.count()
+
+      return count
+
+   def read(self):
+      count = self.tracking_set.filter(status=2).count()
+
+      return count
+
+   def recipients_string(self):
+      recipients = ""
+      for recipient in self.post_to_class_set.all():
+        recipients += recipient.recipient()
+
+      return recipients
 
 class Reminder(models.Model):
 
@@ -177,6 +196,9 @@ class Reminder(models.Model):
 
    #The title of the reminder Eg.Test II, Assignment 1
    title = models.CharField(max_length=20)
+
+   #The note for the test,assignment or presentation
+   note = models.TextField(blank=True)
 
    #The due date of the test,assignment or presentation
    due_date = models.DateTimeField()
@@ -208,12 +230,12 @@ class Staff(models.Model):
    #Possible values for the role field
    role_choices = (
       ('Dean','Dean'),
-      ('A.Dean','Associate Dean'),
-      ('Reg','Registrar'),
-      ('D.Head','Department Head'),
-      ('P.cord','Program Coordinator'),
-      ('Ins','Instructor'),
-      ('Lab','Lab Technician')  # how about we just use instructor
+      ('Associate Dean','Associate Dean'),
+      ('Registrar','Registrar'),
+      ('Department Head','Department Head'),
+      ('Program Coordinator','Program Coordinator'),
+      ('Instructor','Instructor'),
+      ('Lab Technician','Lab Technician')  # how about we just use instructor
    )
 
    #The university the staff member is in
@@ -248,6 +270,10 @@ class Staff(models.Model):
    def __str__(self):
       return self.title + " " + self.first_name  #also add the staff ID here so it's easy to debug
 
+   def get_classes(self):
+      classes = self.instructor_teaches_set.all()
+
+      return classes
 
 
 class Student(models.Model):
@@ -282,6 +308,9 @@ class Student(models.Model):
    #The user object associated with this student
    user = models.OneToOneField(User)
 
+   #The classes the student takes
+   class_in = models.ManyToManyField('Instructor_Teaches')
+
    def __str__(self):
       return self.reg_id
 
@@ -302,21 +331,7 @@ class Instructor_Teaches(models.Model):
    course = models.ForeignKey(Course)
 
    def __str__(self):
-      return self.instructor.first_name + "-" + self.section + "-" + self.course.name
-
-
-
-#A student takes a course that a lecturer teaches
-class Student_Takes(models.Model):
-
-   #The student that takes the course
-   student = models.ForeignKey(Student)
-
-   #The class the student learns in
-   class_in = models.ForeignKey(Instructor_Teaches)
-
-   def __str__(self):
-      return self.student.first_name + "-" + self.class_in
+      return self.instructor.first_name + "-" + str(self.section.year) + "-" + self.course.name
 
 
 
@@ -330,9 +345,10 @@ class Post_To_Class(models.Model):
    post = models.ForeignKey(Post)
 
    def __str__(self):
-      return self.post_by + "-" + self.post_to
+      return str(self.post.post_by) + "-" + str(self.post_to)
 
-
+   def recipient(self):
+      return self.post_to.section.department_in.name + " Year" + str(self.post_to.section.year) + " Section" + self.post_to.section.section_id
 
 #A staff member posts to a section
 class Post_To_Section(models.Model):
@@ -418,11 +434,32 @@ class Tracking(models.Model):
    del_on = models.DateTimeField('Delivery On')
 
    #The date/time the post was read
-   read_on = models.DateTimeField('Read On', null= True)
+   read_on = models.DateTimeField('Read On', null= True, blank=True)
 
    def __str__(self):
-      return self.post_by + "-" + self.post_to
+      return str(self.post.id) + "-" + self.student.reg_id
 
+
+
+class Download(models.Model):
+
+   #The student that downlaads the file
+   student = models.ForeignKey(Student)
+
+   #The file
+   file = models.ForeignKey(File)
+
+   #Download status. True = Download finished
+   status = models.BooleanField(default=False)
+
+   #The download date/time
+   start = models.DateTimeField('Started On')
+
+   #The time the download finished
+   finish = models.DateTimeField('Finished On', null= True, blank=True)
+
+   def __str__(self):
+      return str(self.file.id) + "-" + self.student.reg_id
 
 
 
