@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.db.models import Q
 from django.contrib.auth.models import User
 from main import models
@@ -121,8 +122,9 @@ def Section(request):
             output += "\"given_by\":" + "\"" + Course.given_by.name + "\""
             output += "},"
 
-        # remove the last list separator comma
-        output = output[::-1].replace(",", "", 1)[::-1]
+        if Section.section_takes.all().count() > 0:
+            # remove the last list separator comma
+            output = output[::-1].replace(",", "", 1)[::-1]
 
         #Close section_takes array
         output += "]"
@@ -254,8 +256,9 @@ def Post(request):
             output += "\"post_by\":" + "\"" + File.post_by.__str__() + "\""
             output += "},"
 
-        # remove the last list separator comma
-        output = output[::-1].replace(",", "", 1)[::-1]
+        if Post.post.files.all().count() > 0:
+            # remove the last list separator comma
+            output = output[::-1].replace(",", "", 1)[::-1]
 
         #Close files array
         output += "],"
@@ -269,8 +272,9 @@ def Post(request):
             output += "\"post_by\":" + "\"" + Image.post_by.__str__() + "\""
             output += "},"
 
-        # remove the last list separator comma
-        output = output[::-1].replace(",", "", 1)[::-1]
+        if Post.post.images.all().count() > 0:
+            # remove the last list separator comma
+            output = output[::-1].replace(",", "", 1)[::-1]
 
         #Close images array
         output += "],"
@@ -341,30 +345,27 @@ def Reminder(request):
 
 def login(request):
         user = None
-        password = ''
         role = ''
         status = ''
         remark = ''
 
         def staff():
                 nonlocal user
-                nonlocal password
                 nonlocal role
 
                 staff = models.Staff.objects.get(email = request.POST.get('email'))
-                user = authenticate(user=staff.user, password=password)
                 password = request.POST.get('sta_password')
-                role = 'student'
+                user = authenticate(username=staff.user.username, password=password)
+                role = 'staff'
 
 
         def student():
                 nonlocal user
-                nonlocal password
                 nonlocal role
 
-                student = models.Student.objects.get(email = request.POST.get('reg_id'))
-                user = authenticate(user=student.user, password=password)
+                student = models.Student.objects.get(reg_id = request.POST.get('reg_id'))
                 password = request.POST.get('stu_password')
+                user = authenticate(username=student.user.username, password=password)
                 role = 'student'
 
 
@@ -376,7 +377,7 @@ def login(request):
                 return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
 
         def success():
-                login(request,user)
+                auth_login(request, user)
 
                 nonlocal status
                 nonlocal remark
@@ -402,9 +403,9 @@ def login(request):
                 if user.is_active:
                         success()
                 else:
-                        failure()
+                        notActive()
         else:
-                notActive()
+                failure()
 
 
         #JSON output
@@ -429,16 +430,16 @@ def signup(request):
         last_name = request.POST.get('last-name')
         phone = request.POST.get('phone-number')
         email = request.POST.get('email')
-        department_in = models.Department.objects.get(id = request.POST.get('department'))
-        year = request.POST.get('year')
+        department_in = models.Department.objects.get(id = int(request.POST.get('department')))
+        year = int(request.POST.get('year'))
         section = models.Section.objects.get(department_in = department_in, year = year, section_id = request.POST.get('section'))
-        reg_id = request.POST.get('reg_id')
+        reg_id = request.POST.get('reg-id')
         password = request.POST.get('password')
 
-        user = User.objects.create(username=reg_id, password=password)
-        student = Student.objects.create(university_in = department.university_in, department_in = department_in, year = year, section = section.section_id, first_name = first_name, last_name = last_name, reg_id = reg_id, phone = phone, email = email, user = user)
+        user = User.objects.create_user(reg_id.replace("/","-"), "", password)
+        student = models.Student.objects.create(university_in = department_in.university_in, department_in = department_in, year = year, section = section.section_id, first_name = first_name, last_name = last_name, reg_id = reg_id, phone = phone, email = email, user = user)
 
-        for class_in in section.section_takes:
+        for class_in in models.Instructor_Teaches.objects.filter(section=section):
             student.class_in.add(class_in)
 
         status = 1
@@ -449,14 +450,15 @@ def signup(request):
         output = "{\"status\":"
         output +=  str(status) + ","
         output += "\"remark\":"
-        output += "\"" + remark + "\","
+        output += "\"" + remark + "\"" + ","
         output += "\"fields\":["
 
         for field in fields:
             output +=  "\"" + field + "\","
 
-        # remove the last list separator comma
-        output = output[::-1].replace(",", "", 1)[::-1]
+        if len(fields) > 0:
+            # remove the last list separator comma
+            output = output[::-1].replace(",", "", 1)[::-1]
 
         output += "]}"
 
@@ -474,11 +476,11 @@ def email_exists(request):
         #Start json array
         output = "{"
 
-        if Staff.objects.filter(email=email).exists():
+        if models.Staff.objects.filter(email=email).exists():
                 output += " \"status\":true }"
 
-        elif Student.objects.filter(email=email).exists():
-                output += " \"status\":true}
+        elif models.Student.objects.filter(email=email).exists():
+                output += " \"status\":true }"
 
         else:
                 output += " \"status\":false }"
@@ -497,11 +499,11 @@ def phone_exists(request):
         #Start json array
         output = "{"
 
-        if Staff.objects.filter(phone = phone).exists():
+        if models.Staff.objects.filter(phone = phone).exists():
                 output += " \"status\":true }"
 
-        elif Student.objects.filter(phone = phone).exists():
-                output += " \"status\":true}
+        elif models.Student.objects.filter(phone = phone).exists():
+                output += " \"status\":true }"
 
         else:
                 output += " \"status\":false }"
@@ -520,8 +522,8 @@ def reg_id_exists(request):
         #Start json array
         output = "{"
 
-        if Student.objects.filter(reg_id = reg_id).exists():
-                output += " \"status\":true}
+        if models.Student.objects.filter(reg_id = reg_id).exists():
+                output += " \"status\":true}"
 
         else:
                 output += " \"status\":false }"

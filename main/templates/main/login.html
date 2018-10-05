@@ -35,13 +35,15 @@
 
 				<div id="login-form">
 
-					<form method="post">
+					<form method="post" action="{% url 'Login' %}">
+						{% csrf_token %}
+						<input name="user-type" type="text" value="student" hidden/>
 						<div class="textinput input">
-							<input type="text" placeholder="Phone Number" required/>
+							<input name="reg_id" type="text" placeholder="user" required/>
 						</div>
 
 						<div class="textinput input">
-							<input type="password" placeholder="Password" required/>
+							<input name="stu_password" type="password" placeholder="Password" />
 						</div>
 
 						<div class="submitinput input">

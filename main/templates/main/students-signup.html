@@ -21,34 +21,35 @@
 				</div>
 
 				<div id="signup-form">
-					<form method="post">
+					<form method="post" action="{% url 'Signup' %}">
+					{% csrf_token %}
 					<div id="form-top">
 					<div id="form-left">
 					<div class="textinput input">
 						<label for="firstname">First Name<br></label>
-						<input id="firstname" type="text" required/>
+						<input name="first-name" id="firstname" type="text" required/>
 					</div>
 
 					<div class="textinput input">
 						<label for="lastname">Last Name<br></label>
-						<input id="lastname" type="text" required/>
+						<input name="last-name" id="lastname" type="text" required/>
 					</div>
 
 					<div class="textinput input">
 						<label for="phonenum">Phone number<br></label>
-						<input id="phonenum" type="tel" required/>
+						<input name="phone-number" id="phonenum" type="tel" required/>
 					</div>
 
 					<div class="textinput input">
 						<label for="email">Email<br></label>
-						<input id="email" type="email" required/>
+						<input name="email" id="email" type="email" required/>
 					</div>
 					</div>
 
 					<div id="form-right">
 					<div class="textinput input">
 						<label for="department">Choose your department<br></label>
-						<select id="department">
+						<select name="department" id="department">
 							<option value="" disabled selected>Click to select</option>
 							{% for department in departments %}
 							{% ifchanged department.university_in %}
@@ -61,17 +62,17 @@
 
 					<div class="textinput input">
 						<label for="year">Year<br></label>
-						<input id="year" type="number" required/>
+						<input name="year" id="year" type="number" required/>
 					</div>
 
 					<div class="textinput input">
 						<label for="section">Section<br></label>
-						<input id="section" type="text" required/>
+						<input name="section" id="section" type="text" required/>
 					</div>
 
 					<div class="textinput input">
 						<label for="regid">Registration Number<br></label>
-						<input id="regid" type="text" required/>
+						<input name="reg-id" id="regid" type="text" required/>
 					</div>
 					</div>
 					</div>
@@ -81,7 +82,7 @@
 
 					<div class="textinput input">
 						<label for="password">Enter your password<br></label>
-						<input id="password" type="password" required/>
+						<input name="password" id="password" type="password" required/>
 					</div>
 
 					<div class="textinput input">

@@ -306,7 +306,7 @@ class Student(models.Model):
    email = models.EmailField(max_length=254, null=True)
 
    #The telegram chat id of the student
-   chat_id = models.IntegerField()
+   chat_id = models.IntegerField(default=0)
 
    #The user object associated with this student
    user = models.OneToOneField(User)
