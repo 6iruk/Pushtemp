@@ -287,6 +287,9 @@ class Student(models.Model):
    #The year the student is in
    year = models.IntegerField()   #add section field here?
 
+   #The year the student is in
+   section = models.CharField(max_length=5)
+
    #The first name of the student
    first_name = models.CharField(max_length=50)
 

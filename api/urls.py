@@ -11,6 +11,9 @@ urlpatterns = [
 	url(r'^Course$', views.Course, name="Course"),
 	url(r'^Post$', views.Post, name="Post"),
 	url(r'^Reminder$', views.Reminder, name="Reminder"),
-    url(r'^email_exists$', views.email_exists, name="email_exists"),
+	url(r'^login$', views.login, name="Login"),
+    url(r'^email_exists$', views.email_exists, name="Email exists"),
+	url(r'^phone_exists$', views.phone_exists, name="Phone exists"),
+	url(r'^reg_id_exists$', views.reg_id_exists, name="Reg_ID exists"),
     url(r'^get_latest_app_version$', views.get_latest_app_version, name="get_latest_app_version"),
 ]

@@ -340,20 +340,125 @@ def Reminder(request):
 
 
 def login(request):
+        user = None
+        password = ''
+        role = ''
+        status = ''
+        remark = ''
 
-        if request.GET.get('email'):
-                email = request.GET.get('email')
+        def staff():
+                nonlocal user
+                nonlocal password
+                nonlocal role
+
+                staff = models.Staff.objects.get(email = request.POST.get('email'))
+                user = authenticate(user=staff.user, password=password)
+                password = request.POST.get('sta_password')
+                role = 'student'
+
+
+        def student():
+                nonlocal user
+                nonlocal password
+                nonlocal role
+
+                student = models.Student.objects.get(email = request.POST.get('reg_id'))
+                user = authenticate(user=student.user, password=password)
+                password = request.POST.get('stu_password')
+                role = 'student'
+
+
+        if (request.POST.get('user-type') == 'staff'):
+            staff()
+        elif (request.POST.get('user-type') == 'student'):
+            student()
         else:
-                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+                return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
+
+        def success():
+                login(request,user)
+
+                nonlocal status
+                nonlocal remark
+
+                status = 1
+                remark = 'Authentication success'
+
+        def failure():
+                nonlocal status
+                nonlocal remark
+
+                status = 0
+                remark = 'Authentication failed'
+
+        def notActive():
+                nonlocal status
+                nonlocal remark
+
+                status = 3
+                remark = 'Account not active'
+
+        if user is not None:
+                if user.is_active:
+                        success()
+                else:
+                        failure()
+        else:
+                notActive()
+
 
         #JSON output
-        #Start json array
-        output = "{"
+        #Start json object
+        output = "{\"role\":"
+        output += "\"" + role + "\","
+        output += "\"status\":"
+        output +=  str(status) + ","
+        output += "\"remark\":"
+        output += "\"" + remark + "\"}"
 
-        if User.objects.filter(username=email).exists():
-                output += " \"status\":true }"
-        else:
-                output += " \"status\":false }"
+        return HttpResponse(output, content_type='application/json')
+
+
+
+def signup(request):
+        status = 0
+        remark = ""
+        fields = []
+
+        first_name = request.POST.get('first-name')
+        last_name = request.POST.get('last-name')
+        phone = request.POST.get('phone-number')
+        email = request.POST.get('email')
+        department_in = models.Department.objects.get(id = request.POST.get('department'))
+        year = request.POST.get('year')
+        section = models.Section.objects.get(department_in = department_in, year = year, section_id = request.POST.get('section'))
+        reg_id = request.POST.get('reg_id')
+        password = request.POST.get('password')
+
+        user = User.objects.create(username=reg_id, password=password)
+        student = Student.objects.create(university_in = department.university_in, department_in = department_in, year = year, section = section.section_id, first_name = first_name, last_name = last_name, reg_id = reg_id, phone = phone, email = email, user = user)
+
+        for class_in in section.section_takes:
+            student.class_in.add(class_in)
+
+        status = 1
+        remark = "Sign up successfull"
+
+        #JSON output
+        #Start json object
+        output = "{\"status\":"
+        output +=  str(status) + ","
+        output += "\"remark\":"
+        output += "\"" + remark + "\","
+        output += "\"fields\":["
+
+        for field in fields:
+            output +=  "\"" + field + "\","
+
+        # remove the last list separator comma
+        output = output[::-1].replace(",", "", 1)[::-1]
+
+        output += "]}"
 
         return HttpResponse(output, content_type='application/json')
 
@@ -369,8 +474,55 @@ def email_exists(request):
         #Start json array
         output = "{"
 
-        if User.objects.filter(username=email).exists():
+        if Staff.objects.filter(email=email).exists():
                 output += " \"status\":true }"
+
+        elif Student.objects.filter(email=email).exists():
+                output += " \"status\":true}
+
+        else:
+                output += " \"status\":false }"
+
+        return HttpResponse(output, content_type='application/json')
+
+
+
+def phone_exists(request):
+        if request.GET.get('phone-number'):
+                phone = request.GET.get('phone-number')
+        else:
+                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+
+        #JSON output
+        #Start json array
+        output = "{"
+
+        if Staff.objects.filter(phone = phone).exists():
+                output += " \"status\":true }"
+
+        elif Student.objects.filter(phone = phone).exists():
+                output += " \"status\":true}
+
+        else:
+                output += " \"status\":false }"
+
+        return HttpResponse(output, content_type='application/json')
+
+
+
+def reg_id_exists(request):
+        if request.GET.get('reg_id'):
+                reg_id = request.GET.get('reg_id')
+        else:
+                return HttpResponse("Incorrect API request format. Refer to the docmumentaion.")
+
+        #JSON output
+        #Start json array
+        output = "{"
+
+        if Student.objects.filter(reg_id = reg_id).exists():
+                output += " \"status\":true}
+
         else:
                 output += " \"status\":false }"
 
