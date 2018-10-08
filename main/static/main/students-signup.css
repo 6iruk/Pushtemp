@@ -29,7 +29,11 @@ hr {
 }
 
 option[disabled] {
-  background-color: #000000
+  background-color: #000000;
+}
+
+option[selected] {
+  display: none;
 }
 
 h1 {
@@ -45,6 +49,11 @@ h5 {
 
 .input {
   margin-bottom: 12px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
 }
 
 #container {
@@ -86,6 +95,9 @@ h5 {
 
 #form-bottom {
   width: 100%;
+}
+
+#signup-button {
 }
 
 #signup-footer {

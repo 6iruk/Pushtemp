@@ -2,9 +2,16 @@
 <html>
 	<head>
 		<title>Sign Up</title>
+
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		{% load static %}
 		<link rel="stylesheet" href="{% static 'main/students-signup.css' %}">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		{% load static %}
+		<script src="{% static 'main/students-signup.js' %}"></script>
 	</head>
 
 	<body>
@@ -17,7 +24,6 @@
 					</div>
 					<h1>Sign Up</h1>
 					<h5>Get all announcements and files in one place by simply creating an account!</h5>
-
 				</div>
 
 				<div id="signup-form">
@@ -26,21 +32,25 @@
 					<div id="form-top">
 					<div id="form-left">
 					<div class="textinput input">
+						<div id="error-firstname" class="error"></div>
 						<label for="firstname">First Name<br></label>
 						<input name="first-name" id="firstname" type="text" required/>
 					</div>
 
 					<div class="textinput input">
+						<div id="error-lastname" class="error"></div>
 						<label for="lastname">Last Name<br></label>
 						<input name="last-name" id="lastname" type="text" required/>
 					</div>
 
 					<div class="textinput input">
+						<div id="error-phonenum" class="error"></div>
 						<label for="phonenum">Phone number<br></label>
 						<input name="phone-number" id="phonenum" type="tel" required/>
 					</div>
 
 					<div class="textinput input">
+						<div id="error-email" class="error"></div>
 						<label for="email">Email<br></label>
 						<input name="email" id="email" type="email" required/>
 					</div>
@@ -48,8 +58,9 @@
 
 					<div id="form-right">
 					<div class="textinput input">
+						<div id="error-department" class="error"></div>
 						<label for="department">Choose your department<br></label>
-						<select name="department" id="department">
+						<select name="department" id="department" required>
 							<option value="" disabled selected>Click to select</option>
 							{% for department in departments %}
 							{% ifchanged department.university_in %}
@@ -61,16 +72,19 @@
 					</div>
 
 					<div class="textinput input">
+						<div id="error-year" class="error"></div>
 						<label for="year">Year<br></label>
 						<input name="year" id="year" type="number" required/>
 					</div>
 
 					<div class="textinput input">
+						<div id="error-section" class="error"></div>
 						<label for="section">Section<br></label>
 						<input name="section" id="section" type="text" required/>
 					</div>
 
 					<div class="textinput input">
+						<div id="error-regidr" class="error"></div>
 						<label for="regid">Registration Number<br></label>
 						<input name="reg-id" id="regid" type="text" required/>
 					</div>
@@ -81,17 +95,18 @@
 					<hr>
 
 					<div class="textinput input">
+						<div id="error-password" class="error"></div>
 						<label for="password">Enter your password<br></label>
-						<input name="password" id="password" type="password" required/>
+						<input name="password" id="password" type="password" onKeyUp="password_checker()" required/>
 					</div>
 
 					<div class="textinput input">
 						<label for="repass">Re-enter your password<br></label>
-						<input id="repass" type="password" required/>
+						<input id="repass" type="password" onKeyUp="password_checker()" required/>
 					</div>
 
 					<div class="submitinput input">
-						<input id="login-button" type="submit" value="Get Me Signed Up"/>
+						<input id="signup-button" type="button" value="Get Me Signed Up" onclick="submit()" disabled/>
 					</div>
 					</div>
 				</form>

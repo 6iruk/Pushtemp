@@ -2,9 +2,16 @@
 <html>
 	<head>
 		<title>Log In</title>
+
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		{% load static %}
 		<link rel="stylesheet" href="{% static 'main/login.css' %}">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		{% load static %}
+		<script src="{% static 'main/login.js' %}"></script>
+
 	</head>
 
 	<body>
@@ -34,31 +41,65 @@
 				<h2 class="textcenter">Welcome</h2>
 
 				<div id="login-form">
-
-					<form method="post" action="{% url 'Login' %}">
-						{% csrf_token %}
-						<input name="user-type" type="text" value="student" hidden/>
-						<div class="textinput input">
-							<input name="reg_id" type="text" placeholder="user" required/>
+					<div id="form-chooser">
+						<div id="button-1" class="type-button">
+							<button onclick="user_type_click('student')">Student</button>
 						</div>
 
-						<div class="textinput input">
-							<input name="stu_password" type="password" placeholder="Password" />
+						<div id="button-2" class="type-button">
+							<button onclick="user_type_click('staff')">Staff</button>
 						</div>
+					</div>
 
-						<div class="submitinput input">
-							<input id="login-button" type="submit" value="Sign In"/>
-						</div>
+					<div id="stu-form">
+						<form method="post" action="{% url 'Login' %}">
+							{% csrf_token %}
+							<input name="user-type" type="text" value="student" hidden/>
+							<div class="textinput input">
+								<input name="reg_id" type="text" placeholder="Registration Number" required/>
+							</div>
 
-						<div class="input">
-							<p><a href="#">Forgot Password?</a></p>
-						</div>
-					</form>
+							<div class="textinput input">
+								<input name="password" type="password" placeholder="Password" />
+							</div>
+
+							<div class="submitinput input">
+								<input class="login-button" type="submit" value="Sign In"/>
+							</div>
+
+							<div class="input">
+								<p><a href="#">Forgot Password?</a></p>
+								<p id="signup">Don't have an account? Sign up <a href="#">here</a></p>
+							</div>
+						</form>
+					</div>
+
+					<div id="sta-form">
+						<form method="post" action="{% url 'Login' %}">
+							{% csrf_token %}
+							<input name="user-type" type="text" value="staff" hidden/>
+							<div class="textinput input">
+								<input name="email" type="text" placeholder="Email" required/>
+							</div>
+
+							<div class="textinput input">
+								<input name="password" type="password" placeholder="Password" />
+							</div>
+
+							<div class="submitinput input">
+								<input class="login-button" type="submit" value="Sign In"/>
+							</div>
+
+							<div class="input">
+								<p><a href="#">Forgot Password?</a></p>
+							</div>
+						</form>
+					</div>
 				</div>
 
 
+
 				<div id="login-footer">
-					<p class="input">Don't have an account? Sign up <a href="#">here</a></p>
 					<hr>
 					<p class="textcenter">If there is any problem or if you have a question please contact us at</p>
 					<p class="textcenter contact">aaupush@gmail.com </p>

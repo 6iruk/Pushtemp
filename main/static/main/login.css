@@ -74,6 +74,15 @@ border-left: 1px solid #cccccc;
   border-left: 0px;
 }
 
+.type-button {
+  width: 50%;
+}
+
+.type-button > button{
+  font-size: 18px;
+  width: 100%;
+}
+
 .input {
   margin: auto;
   margin-bottom: 12px;
@@ -88,6 +97,12 @@ border-left: 1px solid #cccccc;
 .textinput > input {
   font-size: 18px;
   padding: 4px;
+}
+
+.login-button {
+  font-size: 18px;
+  padding: 4px;
+
 }
 
 .contact {
@@ -127,18 +142,30 @@ border-left: 1px solid #cccccc;
 }
 
 #login-form {
-  padding: 12px 0px 16px 0px;
+  padding: 0px 0px 0px 0px;
   text-align: center;
 }
 
-#login-button {
-  font-size: 18px;
-  padding: 4px;
+#form-chooser {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
 
+#sta-form {
+  display: none;
+}
+
+#button-1 > button{
+  background-color: #555555;
+}
+
+#signup {
+  padding-top: 36px;
 }
 
 #login-footer {
-  margin-top: 12px;
+
 }
 
 #footer {
