@@ -85,6 +85,10 @@ textarea {
   margin-left: 10px;
 }
 
+.recipient-data-hidden {
+  display: none;
+}
+
 .post-container {
   display: flex;
   justify-content: space-between;
@@ -95,7 +99,29 @@ textarea {
 }
 
 .post-detail {
+  display: none;
   width: 40%;
+}
+
+.chat-date {
+  text-align: center;
+}
+
+.chat-post {
+  width: 100%;
+}
+
+.keyboard-images {
+  padding: 4px;
+}
+
+.keyboard-files {
+  padding: 4px;
+}
+
+.post-status {
+  display: flex;
+  justify-content: flex-end;
 }
 
 #app {
@@ -236,6 +262,54 @@ textarea {
 #post-detail {
   width: 40%;
   padding: 0px 8px 0px 8px;
+}
+
+#keyboard-form {
+  width: 70%;
+  margin: auto;
+}
+
+#group-chat {
+
+}
+
+#group-chat > .post-list > .post{
+
+}
+
+#group-chat-keyboard {
+  padding-top: 8px;
+}
+
+#keyboard-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#keyboard-files {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#keyboard-form-button {
+  text-align: right;
+}
+
+#chat-post-list {
+  width: 60%;
+  margin: auto;
+}
+
+#add-class > form > .recipient-list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#add-class > form > .recipient-list > .recipient-data {
+  width: 50%;
 }
 
 #footer {

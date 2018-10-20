@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth import authenticate, login as auth_login, logout
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Q
 from django.contrib.auth.models import User
 from main import models
@@ -249,8 +250,25 @@ def Post(request):
         else :
             Posts = models.Post_To_Section.objects.filter(query)
 
+    elif request.GET.get('by-type') == "class-post-list":
+        if request.GET.get('by-class') and student.class_in.filter(id = int(request.GET.get('by-class'))).exists():
+            posts = models.Post_To_Class.objects.filter(post_to = student.class_in.get(id = int(request.GET.get('by-class')))).exclude(post__files = None)
 
+        context = {'posts':posts}
+        return render(request, 'main/class-posts-snippet.html', context)
 
+    elif request.GET.get('by-type') == "miscellaneous":
+        for section in classes_in:
+
+            #Add every section the student is in to the query
+            query.add( Q( post_to = section.section ), Q.OR )
+
+        posts_to_section = models.Post_To_Section.objects.filter(query)
+        posts_to_student = models.Post_To_Student.objects.filter( post_to = student )
+
+        posts = sorted((list(posts_to_section) + list(posts_to_student)), key=lambda x: x.post.pub_date)
+        context = {'posts':posts}
+        return render(request, 'main/class-posts-snippet.html', context)
     #JSON output
     #Start json array
     output = "["
@@ -375,7 +393,7 @@ def Instructor_Teaches(request):
     elif request.GET.get('by-student'):
         if models.Student.objects.filter(user=request.user).exists():
             #Get all sections in that specific Department(THE 'ID' ATTRIBUTE SHOULD BE SENT/USED TO SPECIFY THE INSTANCE)
-            classes = models.Student.objects.get(department_in__id = int(request.GET.get('by-department'))).class_in.all()
+            classes = models.Student.objects.get(user=request.user).class_in.all()
 
         else:
             return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
@@ -570,9 +588,12 @@ def account_update(request):
         remark = ""
         fields = []
         role = ""
+        password = request.POST.get('password')
 
         if not request.user.is_authenticated():
             return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User not authenticated\"}", content_type='application/json')
+
+
 
 
         first_name = request.POST.get('first-name')
@@ -597,10 +618,14 @@ def account_update(request):
                 staff.first_name =  first_name
                 staff.last_name = last_name
                 staff.phone = phone
-                staff.email = email
                 staff.role = role
 
+                staff.email = email
+                user = models.User.objects.get(id = request.user.id)
+                user.username = email
+
                 staff.save()
+                user.save()
 
                 status = 1
                 remark = "Update successful"
@@ -625,9 +650,13 @@ def account_update(request):
                 student.last_name = last_name
                 student.phone = phone
                 student.email = email
-                student.reg_id = role
 
-                student.save();
+                student.reg_id = reg_id
+                user = models.User.objects.get(id = request.user.id)
+                user.username = reg_id.replace("/","-")
+
+                student.save()
+                user.save()
 
                 status = 1
                 remark = "Update successful"
@@ -653,7 +682,7 @@ def account_update(request):
             output = output[::-1].replace(",", "", 1)[::-1]
 
         output += "],"
-        output += "{\"role\":"
+        output += "\"role\":"
         output += "\"" + role + "\"}"
 
         return HttpResponse(output, content_type='application/json')
@@ -662,6 +691,10 @@ def account_update(request):
 
 def add_drop(request):
         action = ""
+        no_of_courses = 0
+        html = ""
+        course = ""
+        drop_class_id = -1
 
         if not request.user.is_authenticated():
             return HttpResponse("{\"action\":\"null\", \"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
@@ -673,25 +706,45 @@ def add_drop(request):
             return HttpResponse("{\"action\":\"null\", \"status\":2, \"remark\":\"Student not found\"}", content_type='application/json')
 
 
-        classes_id = request.POST.getlist('classes')
-
         if request.POST.get('action_type') == "add":
             action = "add"
+            classes_id = request.POST.getlist('class')
+
             for class_id in classes_id:
-                if not student.class_in.filter(id = class_id).exists():
-                    student.class_in.add(models.Instructor_Teaches.object.get(id = class_id))
+                if not student.class_in.filter(id = int(class_id)).exists():
+                    class_obj = models.Instructor_Teaches.objects.get(id = int(class_id))
+                    student.class_in.add(class_obj)
+
+                    html += "<tr class='row-" + class_id + "'>"
+                    html += "<td><button onclick='drop_course(" + str(class_obj.id) + ")'>Drop</button></td>"
+                    html += "<td>" + class_obj.course.name  + "</td>"
+                    html += "<td>" + class_obj.course.course_code + "</td>"
+                    html += "<td>" + class_obj.course.module_code + "</td>"
+                    html += "<td>3.00</td>"
+                    html += "<td>5.00</td>"
+                    html += "<td>Year-" + str(class_obj.section.year) + " Section-" + class_obj.section.section_id + "</td>"
+                    html += "<td>" + class_obj.instructor.__str__() + "</td>"
+                    html += "</tr>"
+
+                    no_of_courses += 1
 
         elif request.POST.get('action_type') == "drop":
             action = "drop"
-            for class_id in classes_id:
-                if student.class_in.filter(id = class_id).exists():
-                    student.class_in.remove(models.Instructor_Teaches.object.get(id = class_id))
+            class_id = request.POST.get('class')
+
+            if student.class_in.filter(id = int(class_id)).exists():
+                class_obj = models.Instructor_Teaches.objects.get(id = int(class_id))
+                course = class_obj.course.name
+                drop_class_id = class_obj.id
+
+                student.class_in.remove(class_obj)
+                no_of_courses += 1
 
         else:
                 return HttpResponse("{\"action\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
 
 
-        if len(request.POST.getlist('classes')) > 0:
+        if len(request.POST.getlist('class')) > 0:
             status = 1
             remark = "Action successul"
 
@@ -707,11 +760,81 @@ def add_drop(request):
         output +=  str(status) + ","
         output += "\"remark\":"
         output += "\"" + remark + "\"" + ","
+
+        if action == "add":
+            output += "\"count\":"
+            output +=  str(no_of_courses) + ","
+            output += "\"html\":"
+            output += "\"" + html + "\"" + ","
+
+        else:
+            output += "\"course\":"
+            output +=  "\"" + course + "\"" + ","
+            output += "\"class_id\":"
+            output +=  str(drop_class_id) + ","
         output += "\"action\":"
         output += "\"" + action + "\"}"
 
         return HttpResponse(output, content_type='application/json')
 
+
+
+# def add_drop(request):
+#         action = ""
+#         no_of_courses = 0
+#
+#         if not request.user.is_authenticated():
+#             return HttpResponse("{\"action\":\"null\", \"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
+#
+#         if models.Student.objects.filter(user=request.user).exists():
+#             student = models.Student.objects.get(user=request.user)
+#
+#         else:
+#             return HttpResponse("{\"action\":\"null\", \"status\":2, \"remark\":\"Student not found\"}", content_type='application/json')
+#
+#
+#         classes_id = request.POST.getlist('class')
+#
+#         if request.POST.get('action_type') == "add":
+#             action = "add"
+#             for class_id in classes_id:
+#                 if not student.class_in.filter(id = class_id).exists():
+#                     student.class_in.add(models.Instructor_Teaches.objects.get(id = class_id))
+#                     no_of_courses += 1
+#
+#         elif request.POST.get('action_type') == "drop":
+#             action = "drop"
+#             for class_id in classes_id:
+#                 if student.class_in.filter(id = class_id).exists():
+#                     student.class_in.remove(models.Instructor_Teaches.objects.get(id = class_id))
+#                     no_of_courses += 1
+#
+#         else:
+#                 return HttpResponse("{\"action\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
+#
+#
+#         if len(request.POST.getlist('class')) > 0:
+#             status = 1
+#             remark = "Action successul"
+#
+#         else:
+#             status = 0
+#             remark = "No classes sent"
+#             action = "null"
+#
+#
+#         #JSON output
+#         #Start json object
+#         output = "{\"status\":"
+#         output +=  str(status) + ","
+#         output += "\"remark\":"
+#         output += "\"" + remark + "\"" + ","
+#         output += "\"count\":"
+#         output +=  str(no_of_courses) + ","
+#         output += "\"action\":"
+#         output += "\"" + action + "\"}"
+#
+#         return HttpResponse(output, content_type='application/json')
 
 
 def email_exists(request):
@@ -790,3 +913,12 @@ def get_latest_app_version(request):
         output += " \"version_code\": 9 }"
 
         return HttpResponse(output, content_type='application/json')
+
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+
+        if not request.user.is_authenticated():
+            return HttpResponse("{\"status\": 0}", content_type='application/json')
+
+        return HttpResponse("{\"status\": 1}", content_type='application/json')

@@ -7,24 +7,40 @@
 {% block style %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'main/staff-account.css' %}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+{% load static %}
+<script src="{% static 'main/staff-account.js' %}"></script>
 {% endblock %}
 
 {% block side_nav %}
 <div id="side-nav">
-	<div class="side-nav-sections">
+	<div id="nav-post" class="side-nav-sections" onclick="nav_click('post')">
 		{% load static %}
 		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Post"/>
 	</div>
 
-	<div class="side-nav-sections">
+	<div id="nav-tracker" class="side-nav-sections" onclick="nav_click('tracker')">
 		{% load static %}
 		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Tracker"/>
 	</div>
 
-	<div class="side-nav-sections">
+	<div id="nav-group-chat" class="side-nav-sections" onclick="nav_click('group-chat')">
 		{% load static %}
 		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Group Chat"/>
 	</div>
+
+	<div id="nav-class-list" class="side-nav-sections" onclick="nav_click('class-list')">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Class List"/>
+	</div>
+
+	<div id="nav-account-setting" class="side-nav-sections" onclick="nav_click('account-setting')">
+		{% load static %}
+		<img width=25px src="{% static 'main/White-Logo.svg' %}" alt="Account Setting"/>
+	</div>
+
 </div>
 {% endblock %}
 
@@ -36,7 +52,7 @@
 
 	</div>
 
-	<div id="post-form">
+	<div id="post-form" class="content">
 		<form method="post">
 		<div id="post-header">
 			<div id="header-left">
@@ -137,15 +153,16 @@
 					</div>
 
 					<div class="recipient-list">
-						<div class="dummy-class"><div class="dummy-class"><div class="dummy-class"><div class="dummy-class"><div class="dummy-class"><div class="dummy-class">
 						{% for teaches in staff.get_classes %}
 						{% ifchanged teaches.section.department_in %}
+						{% if not forloop.first %}
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						{% endif %}
 
 						<div class="recipient-data">
 							<div class="recipient-selection">
@@ -154,7 +171,7 @@
 								</div>
 
 								<div class="drop-down-arrow">
-									<span>></span>
+									<span onclick="click_hidden('class-department-{{forloop.counter}}')">></span>
 								</div>
 
 								<div class="recipient-name">
@@ -162,7 +179,7 @@
 								</div>
 							</div>
 
-							<div class="recipient-data-hidden">
+							<div class="recipient-data-hidden" id="class-department-{{forloop.counter}}">
 								<div class="recipient-list">
 									<div class="recipient-data">
 										<div class="recipient-selection">
@@ -171,7 +188,7 @@
 											</div>
 
 											<div class="drop-down-arrow">
-												<span>></span>
+												<span onclick="click_hidden('class-year-{{forloop.counter}}')">></span>
 											</div>
 
 											<div class="recipient-name">
@@ -179,7 +196,7 @@
 											</div>
 										</div>
 
-										<div class="recipient-data-hidden">
+										<div class="recipient-data-hidden" id="class-year-{{forloop.counter}}">
 											<div class="recipient-list">
 												<div class="recipient-data">
 													<div class="recipient-selection">
@@ -205,7 +222,7 @@
 											</div>
 
 											<div class="drop-down-arrow">
-												<span>></span>
+												<span onclick="click_hidden('class-section-{{forloop.counter}}')">></span>
 											</div>
 
 											<div class="recipient-name">
@@ -213,7 +230,7 @@
 											</div>
 										</div>
 
-										<div class="recipient-data-hidden">
+										<div class="recipient-data-hidden" id="class-section-{{forloop.counter}}">
 											<div class="recipient-list">
 												<div class="recipient-data">
 													<div class="recipient-selection">
@@ -246,41 +263,12 @@
 
 					<div class="recipient-list">
 						{% for section in staff.department_in.section_set.all %}
-						{% if forloop.first %}
-									<div class="recipient-data">
-										<div class="recipient-selection">
-											<div class="check-box">
-												<input name="year-{{section.department_in.id}}-{{section.year}}" type="checkbox" />
-											</div>
-
-											<div class="drop-down-arrow">
-												<span>></span>
-											</div>
-
-											<div class="recipient-name">
-												Year&nbsp;{{section.year}}
-											</div>
-										</div>
-
-										<div class="recipient-data-hidden">
-											<div class="recipient-list">
-												<div class="recipient-data">
-													<div class="recipient-selection">
-														<div class="check-box">
-															<input name="section-{{section.id}}" type="checkbox" />
-														</div>
-
-														<div class="recipient-name">
-															Section&nbsp;{{section.section_id}}
-														</div>
-													</div>
-												</div>
-												{% else %}
-												{% ifchanged section.year %}
+						{% ifchanged section.year %}
+						{% if not forloop.first %}
 											</div>
 										</div>
 									</div>
-
+						{% endif %}
 									<div class="recipient-data">
 										<div class="recipient-selection">
 											<div class="check-box">
@@ -288,7 +276,7 @@
 											</div>
 
 											<div class="drop-down-arrow">
-												<span>></span>
+												<span onclick="click_hidden('section-year-{{forloop.counter}}')">></span>
 											</div>
 
 											<div class="recipient-name">
@@ -296,7 +284,7 @@
 											</div>
 										</div>
 
-										<div class="recipient-data-hidden">
+										<div class="recipient-data-hidden" id="section-year-{{forloop.counter}}">
 											<div class="recipient-list">
 												<div class="recipient-data">
 													<div class="recipient-selection">
@@ -322,13 +310,12 @@
 													</div>
 												</div>
 												{% endifchanged %}
-												{% endif %}
 												{% endfor %}
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+								</div>
 
 				<div class="submit">
 					<input type="submit" value="Ok"/>
@@ -338,7 +325,7 @@
 		</form>
 	</div>
 
-	<div id="post-tracker" hidden>
+	<div id="post-tracker" class="content">
 		<div id="post-list">
 			{% for post in posts %}
 			<div class="post-container">
@@ -358,12 +345,18 @@
 						</div>
 
 						<div class="tracking-read">
-							{{post.read}}
+							<div>
+								{{post.read}}
+							</div>
+
+							<div class="see-more">
+								<span onclick="click_hidden('post-detail-{{forloop.counter}}')">See more </span>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="post-detail">
+				<div class="post-detail" id="post-detail-{{forloop.counter}}">
 					<div class="post-detial-header">
 						<h3>Posted to</h3>
 					</div>
@@ -401,5 +394,421 @@
 
 	</div>
 
+	<div id="group-chat" class="content">
+		<div id="group-chat-keyboard">
+			<form>
+			<div id="keyboard-form">
+				<div id="keyboard-form-textarea">
+					<textarea rows="10"></textarea>
+				</div>
+
+				<div id="keyboard-extra">
+					<div id="keyboard-files">
+						<div class="keyboard-images">
+							{% load static %}
+							<img width=25px src="{% static 'main/Colored-Logo.svg' %}" alt="Image"/>
+							<input type="image" hidden/>
+						</div>
+
+						<div class="keyboard-files">
+							{% load static %}
+							<img width=25px src="{% static 'main/Colored-Logo.svg' %}" alt="File"/>
+							<input type="image" hidden/>
+						</div>
+					</div>
+
+					<div id="keyboard-form-button">
+						<button>Send</button>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+
+		<div id="chat-post-list">
+			{% for post in posts %}
+			{% ifchanged post.pub_date.month or post.pub_date.day %}
+				<div class="chat-date">
+					<p>{{post.pub_date | date:"F j"}}</p>
+				</div>
+			{% endifchanged %}
+			<div class="post-container">
+
+				<div class="chat-post">
+					<div class="post-header">
+						<p><b>{{post.post_by}}</b></p>
+					</div>
+
+					<div class="post-images">
+						{% for image in post.images.all %}
+						<div class="image">
+							<img width="100%" src="/media/{{image.image}}"/>
+						</div>
+						{% endfor %}
+					</div>
+
+					<div class="post-content">
+						<p>{{post}}</p>
+					</div>
+
+					<div class="post-status">
+						<div class="tracking-delivered">
+							<div>
+								{{post.delivered}}&nbsp; "Views logo"&nbsp;&nbsp;
+							</div>
+						</div>
+
+						<div class="post-pub-date">
+							{{post.pub_date}}
+						</div>
+					</div>
+
+					<div class="post-files">
+						{% for file in post.files.all %}
+						<div class="file">
+							<div class="file-link">
+								<a href="/media/{{file.file}}">{{ file.name }}</a>
+							</div>
+
+							<div class="file-description">
+								<p>File Type: {{ file.extension | upper }} &emsp; &emsp; File Size: {{ file.file.size | filesizeformat}}</p>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div id="class-list" class="content">
+		<div id="add-class">
+				<div class="list-header">
+					<h4>{{staff.department_in.name}}</h4>
+				</div>
+
+				<form method="POST">
+				<div class="recipient-list">
+					{% for section in sections %}
+					{% ifchanged section.department_in.id %}
+					{% if not forloop.first %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+
+					<div class="recipient-data">
+						<div class="recipient-selection">
+							<div class="drop-down-arrow">
+								<span onclick="click_hidden('department-{{forloop.counter}}')">></span>
+							</div>
+
+							<div class="recipient-name">
+								Department&nbsp;{{section.department_in.name}}
+							</div>
+						</div>
+
+						<div class="recipient-data-hidden" id="department-{{forloop.counter}}">
+							<div class="recipient-list">
+								<div class="recipient-data">
+									<div class="recipient-selection">
+										<div class="drop-down-arrow">
+											<span onclick="click_hidden('year-{{forloop.counter}}')">></span>
+										</div>
+
+										<div class="recipient-name">
+											Year&nbsp;{{section.year}}
+										</div>
+									</div>
+
+									<div class="recipient-data-hidden" id="year-{{forloop.counter}}">
+										<div class="recipient-list">
+											<div class="recipient-data">
+												<div class="recipient-selection">
+													<div class="check-box">
+														<span onclick="click_hidden('section-{{forloop.counter}}')">></span>
+													</div>
+
+													<div class="recipient-name">
+														Section&nbsp;{{section.section_id}}
+													</div>
+												</div>
+
+												<div class="recipient-data-hidden" id="section-{{forloop.counter}}">
+													<div class="recipient-list">
+														{% for course in section.section_takes.all %}
+														<div class="recipient-data">
+															<div class="recipient-selection">
+																<div class="check-box">
+																	<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
+																</div>
+
+																<div class="recipient-name">
+																	{{course.name}}
+																</div>
+															</div>
+														</div>
+														{% endfor %}
+														</div>
+														</div>
+														</div>
+											{% else %}
+											{% ifchanged section.year %}
+										</div>
+									</div>
+								</div>
+
+								<div class="recipient-data">
+									<div class="recipient-selection">
+										<div class="drop-down-arrow">
+											<span onclick="click_hidden('year-{{forloop.counter}}')">></span>
+										</div>
+
+										<div class="recipient-name">
+											Year&nbsp;{{section.year}}
+										</div>
+									</div>
+
+									<div class="recipient-data-hidden" id="year-{{forloop.counter}}">
+										<div class="recipient-list">
+											<div class="recipient-data">
+												<div class="recipient-selection">
+													<div class="check-box">
+														<span onclick="click_hidden('section-{{forloop.counter}}')">></span>
+													</div>
+
+													<div class="recipient-name">
+														Section&nbsp;{{section.section_id}}
+													</div>
+												</div>
+
+												<div class="recipient-data-hidden" id="section-{{forloop.counter}}">
+													<div class="recipient-list">
+														{% for course in section.section_takes.all %}
+														<div class="recipient-data">
+															<div class="recipient-selection">
+																<div class="check-box">
+																	<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
+																</div>
+
+																<div class="recipient-name">
+																	{{course.name}}
+																</div>
+															</div>
+														</div>
+														{% endfor %}
+														</div>
+														</div>
+														</div>
+											{% else %}
+											<div class="recipient-data">
+												<div class="recipient-selection">
+													<div class="check-box">
+														<span onclick="click_hidden('section-{{forloop.counter}}')">></span>
+													</div>
+
+													<div class="recipient-name">
+														Section&nbsp;{{section.section_id}}
+													</div>
+												</div>
+
+												<div class="recipient-data-hidden" id="section-{{forloop.counter}}">
+													<div class="recipient-list">
+														{% for course in section.section_takes.all %}
+														<div class="recipient-data">
+															<div class="recipient-selection">
+																<div class="check-box">
+																	<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
+																</div>
+
+																<div class="recipient-name">
+																	{{course.name}}
+																</div>
+															</div>
+														</div>
+														{% endfor %}
+														</div>
+														</div>
+														</div>
+											{% endifchanged %}
+											{% endifchanged %}
+
+											{% empty %}
+													<div>
+														<div>
+															<div>
+																<div>
+																	<div>
+																		<div>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="add-button">
+					<button>Add</button>
+				</div>
+
+				</form>
+
+		</div>
+
+		<div id="drop-class">
+			<h3>Classes you are teaching</h3>
+
+			<table>
+				<tr>
+					<th>first</th>
+					<th>Course Name</th>
+					<th>Course Code</th>
+					<th>Module Code</th>
+					<th>Credit Hour</th>
+					<th>Department</th>
+					<th>Section</th>
+				</tr>
+
+				{% for class in classes %}
+				<tr>
+					<td><button>Drop</button></td>
+					<td>{{class.course.name}}</td>
+					<td>{{class.course.course_code}}</td>
+					<td>{{class.course.module_code}}</td>
+					<td>3.00</td>
+					<td>{{class.section.department_in}}</td>
+					<td>Year {{class.section.year}} Section {{class.section.year}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+
+	</div>
+
+	<div id="account-setting" class="content">
+		<div id="profile-form">
+			<form method="post" action="{% url 'Signup' %}">
+			{% csrf_token %}
+
+			<div class="form-headers">
+				<h3>Personal Information</h3>
+			</div>
+			<hr>
+
+			<div id="form-top">
+			<div class="form-left">
+			<div class="textinput input">
+				<div id="error-title" class="error"></div>
+				<label for="title">Title<br></label>
+				<select id="title" name="title" required>
+					<option value="Mr.">Mr.</option>
+					<option value="Ms.">Ms.</option>
+					<option value="Mrs.">Mrs.</option>
+					<option value="Dr.">Doctor</option>
+					<option value="Prof.">Professor</option>
+				</select>
+			</div>
+
+			<div class="textinput input">
+				<div id="error-firstname" class="error"></div>
+				<label for="firstname">First Name<br></label>
+				<input name="first-name" id="firstname" type="text" required/>
+			</div>
+
+			<div class="textinput input">
+				<div id="error-lastname" class="error"></div>
+				<label for="lastname">Last Name<br></label>
+				<input name="last-name" id="lastname" type="text" required/>
+			</div>
+			</div>
+
+			</div>
+
+			<div class="form-headers">
+				<h3>School Information</h3>
+			</div>
+			<hr>
+
+			<div id="form-middle">
+
+			<div class="form-left">
+			<div class="textinput input">
+				<label for="year">University<br></label>
+				<input id="university" type="text"/>
+			</div>
+
+			<div class="textinput input">
+				<div id="error-department" class="error"></div>
+				<label for="department">Choose your department<br></label>
+				<select name="department" id="department" required>
+					{% for department in departments %}
+					{% ifchanged department.university_in %}
+					<option value="" disabled>{{department.university_in}}</option>
+					{% endifchanged %}
+
+					{% if department.id == student.department_in.id %}
+					<option value="{{department.id}}" selected>{{department.name}}</option>
+					{% else %}
+					<option value="{{department.id}}">{{department.name}}</option>
+					{% endif %}
+					{% endfor %}
+				</select>
+			</div>
+			</div>
+
+			<div class="form-right">
+			<div class="textinput input">
+				<div id="error-role" class="error"></div>
+				<label for="role">Role<br></label>
+				<input name="role" id="role" type="text" required/>
+			</div>
+
+			</div>
+			</div>
+
+			<div class="form-headers">
+				<h3>Contact Information</h3>
+			</div>
+			<hr>
+
+			<div id="form-bottom">
+
+			<div class="textinput input">
+				<div id="error-phonenum" class="error"></div>
+				<label for="phonenum">Phone number<br></label>
+				<input name="phone-number" id="phonenum" type="tel" required/>
+			</div>
+
+			<div class="textinput input">
+				<div id="error-email" class="error"></div>
+				<label for="email">Email<br></label>
+				<input name="email" id="email" type="email" required/>
+			</div>
+			</div>
+
+			<div id="form-footer">
+			<div>
+				<h4>Please enter your password to save changes</h4>
+			</div>
+
+			<div class="textinput input">
+
+				<input name="password" id="password" type="password" onKeyUp="password_checker()" required/>
+			</div>
+
+			<div class="submitinput input">
+				<input id="signup-button" type="button" value="Save Changes" onclick="submit()" disabled/>
+			</div>
+			</div>
+		</form>
+		</div>
+	</div>
 </div>
 {% endblock %}

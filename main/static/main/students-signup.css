@@ -56,6 +56,15 @@ h5 {
   font-size: 12px;
 }
 
+.recipient-selection {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.recipient-list {
+  margin-left: 10px;
+}
+
 #container {
   padding-bottom: 40px;
 }

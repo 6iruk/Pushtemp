@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from itertools import chain
 from operator import attrgetter
+from django.db.models import Q
 from main.models import *
 from main.models import Section as main_section
 ##from main.forms import Lecturerform
@@ -36,7 +37,13 @@ def student_account_page(request):
     wall = Post_To_Class.objects.all()
     reminder = Reminder_To_Class.objects.all()
 
-    context = {'wall':wall, 'reminder':reminder}
+    student = Student.objects.get(user=request.user)
+
+    classes = Instructor_Teaches.objects.filter(section__department_in = student.department_in)
+
+    departments = Department.objects.all()
+
+    context = {'wall':wall, 'reminder':reminder, 'student':student, 'classes':classes, 'departments':departments}
     return render(request, 'main/student-account.html', context)
 
 def staff_account_page(request):
@@ -44,7 +51,14 @@ def staff_account_page(request):
     posts = Post.objects.all()
     staff = Staff.objects.first()
 
-    context = {'posts':posts, 'staff':staff}
+    classes = Instructor_Teaches.objects.filter(instructor=staff)
+
+    x = Q()
+    for course in staff.department_in.course_set.all():
+        x = x | Q(section_takes = course)
+    sections = Section.objects.filter(x).distinct()
+
+    context = {'posts':posts, 'staff':staff, 'classes':classes, 'sections':sections}
     return render(request, 'main/staff-account.html', context)
 
 def forgot_password_page(request):

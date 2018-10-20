@@ -1,0 +1,62 @@
+{% for post in posts %}
+{% if post.post.files.all|length > 0 %}
+<div class="course-list-post">
+  <div class="course-list-post-files">
+    {% for file in post.post.files.all %}
+    <div class="course-list-file">
+      <div class="course-list-file-link">
+        <a href="/media/{{file.file}}">{{ file.name }}</a>
+      </div>
+
+      <div class="course-list-file-description">
+        <p>File Type: {{ file.extension | upper }} &emsp; &emsp; File Size: {{ file.file.size | filesizeformat}}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="see-more">
+    <p onclick="click_hidden('course-list-{{post.post_to.id}}-read-post-{{forloop.counter}}')">Read post</p>
+  </div>
+
+  <div class="course-list-post-body course-list-post-hidden" id="course-list-{{post.post_to.id}}-read-post-{{forloop.counter}}">
+    <div class="course-list-post-content">
+      <p>{{ post.post }}</p>
+    </div>
+
+    <div class="course-list-post-body-bottom">
+      <div class="course-list-post-by">
+        <div class="course-list-by-name">
+          {{ post.post.post_by }}
+        </div>
+
+        <div class="course-list-by-role">
+          {{ post.post.post_by.role }}
+        </div>
+      </div>
+
+      <div class="course-list-post-date">
+        {{ post.post.pub_date }}
+      </div>
+    </div>
+
+    <div class="see-more">
+      <p onclick="click_hidden('course-list-{{post.post_to.id}}-see-images-{{forloop.counter}}')">See Images</p>
+    </div>
+  </div>
+
+  <div class="course-list-post-images course-list-post-hidden" id="course-list-{{post.post_to.id}}-see-images-{{forloop.counter}}">
+    {% for image in post.post.images.all %}
+    <div class="course-list-image">
+      <img width="100%" src="/media/{{image.image}}"/>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endif %}
+{% empty %}
+<div>
+  <h3>No files uploaded here</h3>
+</div>
+{% endfor %}
