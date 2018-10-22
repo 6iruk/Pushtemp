@@ -1,64 +1,71 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Welcome to Push</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		{% load static %}
-		<link rel="stylesheet" href="{% static 'main/index.css' %}">
-	</head>
+{% extends 'main/base.html' %}
 
-	<body>
-		<div id="container">
-			<div id="header">
-				<div id="header-logo">
-					{% load static %}
-					<img width=60px src="{% static 'main/White-Logo.svg' %}" alt="Logo"/>
-				</div>
+{% block title %}
+<title>AAU Push - Welcome</title>
+{% endblock %}
 
-				<div id="header-login">
-					<a><button type="button">Log In</button></a>
+{% block nav %}
+{% endblock %}
 
-					<p>or</p>
+{% block extra %}
+<a href="{% url 'Log In' %}" class="btn">Login</a>
+{% endblock %}
 
-					<hr>
+{% block content%}
+{% load static %}
+    <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        <div class="container">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-lg-6 mt-4">
+                        <h1 class="h1-responsive font-weight-bold">Make the most college</h1>
+                        <hr>
+                        <p>
+                            AAU Push fills the communication gap between students and teachers. Teachers simply post announcements and upload course textbooks, references and assignments for students. Students get it through website and the Android application.
+                        </p>
+                    </div>
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-4 mt-4">
+                        <div class='card card-body push-corners'>
+                            <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
+                            <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
+                            <form>
+                                    <select class="form-control my-3 push-corners" required>
+                                            <option value="" disabled selected>Pick your Department</option>
+                                            <option value="1">Option 1</option>
+                                            <option value="2">Option 2</option>
+                                            <option value="3">Option 3</option>
+                                    </select>
+                                    <input class="form-control my-3 push-corners" name="first-name" type="text" placeholder="First Name" required>
+                                    <input class="form-control my-3 push-corners" name="last-name" type="text" placeholder="Last Name" required>
+                                    <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                    <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                    <button class="btn btn-block my-3" type="submit">Sign up</button>
+                                    <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ADD LOGIN OPTION HERE FOR WHEN RESIZED TO SMALLER SCREENS-->
+                <div class="row mt-2">
+                        <p class="meta grey-text">
+                            Copyright 2018 AAU Push
+                        | <a href="#" class="link">About Us</a>
+                        | <a href="#" class="link">Feedback</a>
+                        | <a href="#" class="link">Terms</a>
+                        </p>
+                  </div>
+                <!--Grid row-->
+              </div>
+    </div>
+{% endblock %}
 
-					<a href="#"><button type="button">Sign Up For Students</button></a>
-				</div>
-			</div>
+{% block script%}
 
-			<div id="content">
-				<div id="content-top">
-					<div id="content-push">
-						<p>A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.</p>
-					</div>
-
-					<div id="content-stat">
-						<h3>124</h3>
-						<h3>Posts</h3>
-
-						<h3>74</h3>
-						<h3>Files</h3>
-					</div>
-				</div>
-
-				<hr>
-
-				<div id="content-bottom">
-					<div id="content-vision">
-						<p>A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.</p>
-					</div>
-
-					<hr>
-
-					<div id="content-contribute">
-						<p>A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.A form with a three-way option of logging into the account. Either it is Facebook, Twitter or email login they prefer, this is the type of a tool that you need to feature on your page. And if they do not already have an account, you can also link it with your sign up page.</p>
-					</div>
-				</div>
-			</div>
-
-			<div id="footer">
-
-			</div>
-		</div>
-	</body>
-</html>
+<script>
+    // Tooltips Initialization
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}

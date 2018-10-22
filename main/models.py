@@ -363,7 +363,7 @@ class Post_To_Section(models.Model):
    post = models.ForeignKey(Post)
 
    def __str__(self):
-      return self.post_by + "-" + self.post_to
+      return self.post.post_by.__str__() + "-" + self.post_to.__str__()
 
 
 

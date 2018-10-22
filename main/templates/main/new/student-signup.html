@@ -1,0 +1,112 @@
+{% extends 'main/dashboard-base.html' %}
+
+{% block title %}
+<title>AAU Push - Welcome</title>
+{% endblock %}
+
+{% block nav %}
+<!-- Collapse button -->
+<button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#pushNav"
+aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<!-- Collapsible content -->
+<div class="collapse navbar-collapse" id="pushNav">
+
+    <!-- Links -->
+    <ul class="navbar-nav mr-auto d-lg-none">
+        <li class="nav-item active">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav">Announcements</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav">Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav">Push Board</a>
+        </li>
+        <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav">Account</a>
+        </li>
+    </ul>
+    <!-- Links -->
+</div>
+<!-- Collapsible content -->
+{% endblock %}
+
+{% block extra %}
+
+{% endblock %}
+
+{% block content%}
+{% load static %}
+    <div class="container-fluid">
+            <div class="row push-min-height">
+                <div class="col-2 card push-corners d-none d-lg-block">
+                    <div class="push-sidebar">
+                        <div>    
+                            <div class="push-sidebar-item">
+                                <a href="#" class="">
+                                    <i class="fa fa-newspaper-o mr-3" aria-hidden="true"></i>Announcements
+                                </a>
+                            </div>
+                            <div class="push-sidebar-item">
+                                <a href="#">
+                                    <i class="fa fa-newspaper-o mr-3" aria-hidden="true"></i>Push Board
+                                </a>
+                            </div>
+                            <div class="push-sidebar-item">
+                                <a class="dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="fa fa-newspaper-o mr-3" aria-hidden="true"></i>Courses
+                                </a>
+                                <div class="dropdown-menu dropdown-primary push-corners" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="#">Introduction to Computer Science</a>
+                                    <a class="dropdown-item" href="#">Artificial Intelligence</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="push-sidebar-item">
+                                <a href="#">
+                                    <i class="fa fa-newspaper-o mr-3" aria-hidden="true"></i>Footer
+                                </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-10">
+                    <!--Grid row-->
+                    <div class="row push-min-height">
+                            <div class="col-lg-6 mt-4">
+                                
+                            </div>
+
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-4 mt-4">
+
+                            </div>
+                    </div>
+                    <div class="row mb-3 mt-1 ml-2" >
+                            <p class="meta grey-text">
+                                Copyright 2018 AAU Push
+                            | <a href="#" class="link">About Us</a>
+                            | <a href="#" class="link">Feedback</a>
+                            | <a href="#" class="link">Terms</a>
+                            </p>
+                    </div>
+                        <!--Grid row-->
+                </div>
+            </div>
+    </div>
+{% endblock %}
+
+{% block script%}
+
+<script>
+    // Tooltips Initialization
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}

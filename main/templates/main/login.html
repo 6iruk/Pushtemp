@@ -1,131 +1,92 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Log In</title>
+{% extends 'main/base.html' %}
 
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}
+<title>AAU Push - Login</title>
+{% endblock %}
 
-		{% load static %}
-		<link rel="stylesheet" href="{% static 'main/login.css' %}">
+{% block nav %}
+{% endblock %}
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		{% load static %}
-		<script src="{% static 'main/login.js' %}"></script>
+{% block extra %}
+<a href="{% url 'Sign Up' %}" class="btn ">Sign up</a>
+{% endblock %}
 
-	</head>
+{% block content%}
+{% load static %}
+    <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        <div class="container">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-lg-6 mt-4">
+                            <div class='card card-body push-corners'>
+                                    <p class="link font-weight-bold text-center">Pick your Login</p>
 
-	<body>
-		<div id="container">
-			<div id="login">
-				<div id="login-header">
-					<div id="push-logo">
-						{% load static %}
-						<img width=120px src="{% static 'main/Colored-logo.svg' %}" alt="Logo"/>
-					</div>
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="staff" aria-selected="false">Staff</a>
+                                        </li>
+                                    </ul>
 
-					<div id="push-goals">
-						<div class="goal first-goal">
-							Reliable
-						</div>
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
+                                            <form method="post" action="{% url 'Login' %}">
+                                                    {% csrf_token %}
+                                                    <input name="user-type" type="text" value="student" hidden/>
+                                                    <input class="form-control my-3 push-corners" name="reg_id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                                    <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                                    <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                                    <button class="btn btn-block my-3" type="submit">Login</button>
+                                                    <p class=" text-center">Don't have an account? <a class="link" href="#">Sign up here.</a></p>
+                                            </form>    
+                                        </div>
+                                        <div class="tab-pane fade" id="staff" role="tabpanel" aria-labelledby="staff-tab">
+                                            <form method="post" action="{% url 'Login' %}">
+                                                    {% csrf_token %}
+                                                    <input name="user-type" type="text" value="staff" hidden/>
+                                                    <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                                    <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                                    <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                                    <button class="btn btn-block my-3" type="submit">Login</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                            </div>
+                    </div>
+                </div>
+                    <div class="col-lg-6 mt-4">
+                    </div>
+        </div>
+    </div>
+                <div class="row">
+                                
+                                <p class="textcenter">If there is any problem or if you have a question please contact us at</p>
+                                <p class="textcenter contact">aaupush@gmail.com </p>
+                                <hr>
+                                <p class="textcenter contact">or</p>
+                                <p class="textcenter contact">+251-912-12-12-12</p>
+                </div>
+                <div class="row mt-2">
+                        <p class="meta grey-text">
+                            Copyright 2018 AAU Push
+                        | <a href="#" class="link">About Us</a>
+                        | <a href="#" class="link">Feedback</a>
+                        | <a href="#" class="link">Terms</a>
+                        </p>
+                  </div>
+                <!--Grid row-->
+              </div>
+    </div>
+{% endblock %}
 
-						<div class="goal">
-							Fast
-						</div>
+{% block script%}
 
-						<div class="goal">
-							Convinient
-						</div>
-					</div>
-				</div>
-
-				<h2 class="textcenter">Welcome</h2>
-
-				<div id="login-form">
-					<div id="form-chooser">
-						<div id="button-1" class="type-button">
-							<button onclick="user_type_click('student')">Student</button>
-						</div>
-
-						<div id="button-2" class="type-button">
-							<button onclick="user_type_click('staff')">Staff</button>
-						</div>
-					</div>
-
-					<div id="stu-form">
-						<form method="post" action="{% url 'Login' %}">
-							{% csrf_token %}
-							<input name="user-type" type="text" value="student" hidden/>
-							<div class="textinput input">
-								<input name="reg_id" type="text" placeholder="Registration Number" required/>
-							</div>
-
-							<div class="textinput input">
-								<input name="password" type="password" placeholder="Password" />
-							</div>
-
-							<div class="submitinput input">
-								<input class="login-button" type="submit" value="Sign In"/>
-							</div>
-
-							<div class="input">
-								<p><a href="#">Forgot Password?</a></p>
-								<p id="signup">Don't have an account? Sign up <a href="#">here</a></p>
-							</div>
-						</form>
-					</div>
-
-					<div id="sta-form">
-						<form method="post" action="{% url 'Login' %}">
-							{% csrf_token %}
-							<input name="user-type" type="text" value="staff" hidden/>
-							<div class="textinput input">
-								<input name="email" type="text" placeholder="Email" required/>
-							</div>
-
-							<div class="textinput input">
-								<input name="password" type="password" placeholder="Password" />
-							</div>
-
-							<div class="submitinput input">
-								<input class="login-button" type="submit" value="Sign In"/>
-							</div>
-
-							<div class="input">
-								<p><a href="#">Forgot Password?</a></p>
-							</div>
-						</form>
-					</div>
-				</div>
-
-
-
-				<div id="login-footer">
-					<hr>
-					<p class="textcenter">If there is any problem or if you have a question please contact us at</p>
-					<p class="textcenter contact">aaupush@gmail.com </p>
-					<p class="textcenter contact">or</p>
-					<p class="textcenter contact">+251-912-12-12-12</p>
-				</div>
-			</div>
-
-			<div id="footer">
-				<div id="footer-content">
-					<div id="copyright">
-						<span>Copyright 2018</span>
-					</div>
-
-					<div id="footer-nav">
-						<a href="">About Us</a>
-						<a href="">Feedback</a>
-						<a href="">Terms Of Service</a>
-					</div>
-
-					<div id="built-with-passion">
-						{% load static %}
-						<img src="{% static '' %}" alt="PUSH"/>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-</html>
+<script>
+    // Tooltips Initialization
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}
