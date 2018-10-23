@@ -15,67 +15,59 @@
 {% load static %}
     <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
         <div class="container">
-                <!--Grid row-->
-                <div class="row">
-                    <div class="col-lg-6 mt-4">
-                            <div class='card card-body push-corners'>
-                                    <p class="link font-weight-bold text-center">Pick your Login</p>
+            <div class="row push-min-height">
+                <div class="col-lg-6 mt-3">
+                    <div class="card card-body push-corners">
+                        <p class="link font-weight-bold text-center">Pick your Login</p>
 
-                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="staff" aria-selected="false">Staff</a>
-                                        </li>
-                                    </ul>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="staff" aria-selected="false">Staff</a>
+                            </li>
+                        </ul>
 
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
-                                            <form method="post" action="{% url 'Login' %}">
-                                                    {% csrf_token %}
-                                                    <input name="user-type" type="text" value="student" hidden/>
-                                                    <input class="form-control my-3 push-corners" name="reg_id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
-                                                    <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
-                                                    <p><a href="#" class="meta link">Forgot Password?</a></p>
-                                                    <button class="btn btn-block my-3" type="submit">Login</button>
-                                                    <p class=" text-center">Don't have an account? <a class="link" href="#">Sign up here.</a></p>
-                                            </form>    
-                                        </div>
-                                        <div class="tab-pane fade" id="staff" role="tabpanel" aria-labelledby="staff-tab">
-                                            <form method="post" action="{% url 'Login' %}">
-                                                    {% csrf_token %}
-                                                    <input name="user-type" type="text" value="staff" hidden/>
-                                                    <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
-                                                    <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
-                                                    <p><a href="#" class="meta link">Forgot Password?</a></p>
-                                                    <button class="btn btn-block my-3" type="submit">Login</button>
-                                            </form>
-                                        </div>
-                                    </div>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
+                                <form method="post" action="{% url 'Login' %}">
+                                        {% csrf_token %}
+                                        <input name="user-type" type="text" value="student" hidden/>
+                                        <input class="form-control my-3 push-corners" name="reg_id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                        <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                        <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                        <button class="btn btn-block my-3" type="submit">Login</button>
+                                        <p class="text-center">Don't have an account? <a class="link" href="{% url 'Sign Up' %}">Sign up here.</a></p>
+                                        <p class="meta">If there is any problem or if you have a question please contact us at aaupush@gmail.com or 0913 35 00 82.</p>
+                                </form>    
                             </div>
+                            <div class="tab-pane fade" id="staff" role="tabpanel" aria-labelledby="staff-tab">
+                                <form method="post" action="{% url 'Login' %}">
+                                        {% csrf_token %}
+                                        <input name="user-type" type="text" value="staff" hidden/>
+                                        <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                        <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                        <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                        <button class="btn btn-block my-3" type="submit">Login</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                    <div class="col-lg-6 mt-4">
-                    </div>
+            </div>
+            <div class="row mt-2">
+                <p class="meta grey-text">
+                    Copyright 2018 AAU Push
+                | <a href="#" class="link">About Us</a>
+                | <a href="#" class="link">Feedback</a>
+                | <a href="#" class="link">Terms</a>
+                </p>
+            </div>   
         </div>
     </div>
-                <div class="row">
-                                
-                                <p class="textcenter">If there is any problem or if you have a question please contact us at</p>
-                                <p class="textcenter contact">aaupush@gmail.com </p>
-                                <hr>
-                                <p class="textcenter contact">or</p>
-                                <p class="textcenter contact">+251-912-12-12-12</p>
-                </div>
-                <div class="row mt-2">
-                        <p class="meta grey-text">
-                            Copyright 2018 AAU Push
-                        | <a href="#" class="link">About Us</a>
-                        | <a href="#" class="link">Feedback</a>
-                        | <a href="#" class="link">Terms</a>
-                        </p>
-                  </div>
+            
+               
                 <!--Grid row-->
               </div>
     </div>

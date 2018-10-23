@@ -15,53 +15,43 @@
 {% load static %}
     <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
         <div class="container">
-                <!--Grid row-->
-                <div class="row">
-                    <div class="col-lg-6 mt-4">
-                        <div class='card card-body push-corners'>
-                                <p> <span class='link font-weight-bold'>You're almost done... </span></p>
-                                <form method="post" action="{% url 'Signup' %}">
-                                        {% csrf_token %}
-                                        <select class="form-control my-3 push-corners" required>
-                                                <option value="" disabled selected>Pick your year</option>
-                                                <option value="1">Year 1</option>
-                                                <option value="2">Year 2</option>
-                                                <option value="3">Year 3</option>
-                                        </select>
-                                        <select class="form-control my-3 push-corners" data-toggle="tooltip" data-placement="left" title="First pick your year." required>
-                                                <option value="" disabled selected>Pick your section</option>
-                                                <option value="1" disabled>No options (pick your year first)</option>
-                                        </select>
-                                        <input class="form-control my-3 push-corners" name="phone-number" placeholder="Phone Number" type="tel" required/>
-                                        <input class="form-control my-3 push-corners" name="password" id="password" type="password" onKeyUp="password_checker()" placeholder="Password" required>
-                                        <input class="form-control my-3 push-corners" name="repeat-password" type="password" placeholder="Repeat Password" id="repass" onKeyUp="password_checker()" required>
-                                        <button class="btn btn-block my-3" id="signup-button" type="submit" disabled>Complete Sign up</button>
-                                        <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
-                                </form>
-                            </div>
+            <!--Grid row-->
+            <div class="row push-min-height">
+                <div class="col-lg-6 mt-3">
+                    <div class='card card-body push-corners'>
+                        <p> <span class='link font-weight-bold'>You're almost done... </span></p>
+                        <form method="post" action="{% url 'Signup' %}">
+                                {% csrf_token %}
+                                <select class="form-control my-3 push-corners" required>
+                                        <option value="" disabled selected>Pick your year</option>
+                                        <option value="1">Year 1</option>
+                                        <option value="2">Year 2</option>
+                                        <option value="3">Year 3</option>
+                                </select>
+                                <select class="form-control my-3 push-corners" data-toggle="tooltip" data-placement="left" title="First pick your year." required>
+                                        <option value="" disabled selected>Pick your section</option>
+                                        <option value="1" disabled>No options (pick your year first)</option>
+                                </select>
+                                <input class="form-control my-3 push-corners" name="phone-number" placeholder="Phone Number" type="tel" required/>
+                                <input class="form-control my-3 push-corners" name="password" id="password" type="password" onKeyUp="password_checker()" placeholder="Password" required>
+                                <input class="form-control my-3 push-corners" name="repeat-password" type="password" placeholder="Repeat Password" id="repass" onKeyUp="password_checker()" required>
+                                <button class="btn btn-block my-3" id="signup-button" type="submit" disabled>Complete Sign up</button>
+                                <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
+                        </form>
                     </div>
                 </div>
-                    <div class="col-lg-6 mt-4">
-                    </div>
+            </div>
+            <div class="row mt-2">
+                <p class="meta grey-text">
+                    Copyright 2018 AAU Push
+                | <a href="#" class="link">About Us</a>
+                | <a href="#" class="link">Feedback</a>
+                | <a href="#" class="link">Terms</a>
+                </p>
+            </div>
         </div>
     </div>
-                <div class="row">
-                                
-                                <p class="textcenter">If there is any problem or if you have a question please contact us at</p>
-                                <p class="textcenter contact">aaupush@gmail.com </p>
-                                <hr>
-                                <p class="textcenter contact">or</p>
-                                <p class="textcenter contact">+251-912-12-12-12</p>
-                </div>
-                <div class="row mt-2">
-                        <p class="meta grey-text">
-                            Copyright 2018 AAU Push
-                        | <a href="#" class="link">About Us</a>
-                        | <a href="#" class="link">Feedback</a>
-                        | <a href="#" class="link">Terms</a>
-                        </p>
-                  </div>
-                <!--Grid row-->
+                
               </div>
     </div>
 {% endblock %}

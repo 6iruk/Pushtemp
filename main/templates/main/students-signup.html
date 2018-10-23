@@ -17,40 +17,28 @@
         <div class="container">
                 <!--Grid row-->
                 <div class="row">
-                    <div class="col-lg-6 mt-4">
+                    <div class="col-lg-6 mt-3">
                         <div class='card card-body push-corners'>
-                                <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
-                                <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
-                                <form method="post" action="{% url 'Signup' %}">
-                                        <select class="form-control my-3 push-corners" required>
-                                                <option value="" disabled selected>Pick your Department</option>
-                                                {% for department in departments %}
-                                                    <option value="{{department.id}}">{{department.name}}</option>
-                                                {% endfor %}
-                                        </select>
-                                        <input class="form-control my-3 push-corners" name="first-name" type="text" placeholder="First Name" required>
-                                        <input class="form-control my-3 push-corners" name="last-name" type="text" placeholder="Last Name" required>
-                                        <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
-                                        <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
-                                        <button class="btn btn-block my-3" type="submit">Sign up</button>
-                                        <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
-                                </form>
-                            </div>
+                            <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
+                            <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
+                            <form method="post" action="{% url 'Signup' %}">
+                                    <select class="form-control my-3 push-corners" required>
+                                            <option value="" disabled selected>Pick your Department</option>
+                                            {% for department in departments %}
+                                                <option value="{{department.id}}">{{department.name}}</option>
+                                            {% endfor %}
+                                    </select>
+                                    <input class="form-control my-3 push-corners" name="first-name" type="text" placeholder="First Name" required>
+                                    <input class="form-control my-3 push-corners" name="last-name" type="text" placeholder="Last Name" required>
+                                    <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                    <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                    <button class="btn btn-block my-3" type="submit">Sign up</button>
+                                    <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                    <div class="col-lg-6 mt-4">
-                    </div>
-        </div>
-    </div>
-                <div class="row">
-                                
-                                <p class="textcenter">If there is any problem or if you have a question please contact us at</p>
-                                <p class="textcenter contact">aaupush@gmail.com </p>
-                                <hr>
-                                <p class="textcenter contact">or</p>
-                                <p class="textcenter contact">+251-912-12-12-12</p>
-                </div>
-                <div class="row mt-2">
+                <div class="row mt-3">
                         <p class="meta grey-text">
                             Copyright 2018 AAU Push
                         | <a href="#" class="link">About Us</a>
@@ -58,6 +46,8 @@
                         | <a href="#" class="link">Terms</a>
                         </p>
                   </div>
+        </div>
+    </div>
                 <!--Grid row-->
               </div>
     </div>
