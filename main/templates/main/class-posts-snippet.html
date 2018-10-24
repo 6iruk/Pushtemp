@@ -1,62 +1,48 @@
+{% load humanize %}
+
 {% for post in posts %}
-{% if post.post.files.all|length > 0 %}
-<div class="course-list-post">
-  <div class="course-list-post-files">
-    {% for file in post.post.files.all %}
-    <div class="course-list-file">
-      <div class="course-list-file-link">
-        <a href="/media/{{file.file}}">{{ file.name }}</a>
-      </div>
+  {% if post.post.files.all|length > 0 %}
+    <div class="card card-body push-corners mt-2">
+      <div class="flex-container">
+        <div class="course-list-post-files">
+          {% for file in post.post.files.all %}
+            <div class="file">
+                <div>
+                    <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                </div>
 
-      <div class="course-list-file-description">
-        <p>File Type: {{ file.extension | upper }} &emsp; &emsp; File Size: {{ file.file.size | filesizeformat}}</p>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="see-more">
-    <p onclick="click_hidden('course-list-{{post.post_to.id}}-read-post-{{forloop.counter}}')">Read post</p>
-  </div>
-
-  <div class="course-list-post-body course-list-post-hidden" id="course-list-{{post.post_to.id}}-read-post-{{forloop.counter}}">
-    <div class="course-list-post-content">
-      <p>{{ post.post }}</p>
-    </div>
-
-    <div class="course-list-post-body-bottom">
-      <div class="course-list-post-by">
-        <div class="course-list-by-name">
-          {{ post.post.post_by }}
+                <div>
+                    <p class="meta mb-2">File size:  {{ file.file.size | filesizeformat}}</p>
+                </div>
+            </div>
+          {% endfor %}
         </div>
-
-        <div class="course-list-by-role">
-          {{ post.post.post_by.role }}
+        <div>
+            <button class="btn" onclick="click_hidden('course-list-{{post.post_to.id}}-read-post-{{forloop.counter}}')">Read post</button>
         </div>
       </div>
 
-      <div class="course-list-post-date">
-        {{ post.post.pub_date }}
+      <div class="hidden-area" id="course-list-{{post.post_to.id}}-read-post-{{forloop.counter}}">
+        <div class="mt-2">
+            <p>{{ post.post }}</p>
+        </div>
+        <div>
+            <span class="meta">{{ post.post.pub_date | naturaltime}} | </span>
+            <span class="meta link" onclick="click_hidden('course-list-{{post.post_to.id}}-see-images-{{forloop.counter}}')"> See images</span>
+        </div>
+      </div>
+
+      <div class="hidden-area" id="course-list-{{post.post_to.id}}-see-images-{{forloop.counter}}">
+        {% for image in post.post.images.all %}
+          <div class="mt-2">
+            <img width="100%" src="/media/{{image.image}}"/>
+          </div>
+        {% endfor %}
       </div>
     </div>
-
-    <div class="see-more">
-      <p onclick="click_hidden('course-list-{{post.post_to.id}}-see-images-{{forloop.counter}}')">See Images</p>
+  {% endif %}
+  {% empty %}
+    <div class="card card-body push-corners">
+      <span>No files uploaded here</span>
     </div>
-  </div>
-
-  <div class="course-list-post-images course-list-post-hidden" id="course-list-{{post.post_to.id}}-see-images-{{forloop.counter}}">
-    {% for image in post.post.images.all %}
-    <div class="course-list-image">
-      <img width="100%" src="/media/{{image.image}}"/>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-
-{% endif %}
-{% empty %}
-<div>
-  <h3>No files uploaded here</h3>
-</div>
 {% endfor %}

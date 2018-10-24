@@ -26,7 +26,7 @@ def students_signup_page(request):
     departments = Department.objects.all()
 
     context = {'departments':departments}
-    return render(request, 'main/students-signup.html', context)
+    return render(request, 'main/student/students-signup.html', context)
 
 def login_page(request):
 
@@ -39,12 +39,17 @@ def student_account_page(request):
 
     student = Student.objects.get(user=request.user)
 
+    x = Q()
+    for course in student.department_in.course_set.all():
+        x = x | Q(section_takes = course)
+    sections = Section.objects.filter(x).distinct()
+
     classes = Instructor_Teaches.objects.filter(section__department_in = student.department_in)
 
     departments = Department.objects.all()
 
-    context = {'wall':wall, 'reminder':reminder, 'student':student, 'classes':classes, 'departments':departments}
-    return render(request, 'main/student-account.html', context)
+    context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'classes':classes, 'departments':departments}
+    return render(request, 'main/student/student-account.html', context)
 
 def staff_account_page(request):
 
@@ -59,7 +64,7 @@ def staff_account_page(request):
     sections = Section.objects.filter(x).distinct()
 
     context = {'posts':posts, 'staff':staff, 'classes':classes, 'sections':sections}
-    return render(request, 'main/staff-account.html', context)
+    return render(request, 'main/staff/staff-account.html', context)
 
 def forgot_password_page(request):
 

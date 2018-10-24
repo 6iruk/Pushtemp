@@ -94,11 +94,9 @@ a, .link {
 
 .flex-container {
   height: 100%;
-  margin: auto;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: center; }
+  flex-wrap: wrap; }
 
 .push-container {
   max-width: 90%; }
@@ -137,5 +135,14 @@ hr {
 
 .hidden-area {
   display: none; }
+
+.exam-reminder-header {
+  background-color: #960000; }
+
+.assign-reminder-header {
+  background-color: #006b00; }
+
+.proj-reminder-header {
+  background-color: #0074c2; }
 
 /*# sourceMappingURL=push.css.map */

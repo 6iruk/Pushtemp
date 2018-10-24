@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block extra %}
-<a href="{% url 'Log In' %}" class="btn ">Login</a>
+<a href="{% url 'Log In' %}" class="btn">Login</a>
 {% endblock %}
 
 {% block content%}
@@ -42,12 +42,7 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <p class="meta grey-text">
-                    Copyright 2018 AAU Push
-                | <a href="#" class="link">About Us</a>
-                | <a href="#" class="link">Feedback</a>
-                | <a href="#" class="link">Terms</a>
-                </p>
+                {% include 'main/snippets/footer.html' %}
             </div>
         </div>
     </div>
