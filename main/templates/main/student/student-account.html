@@ -93,7 +93,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 				<div class="col-lg-10">
 					<div class="row push-min-height">
 							<div class="col-md-6 mt-3">
-								<div id="your-wall-content" class="content hidden-area">
+								<div id="your-wall-content" class="content">
 									{% include 'main/snippets/post-snippet.html' with source=wall %}
 								</div>
 
@@ -333,7 +333,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 										</div>
 								</div>
 								
-								<div id="account-setting-content" class="content">
+								<div id="account-setting-content" class="content hidden-area">
 										<div id="profile-form" class="card card-body push-corners">
 												<form method="post" action="{% url 'Signup' %}">
 												{% csrf_token %}
