@@ -271,7 +271,11 @@ class Staff(models.Model):
       return self.title + " " + self.first_name  #also add the staff ID here so it's easy to debug
 
    def get_classes(self):
-      classes = self.instructor_teaches_set.all()
+      department_ids = self.instructor_teaches_set.values_list('section__department_in__id', flat=True).distinct()
+      classes = []
+
+      for id in department_ids:
+          classes.append(list(self.instructor_teaches_set.filter(section__department_in__id = id)))
 
       return classes
 
@@ -351,7 +355,7 @@ class Post_To_Class(models.Model):
       return str(self.post.post_by) + "-" + str(self.post_to)
 
    def recipient(self):
-      return self.post_to.section.department_in.name + " Year" + str(self.post_to.section.year) + " Section" + self.post_to.section.section_id
+      return self.post_to.section.department_in.name + " Year " + str(self.post_to.section.year) + " Section " + self.post_to.section.section_id + " - " + self.post_to.course.name
 
 #A staff member posts to a section
 class Post_To_Section(models.Model):
@@ -365,6 +369,8 @@ class Post_To_Section(models.Model):
    def __str__(self):
       return self.post.post_by.__str__() + "-" + self.post_to.__str__()
 
+   def recipient(self):
+      return self.post_to.department_in.name + " Year " + str(self.post_to.year) + " Section " + self.post_to.section_id
 
 
 #A staff member posts to a student

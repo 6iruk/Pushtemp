@@ -25,7 +25,6 @@ urlpatterns = [
     url(r'^login/$',views.login_page, name='Log In'),
     url(r'^student/account$' ,views.student_account_page, name='Student Account'),
     url(r'^staff/account$' ,views.staff_account_page, name='Staff Account'),
-
     # url(r'^section/', include('main.urls')),
     # url(r'^file/(?P<material_id>[0-9a-zA-Z]+)/$',views.file_request, name='File'),
     # url(r'^forgot_password/$',views.forgot_password, name='forgot_password'),

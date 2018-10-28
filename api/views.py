@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Q
 from django.contrib.auth.models import User
+import datetime, zipfile, io
 from main import models
 
 # Create your views here.
@@ -779,62 +780,192 @@ def add_drop(request):
 
 
 
-# def add_drop(request):
-#         action = ""
-#         no_of_courses = 0
-#
-#         if not request.user.is_authenticated():
-#             return HttpResponse("{\"action\":\"null\", \"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
-#
-#         if models.Student.objects.filter(user=request.user).exists():
-#             student = models.Student.objects.get(user=request.user)
-#
-#         else:
-#             return HttpResponse("{\"action\":\"null\", \"status\":2, \"remark\":\"Student not found\"}", content_type='application/json')
-#
-#
-#         classes_id = request.POST.getlist('class')
-#
-#         if request.POST.get('action_type') == "add":
-#             action = "add"
-#             for class_id in classes_id:
-#                 if not student.class_in.filter(id = class_id).exists():
-#                     student.class_in.add(models.Instructor_Teaches.objects.get(id = class_id))
-#                     no_of_courses += 1
-#
-#         elif request.POST.get('action_type') == "drop":
-#             action = "drop"
-#             for class_id in classes_id:
-#                 if student.class_in.filter(id = class_id).exists():
-#                     student.class_in.remove(models.Instructor_Teaches.objects.get(id = class_id))
-#                     no_of_courses += 1
-#
-#         else:
-#                 return HttpResponse("{\"action\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
-#
-#
-#         if len(request.POST.getlist('class')) > 0:
-#             status = 1
-#             remark = "Action successul"
-#
-#         else:
-#             status = 0
-#             remark = "No classes sent"
-#             action = "null"
-#
-#
-#         #JSON output
-#         #Start json object
-#         output = "{\"status\":"
-#         output +=  str(status) + ","
-#         output += "\"remark\":"
-#         output += "\"" + remark + "\"" + ","
-#         output += "\"count\":"
-#         output +=  str(no_of_courses) + ","
-#         output += "\"action\":"
-#         output += "\"" + action + "\"}"
-#
-#         return HttpResponse(output, content_type='application/json')
+def post_action(request):
+        if not request.user.is_authenticated():
+            return HttpResponse("{\"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
+
+        if models.Staff.objects.filter(user=request.user).exists():
+            staff = models.Staff.objects.get(user=request.user)
+
+        else:
+            return HttpResponse("{\"status\":2, \"remark\":\"Staff not found\"}", content_type='application/json')
+
+
+        if request.POST.get('action-type') == "chat":
+            if not request.POST.get('post-content') or (request.POST.get('post-content').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#group-chat-post-content-error\", \"html\":\"<p>Post content is required</p>\"}", content_type='application/json')
+
+            if request.FILES.get('image-1'):
+                if request.POST.get('image-1').split('.')[-1].strip().isslower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                    return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#group-chat-attachment-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+
+
+            content = request.POST.get('post-content')
+            pub_date = datetime.datetime.now()
+
+            post = models.Post.objects.create(content = content, post_type = 1, post_by = staff, pub_date = pub_date)
+
+            if request.FILES.get('file-1'):
+                name = request.FILES.get('file-name-1').name
+                file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff)
+                post.files.add(file)
+
+            if request.FILES.get('image-1'):
+                file = models.Image.objects.create(file = request.FILES.get('image-1'), post_by = staff)
+                post.images.add(file)
+
+            models.Post_To_Chat.objects.create(post_to = staff.department_in, post = post)
+
+            latest = models.Post_To_Chat.objects.latest('post__pub_date')
+
+            def sizeof_fmt(num, suffix='B'):
+                for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+                    if abs(num) < 1024.0:
+                        return "%3.1f%s%s" % (num, unit, suffix)
+                    num /= 1024.0
+                return "%.1f%s%s" % (num, 'Yi', suffix)
+
+            html = ""
+
+            if latest.post.pub_date.day != post.pub_date.day or latest.post.pub_date.month != post.pub_date.month or latest.post.pub_date.year != post.pub_date.year:
+                html += "<div class='mx-3 mt-3'>"
+                html += "<p>" + post.pub_date.strftime("%B") + " " + post.pub_date.day + "</p>"
+                html += "</div>"
+
+            html += "<div class='card card-body push-corners mb-3'>"
+            html += "<div class='post-header'>"
+            html += "<p class='font-weight-bold'>" + post.post_by.__str__() + "</p></div>"
+            html += "<div class='post-images'>"
+            for image in post.images.all():
+                html += "<div class='mb-3'>"
+                html += "<img width='100%' src='/media/" + image.image + "\'/>"
+                html += "</div>"
+            html += "</div>"
+            html += "<div class='post-content'>"
+            html += "<p>" + post.content + "</p>"
+            html += "</div>"
+
+            html += "<div>"
+            for file in post.files.all():
+                html += '<div class="file">'
+                html += '<div>'
+                html += '<a class="link font-weight-bold" href="/media/' + file.file + '">' +  file.name + '['+ file.extension.isupper + ']</a>'
+                html += '</div>'
+                html += '<div>'
+                html += '<p class="meta mb-2">File size:  ' + sizeof_fmt(file.file.size)  + '</p>'
+                html += '</div>'
+                html += '</div>'
+            html += '</div>'
+
+            html += "<div>"
+            html += "<div>"
+            html += "<span class='meta'>" + str(post.delivered()) + " Views | </span>"
+            html += "<span class='meta'>" + post.pub_date.strftime("%b") + "." + str(post.pub_date.day) + ", " + str(post.pub_date.year) + "</span>"
+            html += "</div>"
+            html += "</div>"
+            html += "</div>"
+
+            return HttpResponse("{\"status\":1, \"remark\":\"Post Successful\", \"html\":\"" + html + "\"}", content_type='application/json')
+
+
+        if (request.POST.get('post-content').strip() == ""):
+                return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#post-content-error\", \"html\":\"<p>Post content is required</p>\"}", content_type='application/json')
+
+        if not request.POST.getlist('section-recipients'):
+            if not request.POST.getlist('class-recipients'):
+                return HttpResponse("{\"status\":0, \"remark\":\"Recipient not found\", \"id\":\"#post-recipient-error\", \"html\":\"<p>Choose at least one post recipient</p>\"}", content_type='application/json')
+
+        if request.FILES.get('file-1'):
+            if request.POST.get('file-name-1').strip() == "":
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\", \"id\":\"#post-file-1-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
+
+        if request.FILES.get('file-2'):
+            if request.POST.get('file-name-2').strip() == "":
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-2-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
+
+        if request.FILES.get('file-3'):
+            if request.POST.get('file-name-3').strip() == "":
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-3-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
+
+        if request.FILES.get('image-1'):
+            if request.POST.get('image-1').split('.')[-1].strip().isslower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-image-1-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+
+        if request.FILES.get('image-2'):
+                if request.POST.get('image-2').split('.')[-1].strip().isslower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                    return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-image-2-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+
+        content = request.POST.get('post-content')
+        pub_date = datetime.datetime.now()
+
+        post = models.Post.objects.create(content = content, post_type = 1, post_by = staff, pub_date = pub_date)
+
+        if request.FILES.get('file-1'):
+                name = request.POST.get('file-name-1')
+                file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff)
+                post.files.add(file)
+
+        if request.FILES.get('file-2'):
+                name = request.POST.get('file-name-2')
+                file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = name.split('.')[-1], post_by = staff)
+                post.files.add(file)
+
+        if request.FILES.get('file-3'):
+                name = request.POST.get('file-name-3')
+                file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = name.split('.')[-1], post_by = staff)
+                post.files.add(file)
+
+
+        if request.FILES.get('image-1'):
+            file = models.Image.objects.create(file = request.FILES.get('image-1'), post_by = staff)
+            post.images.add(file)
+
+        if request.FILES.get('image-2'):
+            file = models.Image.objects.create(file = request.FILES.get('image-2'), post_by = staff)
+            post.images.add(file)
+
+
+
+        section_recipients = request.POST.getlist('section-recipients')
+
+        for recipient in section_recipients:
+            detail = recipient.split('-')
+
+            if detail[0] == 'year':
+                for section in models.Section.objects.filter(department_in__id = int(detail[1]), year = int(detail[2])):
+                    models.Post_To_Section.objects.create(post_to = section, post = post)
+
+            elif detail[0] == 'section':
+                section = models.Section.objects.get(id = int(detail[1]))
+                models.Post_To_Section.objects.create(post_to = section, post = post)
+
+
+
+        class_recipients = request.POST.getlist('class-recipients')
+
+        for recipient in class_recipients:
+            detail = recipient.split('-')
+
+            class_ = models.Instructor_Teaches.objects.get(section__id = int(detail[0]), course__id = int(detail[1]))
+
+            models.Post_To_Class.objects.create(post_to = class_, post = post)
+
+
+
+        status = 1
+        remark = "Action successul"
+
+
+
+        #JSON output
+        #Start json object
+        output = "{\"status\":"
+        output +=  str(status) + ","
+        output += "\"remark\":"
+        output += "\"" + remark + "\"}"
+
+
+        return HttpResponse(output, content_type='application/json')
 
 
 def email_exists(request):

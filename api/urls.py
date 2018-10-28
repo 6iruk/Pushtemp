@@ -15,6 +15,7 @@ urlpatterns = [
 	url(r'^signup$', views.signup, name="Signup"),
 	url(r'^account_update$', views.account_update, name="Account Update"),
 	url(r'^add_drop$', views.add_drop, name="Add-Drop"),
+	url(r'^post_action$', views.post_action, name="Post Action"),
     url(r'^email_exists$', views.email_exists, name="Email exists"),
 	url(r'^phone_exists$', views.phone_exists, name="Phone exists"),
 	url(r'^reg_id_exists$', views.reg_id_exists, name="Reg_ID exists"),

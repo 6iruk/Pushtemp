@@ -54,16 +54,19 @@ def student_account_page(request):
 def staff_account_page(request):
 
     posts = Post.objects.all()
-    staff = Staff.objects.first()
+    staff = Staff.objects.get(user = request.user)
 
     classes = Instructor_Teaches.objects.filter(instructor=staff)
 
     x = Q()
     for course in staff.department_in.course_set.all():
         x = x | Q(section_takes = course)
-    sections = Section.objects.filter(x).distinct()
+    sections = Section.objects.filter(x).distinct().order_by('department_in','year','section_id')
 
-    context = {'posts':posts, 'staff':staff, 'classes':classes, 'sections':sections}
+    department_sections = staff.department_in.section_set.all().order_by('department_in','year','section_id')
+    departments = Department.objects.all()
+
+    context = {'departments':departments, 'posts':posts, 'staff':staff, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
     return render(request, 'main/staff/staff-account.html', context)
 
 def forgot_password_page(request):
