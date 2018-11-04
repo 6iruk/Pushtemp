@@ -96,6 +96,17 @@ def Section(request):
         #Get all sections in that specific Department(THE 'ID' ATTRIBUTE SHOULD BE SENT/USED TO SPECIFY THE INSTANCE)
         Sections = models.Section.objects.filter(department_in__id = int(request.GET.get('by-department')))
 
+    #Check if the api request is based on a specific Year in a Department
+    elif request.GET.get('by-year'):
+        year = request.GET.get('by-year').split('-')
+        Sections = models.Section.objects.filter(department_in__id = int(year[0]), year = int(year[1])).order_by('section_id')
+        html = "<option value='-1' disabled selected>Pick your section</option>"
+
+        for section in Sections:
+            html += "<option value=" + str(section.section_id) + ">Section " + str(section.section_id) + "</option>"
+
+        return HttpResponse("{\"status\":1, \"html\":\"" + html + "\"}", content_type='application/json')
+
     #Get all sections
     else :
         Sections = models.Section.objects.all()
@@ -381,7 +392,7 @@ def Reminder(request):
 
 def Instructor_Teaches(request):
 
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return HttpResponse("{\"role\":\"null\", \"status\":, \"remark\":\"User not authenticated\"}", content_type='application/json')
 
     #Check if the api request is based on a specific Educational Institution
@@ -458,54 +469,35 @@ def login(request):
         status = ''
         remark = ''
 
-        def staff():
-                nonlocal user
-                nonlocal role
-
-                staff = models.Staff.objects.get(email = request.POST.get('email'))
-                password = request.POST.get('password')
-                user = authenticate(username=staff.user.username, password=password)
-                role = 'staff'
-
-
-        def student():
-                nonlocal user
-                nonlocal role
-
-                student = models.Student.objects.get(reg_id = request.POST.get('reg_id'))
-                password = request.POST.get('password')
-                user = authenticate(username=student.user.username, password=password)
-                role = 'student'
-
-        def success():
-                auth_login(request, user)
-
-                nonlocal status
-                nonlocal remark
-
-                status = 1
-                remark = 'Authentication success'
-
-        def failure():
-                nonlocal status
-                nonlocal remark
-
-                status = 0
-                remark = 'Authentication failed'
-
-        def notActive():
-                nonlocal status
-                nonlocal remark
-
-                status = 3
-                remark = 'Account not active'
-
-
         if (request.POST.get('user-type') == 'staff'):
-            staff()
+            if not request.POST.get('email') or request.POST.get('email').strip() == "":
+                return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"email-error\", \"html\":\"<p>Email required</p>\"}", content_type='application/json')
+
+            if not request.POST.get('password') or request.POST.get('password').strip() == "":
+                return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"staff-password-error\", \"html\":\"<p>Password required</p>\"}", content_type='application/json')
+
+            if not models.Staff.objects.filter(email = request.POST.get('email')).exists():
+                return HttpResponse("{\"role\":\"staff\", \"status\":0, \"remark\":\"Authentication failed\"}", content_type='application/json')
+
+            staff = models.Staff.objects.get(email = request.POST.get('email'))
+            password = request.POST.get('password')
+            user = authenticate(username=staff.user.username, password=password)
+            role = 'staff'
 
         elif (request.POST.get('user-type') == 'student'):
-            student()
+            if not request.POST.get('reg-id') or request.POST.get('reg-id').strip() == "":
+                return HttpResponse("{\"role\":\"student\", \"status\":2, \"id\":\"reg-id-error\", \"html\":\"<p>Registration ID required</p>\"}", content_type='application/json')
+
+            if not request.POST.get('password') or request.POST.get('password').strip() == "":
+                return HttpResponse("{\"role\":\"student\", \"status\":2, \"id\":\"student-password-error\", \"html\":\"<p>Password required</p>\"}", content_type='application/json')
+
+            if not models.Student.objects.filter(reg_id = request.POST.get('reg-id')).exists():
+                return HttpResponse("{\"role\":\"student\", \"status\":0, \"remark\":\"Authentication failed\"}", content_type='application/json')
+
+            student = models.Student.objects.get(reg_id = request.POST.get('reg-id'))
+            password = request.POST.get('password')
+            user = authenticate(username=student.user.username, password=password)
+            role = 'student'
 
         else:
                 return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
@@ -513,11 +505,16 @@ def login(request):
 
         if user is not None:
                 if user.is_active:
-                        success()
+                        auth_login(request, user)
+
+                        status = 1
+                        remark = 'Authentication success'
                 else:
-                        notActive()
+                        status = 3
+                        remark = 'Account not active'
         else:
-                failure()
+                status = 0
+                remark = 'Authentication failed'
 
 
         #JSON output
@@ -536,31 +533,74 @@ def login(request):
 def signup(request):
         status = 0
         remark = ""
-        fields = []
+
+        if not request.POST.get('first-name') or (request.POST.get('first-name').strip() == ""):
+            return HttpResponse("{\"status\":0, \"remark\":\"First name required\"}", content_type='application/json')
+
+        if not request.POST.get('last-name') or (request.POST.get('last-name').strip() == ""):
+            return HttpResponse("{\"status\":0, \"remark\":\"Last name required\"}", content_type='application/json')
+
+        if not request.POST.get('phone-number') or (request.POST.get('phone-number').strip() == ""):
+            return HttpResponse("{\"status\":0, \"remark\":\"Phone number required\"}", content_type='application/json')
+
+        if request.POST.get('email') and (request.POST.get('email').strip() == ""):
+            return HttpResponse("{\"status\":0, \"remark\":\"Email not valid\"}", content_type='application/json')
+
+        if not request.POST.get('department') or not models.Department.objects.filter(id = int(request.POST.get('department'))).exists():
+            return HttpResponse("{\"status\":0, \"remark\":\"Valid department ID required\"}", content_type='application/json')
+
+        if not request.POST.get('year') or (request.POST.get('year').strip() == "") :
+            return HttpResponse("{\"status\":0, \"remark\":\"Year required\"}", content_type='application/json')
+
+        if not request.POST.get('year').split('-')[-1].isdigit() or not models.Section.objects.filter(department_in = models.Department.objects.get(id = int(request.POST.get('department'))), year = int(request.POST.get('year').split('-')[-1])).exists():
+            return HttpResponse("{\"status\":0, \"remark\":\"Year doesn't exist\"}", content_type='application/json')
+
+        if not request.POST.get('section') or request.POST.get('section').strip() == "":
+            return HttpResponse("{\"status\":0, \"remark\":\"Section required\"}", content_type='application/json')
+
+        if not models.Section.objects.filter(department_in = models.Department.objects.get(id = int(request.POST.get('department'))), year = int(request.POST.get('year').split('-')[-1]), section_id = request.POST.get('section')).exists():
+            return HttpResponse("{\"status\":0, \"remark\":\"Section not found\"}", content_type='application/json')
+
+        if not request.POST.get('reg-id') or (request.POST.get('reg-id').strip() == ""):
+            return HttpResponse("{\"status\":0, \"remark\":\"Registration ID required\"}", content_type='application/json')
+
+        if request.POST.get('reg-id').split('/')[0] != "NSR" or not request.POST.get('reg-id').split('/')[1].isdigit() or not request.POST.get('reg-id').split('/')[2].isdigit():
+            return HttpResponse("{\"status\":0, \"remark\":\"ID not correct\"}", content_type='application/json')
+
+        if User.objects.filter(username = request.POST.get('reg-id').replace("/","-")).exists():
+            return HttpResponse("{\"status\":0, \"remark\":\"ID already in use\"}", content_type='application/json')
+
+        if not request.POST.get('password') or (request.POST.get('password').strip() == "") or len(request.POST.get('password')) < 7:
+            return HttpResponse("{\"status\":0, \"remark\":\"Password must contain more than 7 letters or numbers\"}", content_type='application/json')
 
         first_name = request.POST.get('first-name')
         last_name = request.POST.get('last-name')
         phone = request.POST.get('phone-number')
-        email = request.POST.get('email')
+
+        if request.POST.get('email'):
+            email = request.POST.get('email')
+
+        else:
+            email = ""
+
         department_in = models.Department.objects.get(id = int(request.POST.get('department')))
-        year = int(request.POST.get('year'))
+        year = int(request.POST.get('year').split('-')[-1])
         section = models.Section.objects.get(department_in = department_in, year = year, section_id = request.POST.get('section'))
         reg_id = request.POST.get('reg-id')
         password = request.POST.get('password')
 
-        def verify():
+        user = User.objects.create_user(reg_id.replace("/","-"), "", password)
+        student = models.Student.objects.create(university_in = department_in.university_in, department_in = department_in, year = year, section = section.section_id, first_name = first_name, last_name = last_name, reg_id = reg_id, phone = phone, email = email, user = user)
 
-            return True
+        for course in section.section_takes.all():
+            if not models.Instructor_Teaches.objects.filter(section = section, course = course).exists():
+                models.Instructor_Teaches.objects.create(section = section, course = course)
 
-        if verify():
-            user = User.objects.create_user(reg_id.replace("/","-"), "", password)
-            student = models.Student.objects.create(university_in = department_in.university_in, department_in = department_in, year = year, section = section.section_id, first_name = first_name, last_name = last_name, reg_id = reg_id, phone = phone, email = email, user = user)
+            class_in = models.Instructor_Teaches.objects.get(section = section, course = course)
+            student.class_in.add(class_in)
 
-            for class_in in models.Instructor_Teaches.objects.filter(section=section):
-                student.class_in.add(class_in)
-
-            status = 1
-            remark = "Sign up successfull"
+        status = 1
+        remark = "Sign up successfull"
 
 
         #JSON output
@@ -568,17 +608,7 @@ def signup(request):
         output = "{\"status\":"
         output +=  str(status) + ","
         output += "\"remark\":"
-        output += "\"" + remark + "\"" + ","
-        output += "\"fields\":["
-
-        for field in fields:
-            output +=  "\"" + field + "\","
-
-        if len(fields) > 0:
-            # remove the last list separator comma
-            output = output[::-1].replace(",", "", 1)[::-1]
-
-        output += "]}"
+        output += "\"" + remark + "\"}"
 
         return HttpResponse(output, content_type='application/json')
 
@@ -591,21 +621,37 @@ def account_update(request):
         role = ""
         password = request.POST.get('password')
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User not authenticated\"}", content_type='application/json')
 
 
+        if not request.POST.get('first-name') or (request.POST.get('first-name').strip() == ""):
+            return HttpResponse("{\"status\":0, \"id\":\"error-firstname\", \"html\":\"<p>First name required</p>\"}", content_type='application/json')
 
+        if not request.POST.get('last-name') or (request.POST.get('last-name').strip() == ""):
+            return HttpResponse("{\"status\":0, \"id\":\"error-lastname\", \"html\":\"<p>Last name required</p>\"}", content_type='application/json')
 
         first_name = request.POST.get('first-name')
         last_name = request.POST.get('last-name')
-        phone = request.POST.get('phone-number')
-        email = request.POST.get('email')
-        department_in = models.Department.objects.get(id = int(request.POST.get('department')))
 
         if request.POST.get('user-type') == "staff":
+                if not request.POST.get('email') or (request.POST.get('email').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"id\":\"error-email\", \"html\":\"<p>Email required</p>\"}", content_type='application/json')
+
+                if not request.POST.get('title') or (request.POST.get('title').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"id\":\"error-title\", \"html\":\"<p>Title required</p>\"}", content_type='application/json')
+
+                if request.POST.get('phone-number') and (request.POST.get('phone-number').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"id\":\"error-phonenum\", \"html\":\"<p>Phone not valid</p>\"}", content_type='application/json')
+
                 title = request.POST.get('title')
-                role = request.POST.get('role')
+                email = request.POST.get('email')
+
+                if request.POST.get('phone-number'):
+                    phone = request.POST.get('phone-number')
+
+                else:
+                    phone = ""
 
                 if models.Staff.objects.filter(user=request.user).exists():
                     staff = models.Staff.objects.get(user = request.user)
@@ -613,13 +659,10 @@ def account_update(request):
                     return HttpResponse("{\"role\":\"staff\", \"status\":2, \"remark\":\"Staff not found\"}", content_type='application/json')
 
 
-                staff.university_in = department_in.university_in
-                staff.department_in = department_in
                 staff.title = title
                 staff.first_name =  first_name
                 staff.last_name = last_name
                 staff.phone = phone
-                staff.role = role
 
                 staff.email = email
                 user = models.User.objects.get(id = request.user.id)
@@ -633,9 +676,33 @@ def account_update(request):
                 role = "staff"
 
         elif request.POST.get('user-type') == "student":
+                if not request.POST.get('phone-number') or (request.POST.get('phone-number').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"id\":\"error-phonenum\", \"html\":\"<p>Phone number required</p>\"}", content_type='application/json')
+
+                if not request.POST.get('year') or (request.POST.get('year').strip() == "") :
+                    return HttpResponse("{\"status\":0, \"id\":\"error-year\", \"html\":\"<p>Year required</p>\"}", content_type='application/json')
+
+                if not request.POST.get('year').split('-')[-1].isdigit() or not models.Section.objects.filter(department_in = models.Department.objects.get(id = int(request.POST.get('department'))), year = int(request.POST.get('year').split('-')[-1])).exists():
+                    return HttpResponse("{\"status\":0, \"id\":\"error-year\", \"html\":\"<p>Year doesn't exist</p>\"}", content_type='application/json')
+
+                if not request.POST.get('section') or request.POST.get('section').strip() == "":
+                    return HttpResponse("{\"status\":0, \"id\":\"error-section\", \"html\":\"<p>Section required</p>\"}", content_type='application/json')
+
+                if not models.Section.objects.filter(department_in = models.Department.objects.get(id = int(request.POST.get('department'))), year = int(request.POST.get('year').split('-')[-1]), section_id = request.POST.get('section')).exists():
+                    return HttpResponse("{\"status\":0, \"id\":\"error-section\", \"html\":\"<p>Section not found</p>\"}", content_type='application/json')
+
+                if request.POST.get('email') and (request.POST.get('email').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"id\":\"error-email\", \"html\":\"<p>Email not valid</p>\"}", content_type='application/json')
+
                 year = int(request.POST.get('year'))
                 section = request.POST.get('section')
-                reg_id = request.POST.get('reg-id')
+                phone = request.POST.get('phone-number')
+
+                if request.POST.get('email'):
+                    email = request.POST.get('email')
+
+                else:
+                    email = ""
 
                 if models.Student.objects.filter(user=request.user).exists():
                     student = models.Student.objects.get(user = request.user)
@@ -643,8 +710,7 @@ def account_update(request):
                     return HttpResponse("{\"role\":\"student\", \"status\":2, \"remark\":\"Student not found\"}", content_type='application/json')
 
 
-                student.university_in = department_in.university_in
-                student.department_in = department_in
+
                 student.year = year
                 student.section = section
                 student.first_name =  first_name
@@ -652,12 +718,8 @@ def account_update(request):
                 student.phone = phone
                 student.email = email
 
-                student.reg_id = reg_id
-                user = models.User.objects.get(id = request.user.id)
-                user.username = reg_id.replace("/","-")
-
                 student.save()
-                user.save()
+
 
                 status = 1
                 remark = "Update successful"
@@ -696,53 +758,96 @@ def add_drop(request):
         html = ""
         course = ""
         drop_class_id = -1
+        role = ""
+        student = None
+        staff = None
 
-        if not request.user.is_authenticated():
-            return HttpResponse("{\"action\":\"null\", \"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
+        if not request.user.is_authenticated:
+            return HttpResponse("{\"action\":\"null\", \"status\":2, \"remark\":\"User not authenticated\"}", content_type='application/json')
 
         if models.Student.objects.filter(user=request.user).exists():
             student = models.Student.objects.get(user=request.user)
+            role = 'student'
+
+        elif models.Staff.objects.filter(user=request.user).exists():
+            staff = models.Staff.objects.get(user=request.user)
+            role = 'staff'
 
         else:
-            return HttpResponse("{\"action\":\"null\", \"status\":2, \"remark\":\"Student not found\"}", content_type='application/json')
+            return HttpResponse("{\"action\":\"null\", \"status\":3, \"remark\":\"User not found\"}", content_type='application/json')
 
 
         if request.POST.get('action_type') == "add":
             action = "add"
             classes_id = request.POST.getlist('class')
 
-            for class_id in classes_id:
-                if not student.class_in.filter(id = int(class_id)).exists():
-                    class_obj = models.Instructor_Teaches.objects.get(id = int(class_id))
-                    student.class_in.add(class_obj)
+            if student:
+                for class_id in classes_id:
+                    pair = class_id.split('-')
 
-                    html += "<tr class='row-" + class_id + "'>"
-                    html += "<td><button onclick='drop_course(" + str(class_obj.id) + ")'>Drop</button></td>"
-                    html += "<td>" + class_obj.course.name  + "</td>"
-                    html += "<td>" + class_obj.course.course_code + "</td>"
-                    html += "<td>" + class_obj.course.module_code + "</td>"
-                    html += "<td>3.00</td>"
-                    html += "<td>5.00</td>"
-                    html += "<td>Year-" + str(class_obj.section.year) + " Section-" + class_obj.section.section_id + "</td>"
-                    html += "<td>" + class_obj.instructor.__str__() + "</td>"
-                    html += "</tr>"
+                    if not models.Instructor_Teaches.objects.filter(section__id = int(pair[0]), course_id = int(pair[1])).exists():
+                        models.Instructor_Teaches.objects.create(section = models.Section.objects.get(id = int(pair[0])), course = models.Course.objects.get(id = int(pair[1])))
 
-                    no_of_courses += 1
+                    class_obj = models.Instructor_Teaches.objects.filter(section__id = int(pair[0]), course_id = int(pair[1])).order_by('id').first()
+
+                    if not student.class_in.filter(id = class_obj.id).exists():
+                        student.class_in.add(class_obj)
+
+                        html += "<tr class='row-" + str(class_obj.id) + "'>"
+                        html += "<td>" + class_obj.course.name  + "</td>"
+                        html += "<td>" + class_obj.section.department_in.name  + "</td>"
+                        html += "<td>Year " + str(class_obj.section.year) + " <br/>Section " + class_obj.section.section_id + "</td>"
+                        html += "<td><button class='btn btn-block' type='button' onclick='drop_course(" + str(class_obj.id) + ")'>Drop Course</button></td>"
+                        html += "</tr>"
+
+                        no_of_courses += 1
+
+            elif staff:
+                for class_id in classes_id:
+                    pair = class_id.split('-')
+
+                    if not models.Instructor_Teaches.objects.filter(section__id = int(pair[0]), course_id = int(pair[1])).exists():
+                        models.Instructor_Teaches.objects.create(section = models.Section.objects.get(id = int(pair[0])), course = models.Course.objects.get(id = int(pair[1])))
+
+                    class_obj = models.Instructor_Teaches.objects.filter(section__id = int(pair[0]), course_id = int(pair[1])).order_by('id').first()
+
+                    if not class_obj.instructor.filter(id = staff.id).exists():
+                        class_obj.instructor.add(staff)
+
+                        html += "<tr class='row-" + str(class_obj.id) + "'>"
+                        html += "<td>" + class_obj.course.name  + "</td>"
+                        html += "<td>" + class_obj.section.department_in.name  + "</td>"
+                        html += "<td>Year " + str(class_obj.section.year) + " <br/>Section " + class_obj.section.section_id + "</td>"
+                        html += "<td><button class='btn btn-block' type='button' onclick='drop_course(" + str(class_obj.id) + ")'>Drop Course</button></td>"
+                        html += "</tr>"
+
+                        no_of_courses += 1
+
 
         elif request.POST.get('action_type') == "drop":
             action = "drop"
             class_id = request.POST.get('class')
 
-            if student.class_in.filter(id = int(class_id)).exists():
+            if student:
+                role = 'student'
+                if student.class_in.filter(id = int(class_id)).exists():
+                    class_obj = models.Instructor_Teaches.objects.get(id = int(class_id))
+                    course = class_obj.course.name
+                    drop_class_id = class_obj.id
+
+                    student.class_in.remove(class_obj)
+
+            elif staff:
+                role = 'staff'
                 class_obj = models.Instructor_Teaches.objects.get(id = int(class_id))
-                course = class_obj.course.name
-                drop_class_id = class_obj.id
 
-                student.class_in.remove(class_obj)
-                no_of_courses += 1
+                if class_obj.instructor.filter(id = staff.id).exists():
+                    course = class_obj.course.name
+                    drop_class_id = class_obj.id
 
+                    class_obj.instructor.remove(staff)
         else:
-                return HttpResponse("{\"action\":\"null\", \"status\":4, \"remark\":\"User type not found\"}", content_type='application/json')
+                return HttpResponse("{\"action\":\"null\", \"status\":4, \"remark\":\"Action not found\"}", content_type='application/json')
 
 
         if len(request.POST.getlist('class')) > 0:
@@ -773,6 +878,8 @@ def add_drop(request):
             output +=  "\"" + course + "\"" + ","
             output += "\"class_id\":"
             output +=  str(drop_class_id) + ","
+        output += "\"role\":"
+        output += "\"" + role + "\"" + ","
         output += "\"action\":"
         output += "\"" + action + "\"}"
 
@@ -781,7 +888,7 @@ def add_drop(request):
 
 
 def post_action(request):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return HttpResponse("{\"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
 
         if models.Staff.objects.filter(user=request.user).exists():
@@ -796,22 +903,22 @@ def post_action(request):
                     return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#group-chat-post-content-error\", \"html\":\"<p>Post content is required</p>\"}", content_type='application/json')
 
             if request.FILES.get('image-1'):
-                if request.POST.get('image-1').split('.')[-1].strip().isslower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                if request.FILES['image-1'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
                     return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#group-chat-attachment-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
 
 
             content = request.POST.get('post-content')
             pub_date = datetime.datetime.now()
 
-            post = models.Post.objects.create(content = content, post_type = 1, post_by = staff, pub_date = pub_date)
+            post = models.Post.objects.create(content = content, post_type = 4, post_by = staff, pub_date = pub_date)
 
             if request.FILES.get('file-1'):
-                name = request.FILES.get('file-name-1').name
+                name = request.FILES['file-1'].name
                 file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff)
                 post.files.add(file)
 
             if request.FILES.get('image-1'):
-                file = models.Image.objects.create(file = request.FILES.get('image-1'), post_by = staff)
+                file = models.Image.objects.create(image = request.FILES.get('image-1'), post_by = staff)
                 post.images.add(file)
 
             models.Post_To_Chat.objects.create(post_to = staff.department_in, post = post)
@@ -860,7 +967,15 @@ def post_action(request):
             html += "<div>"
             html += "<div>"
             html += "<span class='meta'>" + str(post.delivered()) + " Views | </span>"
-            html += "<span class='meta'>" + post.pub_date.strftime("%b") + "." + str(post.pub_date.day) + ", " + str(post.pub_date.year) + "</span>"
+            html += "<span class='meta'>" + post.pub_date.strftime("%b") + ". " + str(post.pub_date.day) + ", " + str(post.pub_date.year) +  ", " + post.pub_date.strftime("%I") + ":" + post.pub_date.strftime("%M") + " "
+
+            if post.pub_date.strftime("%p") == "AM":
+                html += "a.m"
+
+            else:
+                html += "p.m"
+
+            html += "</span>"
             html += "</div>"
             html += "</div>"
             html += "</div>"
@@ -888,67 +1003,94 @@ def post_action(request):
                 return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-3-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
 
         if request.FILES.get('image-1'):
-            if request.POST.get('image-1').split('.')[-1].strip().isslower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
-                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-image-1-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+            if request.FILES['image-1'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                return HttpResponse("{\"status\":0, \"remark\":\"Image format not supported\",  \"id\":\"#post-image-1-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
 
         if request.FILES.get('image-2'):
-                if request.POST.get('image-2').split('.')[-1].strip().isslower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
-                    return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-image-2-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+                if request.FILES['image-2'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                    return HttpResponse("{\"status\":0, \"remark\":\"Image format not supported\",  \"id\":\"#post-image-2-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
 
         content = request.POST.get('post-content')
         pub_date = datetime.datetime.now()
 
-        post = models.Post.objects.create(content = content, post_type = 1, post_by = staff, pub_date = pub_date)
+        if len(request.POST.getlist('section-recipients')) > 0:
+            post = models.Post.objects.create(content = content, post_type = 1, post_by = staff, pub_date = pub_date)
 
-        if request.FILES.get('file-1'):
-                name = request.POST.get('file-name-1')
-                file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff)
-                post.files.add(file)
+            if request.FILES.get('file-1'):
+                    name = request.POST.get('file-name-1')
+                    file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    post.files.add(file)
 
-        if request.FILES.get('file-2'):
-                name = request.POST.get('file-name-2')
-                file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = name.split('.')[-1], post_by = staff)
-                post.files.add(file)
+            if request.FILES.get('file-2'):
+                    name = request.POST.get('file-name-2')
+                    file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    post.files.add(file)
 
-        if request.FILES.get('file-3'):
-                name = request.POST.get('file-name-3')
-                file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = name.split('.')[-1], post_by = staff)
-                post.files.add(file)
-
-
-        if request.FILES.get('image-1'):
-            file = models.Image.objects.create(file = request.FILES.get('image-1'), post_by = staff)
-            post.images.add(file)
-
-        if request.FILES.get('image-2'):
-            file = models.Image.objects.create(file = request.FILES.get('image-2'), post_by = staff)
-            post.images.add(file)
+            if request.FILES.get('file-3'):
+                    name = request.POST.get('file-name-3')
+                    file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    post.files.add(file)
 
 
+            if request.FILES.get('image-1'):
+                file = models.Image.objects.create(image = request.FILES['image-1'], post_by = staff)
+                post.images.add(file)
 
-        section_recipients = request.POST.getlist('section-recipients')
+            if request.FILES.get('image-2'):
+                file = models.Image.objects.create(image = request.FILES['image-2'], post_by = staff)
+                post.images.add(file)
 
-        for recipient in section_recipients:
-            detail = recipient.split('-')
 
-            if detail[0] == 'year':
-                for section in models.Section.objects.filter(department_in__id = int(detail[1]), year = int(detail[2])):
+
+            section_recipients = request.POST.getlist('section-recipients')
+
+            for recipient in section_recipients:
+                detail = recipient.split('-')
+
+                if detail[0] == 'year':
+                    for section in models.Section.objects.filter(department_in__id = int(detail[1]), year = int(detail[2])):
+                        models.Post_To_Section.objects.create(post_to = section, post = post)
+
+                elif detail[0] == 'section':
+                    section = models.Section.objects.get(id = int(detail[1]))
                     models.Post_To_Section.objects.create(post_to = section, post = post)
 
-            elif detail[0] == 'section':
-                section = models.Section.objects.get(id = int(detail[1]))
-                models.Post_To_Section.objects.create(post_to = section, post = post)
+
+        if len(request.POST.getlist('class-recipients')) > 0:
+            post = models.Post.objects.create(content = content, post_type = 2, post_by = staff, pub_date = pub_date)
+
+            if request.FILES.get('file-1'):
+                    name = request.POST.get('file-name-1')
+                    file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    post.files.add(file)
+
+            if request.FILES.get('file-2'):
+                    name = request.POST.get('file-name-2')
+                    file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    post.files.add(file)
+
+            if request.FILES.get('file-3'):
+                    name = request.POST.get('file-name-3')
+                    file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    post.files.add(file)
 
 
+            if request.FILES.get('image-1'):
+                file = models.Image.objects.create(image = request.FILES['image-1'], post_by = staff)
+                post.images.add(file)
 
-        class_recipients = request.POST.getlist('class-recipients')
+            if request.FILES.get('image-2'):
+                file = models.Image.objects.create(image = request.FILES['image-2'], post_by = staff)
+                post.images.add(file)
 
-        for recipient in class_recipients:
-            detail = recipient.split('-')
+            class_recipients = request.POST.getlist('class-recipients')
 
-            class_ = models.Instructor_Teaches.objects.get(section__id = int(detail[0]), course__id = int(detail[1]))
+            for recipient in class_recipients:
+                detail = recipient.split('-')
 
-            models.Post_To_Class.objects.create(post_to = class_, post = post)
+                class_ = models.Instructor_Teaches.objects.get(section__id = int(detail[0]), course__id = int(detail[1]))
+
+                models.Post_To_Class.objects.create(post_to = class_, post = post)
 
 
 

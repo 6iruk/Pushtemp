@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
+from main.models import *
 import math
 
 ## ENTITES ##
@@ -48,7 +49,7 @@ class Educational_Institution(models.Model):
 class Department(models.Model):
 
    #The university the department is in
-   university_in = models.ForeignKey(Educational_Institution)
+   university_in = models.ForeignKey(Educational_Institution, on_delete=models.CASCADE)
 
    #The name of the department
    name = models.CharField(max_length=60)
@@ -59,12 +60,27 @@ class Department(models.Model):
    def __str__(self):
       return self.name
 
+   def get_classes(self):
+       x = Q()
+
+       for course in self.course_set.all():
+           x = x | Q(section_takes = course)
+
+       temp_sections = Section.objects.filter(x).order_by('department_in')
+       ids = temp_sections.values_list('department_in__id', flat=True).distinct()
+
+       sections = []
+
+       for id in ids:
+           sections.append(list(temp_sections.filter(department_in__id = id).order_by('department_in','year','section_id').distinct()))
+
+       return sections
 
 
 class Section(models.Model):
 
    #The department the section is in
-   department_in = models.ForeignKey(Department)
+   department_in = models.ForeignKey(Department, on_delete=models.CASCADE)
 
    #The year the section is in
    year = models.IntegerField()
@@ -92,7 +108,7 @@ class Course(models.Model):
    module_code = models.CharField(max_length=20, null=True, blank=True)
 
    #The department that gives this course
-   given_by = models.ForeignKey(Department)
+   given_by = models.ForeignKey(Department, on_delete=models.CASCADE)
 
    def __str__(self):
       return self.name
@@ -127,7 +143,7 @@ class File(models.Model):
    extension = models.CharField(max_length=8)
 
    #The staff member that uploaded the file
-   post_by = models.ForeignKey('Staff')
+   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.name
@@ -143,7 +159,7 @@ class Image(models.Model):
    image = models.FileField(upload_to=upload_path_image, max_length=300)
 
    #The staff member that uploaded the image
-   post_by = models.ForeignKey('Staff')
+   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.image.name
@@ -155,16 +171,16 @@ class Post(models.Model):
    content = models.TextField()
 
    #The files attached to the post
-   files = models.ManyToManyField(File, blank=True, null=True, default=None)
+   files = models.ManyToManyField(File, blank=True)
 
    #The images attached to the post
-   images = models.ManyToManyField(Image, blank=True, null=True, default=None)  ##did you mean to name this 'images'?
+   images = models.ManyToManyField(Image, blank=True)  ##did you mean to name this 'images'?
 
    #The type of the post. Notice = 1, Announcement = 2, Specific = 3, Group Message = 4, Staff Message = 5.
    post_type = models.IntegerField()
 
    #The staff member that posted the post
-   post_by = models.ForeignKey('Staff')
+   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
 
    #The date and time the post was posted
    pub_date = models.DateTimeField('Date Published')
@@ -239,10 +255,10 @@ class Staff(models.Model):
    )
 
    #The university the staff member is in
-   university_in = models.ForeignKey(Educational_Institution)
+   university_in = models.ForeignKey(Educational_Institution,  on_delete=models.CASCADE)
 
    #The department the staff member is in
-   department_in = models.ForeignKey(Department)
+   department_in = models.ForeignKey(Department,  on_delete=models.CASCADE)
 
    #The title of the staff member
    title = models.CharField(max_length=15, choices=title_choices)
@@ -263,7 +279,7 @@ class Staff(models.Model):
    role = models.CharField(max_length=15, choices=role_choices)   #this shouldn't be the option for the user
 
    #The user object associated with this staff member
-   user = models.OneToOneField(User)
+   user = models.OneToOneField(User,  on_delete=models.CASCADE)
 
    #staff_id = models.CharField(max_length=50, null=True)  # we need the staff ID
 
@@ -283,10 +299,10 @@ class Staff(models.Model):
 class Student(models.Model):
 
    #The university the student is in
-   university_in = models.ForeignKey(Educational_Institution)
+   university_in = models.ForeignKey(Educational_Institution, on_delete=models.CASCADE)
 
    #The department the student is in
-   department_in = models.ForeignKey(Department)
+   department_in = models.ForeignKey(Department,  on_delete=models.CASCADE)
 
    #The year the student is in
    year = models.IntegerField()   #add section field here?
@@ -313,7 +329,7 @@ class Student(models.Model):
    chat_id = models.IntegerField(default=0)
 
    #The user object associated with this student
-   user = models.OneToOneField(User)
+   user = models.OneToOneField(User,  on_delete=models.CASCADE)
 
    #The classes the student takes
    class_in = models.ManyToManyField('Instructor_Teaches')
@@ -329,16 +345,16 @@ class Student(models.Model):
 class Instructor_Teaches(models.Model):
 
    #The lecturer that teaches
-   instructor = models.ForeignKey(Staff)
+   instructor = models.ManyToManyField(Staff)
 
    #The section the lecturer teaches
-   section = models.ForeignKey(Section)
+   section = models.ForeignKey(Section,  on_delete=models.CASCADE)
 
    #The course the lecturer teaches to the section
-   course = models.ForeignKey(Course)
+   course = models.ForeignKey(Course,  on_delete=models.CASCADE)
 
    def __str__(self):
-      return self.instructor.first_name + "-" + str(self.section.year) + "-" + self.course.name
+      return str(self.section.year) + "-" + self.course.name
 
 
 
@@ -346,10 +362,10 @@ class Instructor_Teaches(models.Model):
 class Post_To_Class(models.Model):
 
    #The class the post is intended for
-   post_to = models.ForeignKey(Instructor_Teaches)
+   post_to = models.ForeignKey(Instructor_Teaches,  on_delete=models.CASCADE)
 
    #The post
-   post = models.ForeignKey(Post)
+   post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
       return str(self.post.post_by) + "-" + str(self.post_to)
@@ -361,10 +377,10 @@ class Post_To_Class(models.Model):
 class Post_To_Section(models.Model):
 
    #The section the post is intended for
-   post_to = models.ForeignKey(Section)
+   post_to = models.ForeignKey(Section,  on_delete=models.CASCADE)
 
    #The post
-   post = models.ForeignKey(Post)
+   post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.post.post_by.__str__() + "-" + self.post_to.__str__()
@@ -377,10 +393,10 @@ class Post_To_Section(models.Model):
 class Post_To_Student(models.Model):
 
    #The student the post is intended for
-   post_to = models.ForeignKey(Student)
+   post_to = models.ForeignKey(Student,  on_delete=models.CASCADE)
 
    #The post
-   post = models.ForeignKey(Post)
+   post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.post_by + "-" + self.post_to
@@ -391,10 +407,10 @@ class Post_To_Student(models.Model):
 class Post_To_Chat(models.Model):
 
    #The group chat the post is intended for
-   post_to = models.ForeignKey(Department)
+   post_to = models.ForeignKey(Department,  on_delete=models.CASCADE)
 
    #The post
-   post = models.ForeignKey(Post)
+   post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.post_by + "-" + self.post_to
@@ -405,10 +421,10 @@ class Post_To_Chat(models.Model):
 class Post_To_Staff(models.Model):
 
    #The staff member the post is intended for
-   post_to = models.ForeignKey(Staff)
+   post_to = models.ForeignKey(Staff,  on_delete=models.CASCADE)
 
    #The post
-   post = models.ForeignKey(Post)
+   post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.post_by + "-" + self.post_to
@@ -418,10 +434,10 @@ class Post_To_Staff(models.Model):
 class Reminder_To_Class(models.Model):
 
     #The class the reminder is intended for
-    reminder_to = models.ForeignKey(Instructor_Teaches)
+    reminder_to = models.ForeignKey(Instructor_Teaches,  on_delete=models.CASCADE)
 
     #The reminder
-    reminder = models.ForeignKey(Reminder)
+    reminder = models.ForeignKey(Reminder,  on_delete=models.CASCADE)
 
 
 
@@ -431,10 +447,10 @@ class Reminder_To_Class(models.Model):
 class Tracking(models.Model):
 
    #The student that received/read the post
-   student = models.ForeignKey(Student)
+   student = models.ForeignKey(Student,  on_delete=models.CASCADE)
 
    #The post
-   post = models.ForeignKey(Post)
+   post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    #Post status. Delivered = 1, Read = 2
    status = models.IntegerField()
@@ -453,10 +469,10 @@ class Tracking(models.Model):
 class Download(models.Model):
 
    #The student that downlaads the file
-   student = models.ForeignKey(Student)
+   student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
    #The file
-   file = models.ForeignKey(File)
+   file = models.ForeignKey(File,  on_delete=models.CASCADE)
 
    #Download status. True = Download finished
    status = models.BooleanField(default=False)

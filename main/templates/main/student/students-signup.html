@@ -21,17 +21,36 @@
                         <div class='card card-body push-corners'>
                             <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
                             <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
-                            <form method="post" action="{% url 'Signup' %}">
-                                    <select class="form-control my-3 push-corners" required>
+                            <form method="post" action="{% url 'Sign Up' %}">
+                                    {% csrf_token %}
+
+                                    <div id="form-error">
+                                      {% if error.0 %}
+                                        <p>Department doesn't exist</p>
+                                      {% endif %}
+                                      
+                                      {% if error.1 %}
+                                        <p>Personal information incorrect</p>
+                                      {% endif %}
+                                    </div>
+                                    <select name="department" class="form-control my-3 push-corners" required>
+                                            {% if not form.department %}
                                             <option value="" disabled selected>Pick your Department</option>
+                                            {% endif %}
+
                                             {% for department in departments %}
+                                                {% if form.department == department.id %}
+                                                  <option value="{{department.id}}" selected>{{department.name}}</option>
+                                                {% endif %}
                                                 <option value="{{department.id}}">{{department.name}}</option>
                                             {% endfor %}
                                     </select>
-                                    <input class="form-control my-3 push-corners" name="first-name" type="text" placeholder="First Name" required>
-                                    <input class="form-control my-3 push-corners" name="last-name" type="text" placeholder="Last Name" required>
-                                    <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
-                                    <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+
+                                    <input class="form-control my-3 push-corners" name="first_name" type="text" placeholder="First Name" value="{{form.first_name}}" required>
+                                    <input class="form-control my-3 push-corners" name="last_name" type="text" placeholder="Last Name" value="{{form.last_name}}" required>
+                                    <input class="form-control my-3 push-corners" name="reg_id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" value="{{form.reg_id}}" required>
+                                    <input class="form-control my-3 push-corners" name="email" type="email" placeholder="Email" value="{{form.email}}" required>
+
                                     <button class="btn btn-block my-3" type="submit">Sign up</button>
                                     <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
                             </form>

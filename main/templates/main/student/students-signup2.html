@@ -20,22 +20,29 @@
                 <div class="col-lg-6 mt-3">
                     <div class='card card-body push-corners'>
                         <p> <span class='link font-weight-bold'>You're almost done... </span></p>
-                        <form method="post" action="{% url 'Signup' %}">
+                        <div id="sign-up-form-notif">
+
+                        </div>
+
+                        <form id="sign-up-form">
                                 {% csrf_token %}
-                                <select class="form-control my-3 push-corners" required>
-                                        <option value="" disabled selected>Pick your year</option>
-                                        <option value="1">Year 1</option>
-                                        <option value="2">Year 2</option>
-                                        <option value="3">Year 3</option>
+                                <input name="department" type="text" value="{{form.department.0}}" hidden>
+                                <input name="first-name" type="text" value="{{form.first_name}}" hidden>
+                                <input name="last-name" type="text" value="{{form.last_name}}" hidden>
+                                <input name="reg-id" type="text"  value="{{form.reg_id}}" hidden>
+                                <input name="email" type="email" value="{{form.email}}" hidden>
+
+                                <select id="year-select" name="year" class="form-control my-3 push-corners" onchange="get_sections()" required>
+                                        <option value="-1" disabled selected>Pick your year</option>
+                                        {{year_html|safe}}
                                 </select>
-                                <select class="form-control my-3 push-corners" data-toggle="tooltip" data-placement="left" title="First pick your year." required>
-                                        <option value="" disabled selected>Pick your section</option>
-                                        <option value="1" disabled>No options (pick your year first)</option>
+                                <select id="section-select" name="section" class="form-control my-3 push-corners" data-toggle="tooltip" data-placement="left" title="First pick your year." required>
+                                        <option disabled selected>No options (pick your year first)</option>
                                 </select>
                                 <input class="form-control my-3 push-corners" name="phone-number" placeholder="Phone Number" type="tel" required/>
                                 <input class="form-control my-3 push-corners" name="password" id="password" type="password" onKeyUp="password_checker()" placeholder="Password" required>
                                 <input class="form-control my-3 push-corners" name="repeat-password" type="password" placeholder="Repeat Password" id="repass" onKeyUp="password_checker()" required>
-                                <button class="btn btn-block my-3" id="signup-button" type="submit" disabled>Complete Sign up</button>
+                                <button class="btn btn-block my-3" id="signup-button" type="button" onclick="sign_up()" disabled>Complete Sign up</button>
                                 <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
                         </form>
                     </div>
@@ -46,9 +53,8 @@
             </div>
         </div>
     </div>
-                
+
               </div>
-    </div>
 {% endblock %}
 
 {% block script%}

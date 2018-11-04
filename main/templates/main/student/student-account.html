@@ -113,282 +113,244 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 											Miscellaneous Files
 										</div>
 									</div>
-							
+
 									<hr>
-							
+
 									<div id="file-list">
 										{% for class in student.class_in.all %}
 											<div id="course-list-{{forloop.counter}}" class="course-files">
-								
+
 											</div>
 										{% endfor %}
 
 										<div id="miscellaneous-files" class="course-files">
-							
+
 										</div>
 									</div>
 								</div>
 
 								<div id='add-drop-content' class="content hidden-area">
+
 									<div class="card card-body push-corners">
-										<form>
+										<form id='add-courses-form'>
+										<input name="action_type" type="text" value="add" hidden/>
 										{% csrf_token %}
+										<div id="add-courses-form-notif">
+											<h3></h3>
+										</div>
+
+										<div>
+											<span class="h2-responsive">Add Course</span>
+											<span class="meta">Browse for the courses you are taking</span>
+										</div>
 											<div class="recipient-list">
 												{% for section in sections %}
-													{% ifchanged section.department_in.id %}
-														{% if not forloop.first %}
-																			</div>
+														{% ifchanged section.department_in.id %}
+																{% if not forloop.first %}
+																										</div>
+																								</div>
+																						</div>
+																				</div>
 																		</div>
-																	</div>
 																</div>
-															</div>
-														</div>
-														{% endif %}
-								
+																{% endif %}
+
 												<div>
-													<div>
-														<span class="h2-responsive">Add Course</span>
-														<span class="meta">Browse for the courses you are taking</span>
-													</div>
-													<div class="form-control" onclick="click_hidden('department-{{forloop.counter}}')">
-														<div class="d-inline-block">
-															<p>{{section.department_in.name}}</p>
-														</div>
-														<div class="d-inline ml-2">
-																<i class="fa fa-caret-down" aria-hidden="true"></i>
-														</div>
-													</div>
-							
-													<div class="hidden-area" id="department-{{forloop.counter}}">
-														<div class="recipient-list">
-															<div class="recipient-data">
-																<div class="recipient-selection">
-																	<div class="form-control" onclick="click_hidden('year-{{forloop.counter}}')">
-																		<div class="d-inline-block">
-																			<p>Year {{section.year}}</p>
-																		</div>
-																		<div class="d-inline ml-2">
+															<div class="form-control" onclick="click_hidden('department-{{forloop.counter}}')">
+																<div class="d-inline-block">
+																		<p>{{section.department_in.name}}</p>
+																</div>
+																<div class="d-inline ml-2">
 																				<i class="fa fa-caret-down" aria-hidden="true"></i>
-																		</div>
-																	</div>
 																</div>
-							
-																<div class="hidden-area" id="year-{{forloop.counter}}">
-																	<div class="recipient-list">
-																		<div class="recipient-data">
-																			<div class="recipient-selection">
-																				<div class="form-control" onclick="click_hidden('section-{{forloop.counter}}')">
-																					<div class="d-inline-block">
-																						<p>Section&nbsp;{{section.section_id}}</p>
-																					</div>
-																					<div class="d-inline ml-2">
-																							<i class="fa fa-caret-down" aria-hidden="true"></i>
-																					</div>
-																				</div>
-																			</div>
-							
-																			<div class="hidden-area" id="section-{{forloop.counter}}">
-																				<div class="recipient-list">
-																					{% for course in section.section_takes.all %}
-																					<div class="recipient-data">
-																						<div class="my-2 ml-5">
-																							<div class="d-inline">
-																								<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
-																							</div>
-							
-																							<div class="d-inline">
-																								{{course.name}}
-																							</div>
-																						</div>
-																					</div>
-																					{% endfor %}
-																					</div>
-																					</div>
-																					</div>
-																		{% else %}
-																		{% ifchanged section.year %}
-																	</div>
-																</div>
-															</div>
-							
-															<div class="recipient-data">
-																<div class="recipient-selection">
-																	<div class="form-control" onclick="click_hidden('year-{{forloop.counter}}')">
-																		<div class="d-inline-block">
-																			<p>Year {{section.year}}</p>
-																		</div>
-																		<div class="d-inline ml-2">
-																				<i class="fa fa-caret-down" aria-hidden="true"></i>
-																		</div>
-																	</div>
-																</div>
-							
-																<div class="hidden-area" id="year-{{forloop.counter}}">
-																	<div class="recipient-list">
-																		<div class="recipient-data">
-																			<div class="recipient-selection">
-																				<div class="form-control" onclick="click_hidden('section-{{forloop.counter}}')">
-																					<div class="d-inline-block">
-																						<p>Section&nbsp;{{section.section_id}}</p>
-																					</div>
-																					<div class="d-inline ml-2">
-																							<i class="fa fa-caret-down" aria-hidden="true"></i>
-																					</div>
-																				</div>
-																			</div>
-							
-																			<div class="hidden-area" id="section-{{forloop.counter}}">
-																				<div class="recipient-list">
-																					{% for course in section.section_takes.all %}
-																					<div class="recipient-data">
-																						<div class="my-2 ml-5">
-																							<div class="d-inline">
-																								<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
-																							</div>
-							
-																							<div class="d-inline">
-																								{{course.name}}
-																							</div>
-																						</div>
-																					</div>
-																					{% endfor %}
-																					</div>
-																					</div>
-																					</div>
-																		{% else %}
-																		<div class="recipient-data">
-																			<div class="recipient-selection">
-																				<div class="check-box">
-																					<span onclick="click_hidden('section-{{forloop.counter}}')">></span>
-																				</div>
-							
-																				<div class="recipient-name">
-																					Section&nbsp;{{section.section_id}}
-																				</div>
-																			</div>
-							
-																			<div class="hidden-area" id="section-{{forloop.counter}}">
-																				<div class="recipient-list">
-																					{% for course in section.section_takes.all %}
-																					<div class="recipient-data">
-																						<div class="recipient-selection">
-																							<div class="check-box">
-																								<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
-																							</div>
-							
-																							<div class="recipient-name">
-																								{{course.name}}
-																							</div>
-																						</div>
-																					</div>
-																					{% endfor %}
-																					</div>
-																					</div>
-																					</div>
-																		{% endifchanged %}
-																		{% endifchanged %}
-							
-																		{% empty %}
-																				<div>
-																					<div>
-																						<div>
-																							<div>
-																								<div>
-																									<div>
-																		{% endfor %}
-																	</div>
-																</div>
-															</div>
 														</div>
-													</div>
+
+														<div class="hidden-area" id="department-{{forloop.counter}}">
+																<div class="recipient-list">
+																		<div class="recipient-data">
+																				<div class="recipient-selection">
+																						<div class="form-control" onclick="click_hidden('year-{{forloop.counter}}')">
+																								<div class="d-inline-block">
+																										<p>Year {{section.year}}</p>
+																								</div>
+																								<div class="d-inline ml-2">
+																												<i class="fa fa-caret-down" aria-hidden="true"></i>
+																								</div>
+																						</div>
+																				</div>
+
+																				<div class="hidden-area" id="year-{{forloop.counter}}">
+																						<div class="recipient-list">
+																							{% endifchanged %}
+
+																								{% ifchanged section.year %}
+																								{% ifchanged section.department_in.id %}
+
+																								{% else %}
+
+																						</div>
+																				</div>
+																		</div>
+
+																		<div class="recipient-data">
+																				<div class="recipient-selection">
+																						<div class="form-control" onclick="click_hidden('year-{{forloop.counter}}')">
+																								<div class="d-inline-block">
+																										<p>Year {{section.year}}</p>
+																								</div>
+																								<div class="d-inline ml-2">
+																												<i class="fa fa-caret-down" aria-hidden="true"></i>
+																								</div>
+																						</div>
+																				</div>
+
+																				<div class="hidden-area" id="year-{{forloop.counter}}">
+																						<div class="recipient-list">
+																								{% endifchanged %}
+																								{% endifchanged %}
+
+																								<div class="recipient-data">
+																										<div class="recipient-selection">
+																												<div class="form-control" onclick="click_hidden('section-{{forloop.counter}}')">
+																														<div class="d-inline-block">
+																																<p>Section&nbsp;{{section.section_id}}</p>
+																														</div>
+																														<div class="d-inline ml-2">
+																																		<i class="fa fa-caret-down" aria-hidden="true"></i>
+																														</div>
+																												</div>
+																										</div>
+
+																										<div class="hidden-area" id="section-{{forloop.counter}}">
+																												<div class="recipient-list">
+																														{% for course in section.section_takes.all %}
+																														<div class="recipient-data">
+																																<div class="my-2 ml-5">
+																																		<div class="d-inline">
+																																				<input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
+																																		</div>
+
+																																		<div class="d-inline">
+																																				{{course.name}}
+																																		</div>
+																																</div>
+																														</div>
+																														{% endfor %}
+																														</div>
+																														</div>
+																														</div>
+
+																							{% empty %}
+																												<div>
+																														<div>
+																																<div>
+																																		<div>
+																																				<div>
+																																						<div>
+																								{% endfor %}
+																						</div>
+																				</div>
+																		</div>
+																</div>
+														</div>
 												</div>
-											</div>
-							
+										</div>
+
 											<div>
-												<button class="btn mt-3">Add Classes</button>
+												<button class="btn mt-3" type="button" onclick="add_course()">Add Classes</button>
 											</div>
-							
+
 											</form>
 										</div>
+
 										<div class="card card-body push-corners my-3">
+											<div id="drop-courses-form-notif">
+												<h3></h3>
+											</div>
+
 											<h3>Your Courses</h3>
-								
-											<table class="table table-striped table-hover table-borderless table-responsive">
+
+											<table id="course-table" class="table table-striped table-hover table-borderless table-responsive">
+												<tbody>
 												<tr>
 													<th class="font-weight-bold">Course Name</th>
 													<th class="font-weight-bold">Department</th>
 													<th class="font-weight-bold">Section</th>
 													<th class="font-weight-bold"></th>
 												</tr>
-								
-												{% for class in classes %}
-												<tr>
+
+												{% for class in student.class_in.all %}
+												<tr class="row-{{class.id}}">
 													<td>{{class.course.name}}</td>
 													<td>{{class.section.department_in}}</td>
-													<td>Year {{class.section.year}} <br/>Section {{class.section.year}}</td>
-													<td><button class="btn btn-block">Drop Course</button></td>
+													<td>Year {{class.section.year}} <br/>Section {{class.section.section_id}}</td>
+													<td><button class="btn btn-block" type="button" onclick="drop_course('{{class.id}}')">Drop Course</button></td>
 												</tr>
 												{% endfor %}
+												</tbody>
 											</table>
 										</div>
 								</div>
-								
+
 								<div id="account-setting-content" class="content hidden-area">
 										<div id="profile-form" class="card card-body push-corners">
-												<form method="post" action="{% url 'Signup' %}">
+												<div id="profile-form-notif">
+													<h3></h3>
+												</div>
+
+												<form id="profile-update-form" method="post">
+												<input name="user-type" type="text" value="student" hidden/>
 												{% csrf_token %}
-									
+
 												<div>
 													<p class="h3-responsive">Personal Information</p>
 												</div>
 												<hr>
-									
+
 												<div id="form-top">
 													<div class="form-left">
-											
+
 														<div class="textinput input">
 															<div id="error-firstname" class="error"></div>
 															<label for="firstname">First Name<br></label>
 															<input name="first-name" value="{{student.first_name}}" id="firstname" type="text" required/>
 														</div>
-											
+
 														<div class="textinput input">
 															<div id="error-lastname" class="error"></div>
 															<label for="lastname">Last Name<br></label>
 															<input name="last-name" id="lastname" value="{{student.last_name}}" type="text" required/>
 														</div>
-														
+
 														<div class="textinput input">
-															<div id="error-regidr" class="error"></div>
 															<label for="reg-id">Registration ID Number<br></label>
 															<input name="reg-id" id="lastname" type="text" value="{{student.reg_id}}" required/>
 														</div>
 													</div>
-									
+
 												</div>
-									
+
 												<div>
 													<p class="h3-responsive mt-3">School Information</p>
 												</div>
 												<hr>
-									
+
 												<div id="form-middle">
-									
+
 													<div class="form-left">
 														<div class="textinput input">
 															<label for="year">University<br></label>
 															<input id="university" type="text" value="{{student.university_in.name}}" disabled/>
 														</div>
-											
+
 														<div class="textinput input">
-															<div id="error-department" class="error"></div>
 															<label for="department">Department<br></label>
 															<select name="department" id="profile-update-department" required>
 																{% for department in departments %}
 																{% ifchanged department.university_in %}
 																<option value="" disabled>{{department.university_in}}</option>
 																{% endifchanged %}
-											
+
 																{% if department.id == student.department_in.id %}
 																<option value="{{department.id}}" selected>{{department.name}}</option>
 																{% else %}
@@ -398,7 +360,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 															</select>
 															</div>
 														</div>
-											
+
 														<div class="textinput input">
 															<div id="error-year" class="error"></div>
 															<label for="year">Year<br></label>
@@ -410,45 +372,45 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 															<input name="section" id="profile-update-section" type="text" value="{{student.section}}" required/>
 														</div>
 													</div>
-										
+
 													<div>
 														<p class="h3-responsive mt-3">Contact Information</p>
 													</div>
 													<hr>
-										
+
 													<div id="form-bottom">
-										
+
 													<div class="textinput input">
 														<div id="error-phonenum" class="error"></div>
 														<label for="phonenum">Phone number<br></label>
 														<input name="phone-number" id="phonenum" type="tel" value="{{student.phone}}" required/>
 													</div>
-										
+
 													<div class="textinput input">
 														<div id="error-email" class="error"></div>
 														<label for="email">Email<br></label>
 														<input name="email" id="email" type="email" value="{{student.email}}" required/>
 													</div>
 													</div>
-										
+
 													<div id="form-footer">
 															<hr>
 													<div>
 														<p>Please enter your password to save changes</p>
 													</div>
-										
+
 													<div class="textinput input">
 														<input name="password" id="password" type="password" required/>
 													</div>
-										
+
 													<div class="submitinput input">
-														<button id="save-changes" class="btn" id="signup-button" type="button" onclick="account_update()">Save Changes</button>
+														<button id="save-changes" class="btn" type="button" onclick="account_update()">Save Changes</button>
 													</div>
 													</div>
 												</form>
 											</div>
 									</div>
-								
+
 							</div>
 
 							<div class="col-lg-2 d-none d-lg-block"></div>
@@ -503,6 +465,3 @@ $(function () {
 })
 </script>
 {% endblock %}
-
-
-

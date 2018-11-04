@@ -11,15 +11,35 @@ function password_checker(){
   }
 }
 
-function submit(){
-  var pass = 	$("#password").val();
-  var repass = $("#repass").val();
+function get_sections() {
+    var year = $("select#year-select").children("option:selected").val();
 
-  if(pass.trim() != "" && pass === repass){
-    $("#signup-button").attr("disabled",false);
-  }
+    $.get("http://localhost:8000/json/Section?by-year=" + year, function (result,status) {
+        if(status == "success"){
+          if(result.status == 1) {
+             $("select#section-select").html(result.html);
+          }
+        }
+        else {
+          $("#sign-up-form-notif").html("<p>Sorry, couldn't load sections</p>");
+        }
+      });
+}
 
-  else{
-    $("#signup-button").attr("disabled",true);
-  }
+function sign_up(){
+  $.post("http://localhost:8000/json/signup/", $( "#sign-up-form" ).serialize(), function (result,status) {
+       if(status == "success") {
+         if(result.status == 1) {
+           document.location.href='/login/';
+         }
+
+         else {
+           $("#sign-up-form-notif").html("<p>" + result.remark + "</p>");
+         }
+       }
+
+       else {
+         $("#sign-up-form-notif").html("<p>Couldn't reach server</p>");
+       }
+     });
 }

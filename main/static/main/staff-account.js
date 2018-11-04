@@ -29,6 +29,10 @@ function nav_click(page) {
     $(".side-nav-sections").css("background-color","inherit");
     $("#nav-account-setting").css("background-color","#ffffff");
   }
+  
+  else if(page == 'log-out') {
+    document.location.href='/login/'
+  }
 }
 
 function click_hidden(page) {
@@ -47,7 +51,7 @@ function post_action(action) {
       formdata =  new FormData(form);
 
       $.ajax({
-      url: 'http://localhost:8000/json/post_action',
+      url: 'http://localhost:8000/json/post_action/',
       data: formdata,
       processData: false,
       contentType: false,
@@ -58,6 +62,8 @@ function post_action(action) {
                $("#chat-post-list").append(result.html);
                $("#group-chat-post-notif").html("<p>Post Successful</p>");
                $("#group-chat-post-notif").css("display", "block");
+               $(".error").css("display", "none");
+               $("#group-chat-form-reset").click();
 
                setTimeout( function() {
                  $("#group-chat-post-notif").css("display", "none");
@@ -65,6 +71,7 @@ function post_action(action) {
              }
 
              else if(result.status == 0)  {
+               $(".error").css("display", "none");
                $(result.id).html(result.html);
                $(result.id).css("display", "block");
              }
@@ -85,7 +92,7 @@ function post_action(action) {
     formdata =  new FormData(form);;
 
     $.ajax({
-    url: 'http://localhost:8000/json/post_action',
+    url: 'http://localhost:8000/json/post_action/',
     data: formdata,
     processData: false,
     contentType: false,
@@ -95,6 +102,8 @@ function post_action(action) {
            if(result.status == 1) {
              $("#post-form-notif > h3").html("Post Successful");
              $("#post-form-notif").css("display", "block");
+             $(".error").css("display", "none");
+             $("#post-form-reset").click();
 
              setTimeout( function() {
                $("#post-form-notif").css("display", "none");
@@ -102,6 +111,7 @@ function post_action(action) {
            }
 
            else if(result.status == 0)  {
+             $(".error").css("display", "none");
              $(result.id).html(result.html);
              $(result.id).css("display", "block");
            }
@@ -117,115 +127,131 @@ function post_action(action) {
      });
 }
 
-var add_drop_notif_timer;
+var add_notif_timer;
 
 function add_course() {
-    $.post("http://localhost:8000/json/add_drop", $( "#add-courses-form" ).serialize(), function (result,status) {
+    $.post("http://localhost:8000/json/add_drop/", $( "#add-courses-form" ).serialize(), function (result,status) {
          if(status == "success") {
            if(result.status == 1) {
-             $("#course-table > tbody").append(result.html);
-             clearTimeout(add_drop_notif_timer);
+             $("#class-table > tbody").append(result.html);
+             clearTimeout(add_notif_timer);
              $("#add-courses-form-notif > h3").html("You have added " + result.count + " courses");
              $("#add-courses-form-notif").css("display","block");
+             $("#add-class-form-reset").click();
 
-             add_drop_notif_timer = setTimeout( function() {
+             add_notif_timer = setTimeout( function() {
                $("#add-courses-form-notif").css("display", "none");
              },7000);
            }
 
            else {
-             clearTimeout(add_drop_notif_timer);
+             clearTimeout(add_notif_timer);
              $("#add-courses-form-notif > h3").html(result.remark);
              $("#add-courses-form-notif").css("display","block");
 
-             add_drop_notif_timer = setTimeout( function() {
+             add_notif_timer = setTimeout( function() {
                $("#add-courses-form-notif").css("display", "none");
              },7000);
            }
          }
 
          else {
-           clearTimeout(add_drop_notif_timer);
+           clearTimeout(add_notif_timer);
            $("#add-courses-form-notif > h3").html("Action Failed");
            $("#add-courses-form-notif").css("display","block");
 
-           add_drop_notif_timer = setTimeout( function() {
+           add_notif_timer = setTimeout( function() {
              $("#add-courses-form-notif").css("display", "none");
            },7000);
          }
        });
 }
 
-
+var drop_notif_timer;
 
 function drop_course(class_id) {
-    $.post("http://localhost:8000/json/add_drop", { action_type : "drop", class : class_id, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
-         if(status == "success") {
-           if(result.status == 1) {
-             $(".row-" + result.class_id).css("display", "none");
-             clearTimeout(add_drop_notif_timer);
-             $("#add-courses-form-notif > h3").html("You have dropped the course " + result.course);
-             $("#add-courses-form-notif").css("display","block");
-
-             add_drop_notif_timer = setTimeout( function() {
-               $("#add-courses-form-notif").css("display", "none");
-             },7000);
+  $.post("http://localhost:8000/json/add_drop/", { action_type : "drop", class : class_id, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
+       if(status == "success") {
+         if(result.status == 1) {
+           $(".row-" + result.class_id).css("display", "none");
+           clearTimeout(drop_notif_timer);
+           if(result.class_id == '-1') {
+             $("#drop-courses-form-notif > h3").html("You don't take that course");
            }
 
            else {
-             clearTimeout(add_drop_notif_timer);
-             $("#add-courses-form-notif > h3").html(result.remark);
-             $("#add-courses-form-notif").css("display","block");
-
-             add_drop_notif_timer = setTimeout( function() {
-               $("#add-courses-form-notif").css("display", "none");
-             },7000);
+             $("#drop-courses-form-notif > h3").html("You have dropped the course " + result.course);
            }
+
+           $("#drop-courses-form-notif").css("display","block");
+
+           drop_notif_timer = setTimeout( function() {
+             $("#drop-courses-form-notif").css("display", "none");
+           },7000);
          }
 
          else {
-           clearTimeout(add_drop_notif_timer);
-           $("#add-courses-form-notif > h3").html("Action Failed");
-           $("#add-courses-form-notif").css("display","block");
+           clearTimeout(drop_notif_timer);
+           $("#drop-courses-form-notif > h3").html(result.remark);
+           $("#drop-courses-form-notif").css("display","block");
 
-           add_drop_notif_timer = setTimeout( function() {
-             $("#add-courses-form-notif").css("display", "none");
+           drop_notif_timer = setTimeout( function() {
+             $("#drop-courses-form-notif").css("display", "none");
            },7000);
          }
-       });
+       }
+
+       else {
+         clearTimeout(drop_notif_timer);
+         $("#drop-courses-form-notif > h3").html("Action Failed");
+         $("#drop-courses-form-notif").css("display","block");
+
+         drop_notif_timer = setTimeout( function() {
+           $("#drop-courses-form-notif").css("display", "none");
+         },7000);
+       }
+     });
 }
 
 
 
 function account_update() {
-    $.post("http://localhost:8000/json/account_update", $( "#profile-update-form" ).serialize(), function (result,status) {
-         if(status == "success") {
-           if(result.status == 1) {
-             $("#profile-form-notif > h3").html("Update Successful");
-             $("#profile-form-notif").css("display", "block");
+    $.post("http://localhost:8000/json/account_update/", $( "#profile-update-form" ).serialize(), function (result,status) {
+      if(status == "success") {
+        if(result.status == 0) {
+          $(".error").css("display","none");
+          $("#" + result.id).html(result.html);
+          $("#" + result.id).css("display","block");
+        }
 
-             setTimeout( function() {
-               $("#profile-form-notif").css("display", "none");
-             },7000);
-           }
+         else if(result.status == 1) {
+           $(".error").css("display","none");
+          $("#profile-form-notif > h3").html("Update Successful");
+          $("#profile-form-notif").css("display", "block");
 
-           else {
-             $("#profile-form-notif > h3").html("Incorrect Password");
-             $("#profile-form-notif").css("display", "block");
+          setTimeout( function() {
+            $("#profile-form-notif").css("display", "none");
+          },7000);
+        }
 
-             setTimeout( function() {
-               $("#profile-form-notif").css("display", "none");
-             },7000);
-           }
-         }
+        else if(result.status == 2) {
+          $(".error").css("display","none");
+          $("#profile-form-notif > h3").html(result.remark);
+          $("#profile-form-notif").css("display", "block");
 
-         else {
-           $("#profile-form-notif > h3").html("Update Failed");
-           $("#profile-form-notif").css("display", "block");
+          setTimeout( function() {
+            $("#profile-form-notif").css("display", "none");
+          },7000);
+        }
+      }
 
-           setTimeout( function() {
-             $("#profile-form-notif").css("display", "none");
-           },7000);
-         }
+      else {
+        $("#profile-form-notif > h3").html("Update Failed");
+        $("#profile-form-notif").css("display", "block");
+
+        setTimeout( function() {
+          $("#profile-form-notif").css("display", "none");
+        },7000);
+      }
        });
 }

@@ -2,10 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from itertools import chain
 from operator import attrgetter
-from django.db.models import Q
+from django.db.models import Q, Max, Count
 from main.models import *
-from main.models import Section as main_section
-##from main.forms import Lecturerform
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from django.core import serializers
@@ -13,15 +11,40 @@ import datetime, zipfile, io
 import os
 ##import sendgrid
 ##from sendgrid.helpers.mail import *
-from django.db.models import Count, Q
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def index(request):
+    departments = Department.objects.all()
 
-    return render(request, 'main/index.html')
+    context = {'departments':departments}
+    return render(request, 'main/index.html', context)
 
 def students_signup_page(request):
+    if(request.method == "POST"):
+        form = request.POST.copy()
+        error = [False,False]
+
+        if not Department.objects.filter(id = int(form['department'])).exists():
+            error[0] = True
+
+        else:
+            department = Department.objects.get(id = int(form['department']))
+
+        if form['first_name'].strip() == "" or form['last_name'].strip() == "" or form['reg_id'].strip() == "":
+            error[1] = True
+
+        if error[0] or error[1]:
+            return render(request, 'main/student/students-signup.html', {'form': form, 'error':error})
+
+        max_year = department.section_set.all().aggregate(Max('year'))
+        year_html = ""
+
+        for x in range(max_year['year__max']):
+            year_html += "<option value=" + str(department.id) + "-" + str(x + 1) + ">Year " + str(x + 1) + "</option>"
+
+        context = {'form' : form, 'year_html' : year_html}
+        return render(request, 'main/student/students-signup2.html', context)
 
     departments = Department.objects.all()
 
@@ -29,6 +52,8 @@ def students_signup_page(request):
     return render(request, 'main/student/students-signup.html', context)
 
 def login_page(request):
+    if request.user.is_authenticated:
+        logout(request)
 
     return render(request, 'main/login.html')
 
@@ -38,17 +63,11 @@ def student_account_page(request):
     reminder = Reminder_To_Class.objects.all()
 
     student = Student.objects.get(user=request.user)
-
-    x = Q()
-    for course in student.department_in.course_set.all():
-        x = x | Q(section_takes = course)
-    sections = Section.objects.filter(x).distinct()
-
-    classes = Instructor_Teaches.objects.filter(section__department_in = student.department_in)
+    sections = student.department_in.section_set.all().order_by('department_in','year','section_id')
 
     departments = Department.objects.all()
 
-    context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'classes':classes, 'departments':departments}
+    context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'departments':departments}
     return render(request, 'main/student/student-account.html', context)
 
 def staff_account_page(request):

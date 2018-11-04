@@ -31,6 +31,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
         <li class="nav-item">
                 <a class="nav-link" href="#" onclick="nav_click('account-setting')" data-toggle="collapse" data-target="#pushNav">Account</a>
         </li>
+        <li class="nav-item">
+                <a class="nav-link" href="/login/" data-toggle="collapse" data-target="#pushNav">Log out</a>
+        </li>
     </ul>
     <!-- Links -->
 </div>
@@ -74,7 +77,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                 </a>
                             </div>
                             <div class="push-sidebar-item">
-                                    <a href="#">
+                                    <a href="/login/">
                                         <i class="fa fa-sign-out mr-3" aria-hidden="true"></i>Logout
                                     </a>
                             </div>
@@ -96,14 +99,14 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         <div id="post-form-notif">
                                           <h3></h3>
                                         </div>
-                                        
+
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                     <div>
                                                         <h1 class="h2-responsive">Write Post</h1>
                                                     </div>
 
-                                                    <div id="post-content-error">
+                                                    <div id="post-content-error" class="error">
 
                                                     </div>
 
@@ -114,7 +117,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             <h1 class="h5-responsive mt-3">Send to</h1>
                                                         </div>
 
-                                                        <div id="post-recipient-error">
+                                                        <div id="post-recipient-error" class="error">
 
                                                         </div>
 
@@ -260,7 +263,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                 <span class="meta">Upload up to 3 files</span>
                                                             </div>
 
-                                                            <div id="post-file-1-error">
+                                                            <div id="post-file-1-error" class="error">
 
                                                             </div>
 
@@ -272,7 +275,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                 </div>
                                                             </div>
 
-                                                            <div id="post-file-2-error">
+                                                            <div id="post-file-2-error" class="error">
 
                                                             </div>
 
@@ -284,7 +287,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                 </div>
                                                             </div>
 
-                                                            <div id="post-file-3-error">
+                                                            <div id="post-file-3-error" class="error">
 
                                                             </div>
 
@@ -303,7 +306,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                 <span class="meta">Upload up to 2 images</span>
                                                         </div>
 
-                                                        <div id="post-image-1-error">
+                                                        <div id="post-image-1-error" class="error">
 
                                                         </div>
 
@@ -314,7 +317,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             </div>
                                                         </div>
 
-                                                        <div id="post-image-2-error">
+                                                        <div id="post-image-2-error" class="error">
 
                                                         </div>
 
@@ -329,6 +332,8 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             <button class="btn btn-block my-3" type="button" onclick="post_action()">Send</button>
                                                         </div>
                                                 </div>
+
+                                                <button id="post-form-reset" type="reset" hidden></button>
                                                 </form>
                                             </div>
                                     </div>
@@ -423,7 +428,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         <h1 class="h2-responsive">Group Chat</h1>
                                                     </div>
                                                     <div id="keyboard-form">
-                                                        <div id="group-chat-post-content-error">
+                                                        <div id="group-chat-post-content-error" class="error">
 
                                                         </div>
 
@@ -437,7 +442,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                     <h1 class="h5-responsive mt-3">Add attachment</h1>
                                                                 </div>
 
-                                                                <div id="group-chat-attachment-error">
+                                                                <div id="group-chat-attachment-error" class="error">
 
                                                                 </div>
 
@@ -471,6 +476,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <button id="group-chat-form-reset" type="reset" hidden></button>
                                                 </form>
                                             </div>
                                         </div>
@@ -526,9 +532,14 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                 <div id="class-list" class="content hidden-area">
                                     <div class="card card-body push-corners my-3">
+                                            <div id="drop-courses-form-notif">
+                                              <h3></h3>
+                                            </div>
+
                                             <h3>Classes You Teach</h3>
 
-                                            <table class="table table-striped table-hover table-borderless table-responsive">
+                                            <table id="class-table" class="table table-striped table-hover table-borderless table-responsive">
+                                              <tbody>
                                                 <tr>
                                                     <th class="font-weight-bold">Course Name</th>
                                                     <th class="font-weight-bold">Department</th>
@@ -537,194 +548,125 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 </tr>
 
                                                 {% for class in classes %}
-                                                <tr>
+                                                <tr class="row-{{class.id}}">
                                                     <td>{{class.course.name}}</td>
                                                     <td>{{class.section.department_in}}</td>
                                                     <td>Year {{class.section.year}} <br/>Section {{class.section.year}}</td>
-                                                    <td><button class="btn btn-block">Remove Course</button></td>
+                                                    <td><button class="btn btn-block" type="button" onclick="drop_course({{class.id}})">Remove Course</button></td>
                                                 </tr>
                                                 {% endfor %}
+                                              </tbody>
                                             </table>
                                         </div>
 
                                         <div class="card card-body push-corners my-3">
+                                            <div id="add-courses-form-notif">
+                                              <h3></h3>
+                                            </div>
+
                                             <div>
                                                 <span class="h2-responsive">Browse Courses</span>
                                                 <span class="meta">Add the courses you are teaching</span>
                                             </div>
-                                            <form>
+                                            <form id="add-courses-form">
+                                            <input name="action_type" type="text" value="add" hidden/>
                                             {% csrf_token %}
                                                 <div class="recipient-list">
-                                                    {% for section in sections %}
-                                                        {% ifchanged section.department_in.id %}
-                                                            {% if not forloop.first %}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            {% endif %}
+                                                          {% for t in staff.department_in.get_classes %}
 
-                                                    <div>
-                                                        <div class="form-control blue lighten-5" onclick="click_hidden('department-{{forloop.counter}}')">
-                                                            <div class="d-inline-block">
-                                                                <p>{{section.department_in.name}}</p>
-                                                            </div>
-                                                            <div class="d-inline ml-2">
-                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                            </div>
-                                                        </div>
+                                                          <div class="recipient-data">
+                                                              <div class="recipient-selection">
+                                                                  <div class="recipient-selection form-control blue lighten-5 mt-3">
+                                                                      <div class='d-inline-block' onclick="click_hidden('add-department-{{forloop.counter}}')">
+                                                                          <div class="d-inline mx-2">
+                                                                              {{t.0.department_in.name}}
+                                                                          </div>
+                                                                          <div class="d-inline">
+                                                                              <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
 
-                                                        <div class="hidden-area" id="department-{{forloop.counter}}">
-                                                            <div class="recipient-list">
-                                                                <div class="recipient-data">
-                                                                    <div class="recipient-selection">
-                                                                        <div class="form-control" onclick="click_hidden('year-{{forloop.counter}}')">
-                                                                            <div class="d-inline-block">
-                                                                                <p>Year {{section.year}}</p>
+                                                              <div class="recipient-data-hidden hidden-area" id="add-department-{{forloop.counter}}">
+                                                                  <div class="recipient-list">
+                                                                      {% for teaches in t %}
+                                                                      {% ifchanged teaches.year %}
+                                                                      {% if not forloop.first %}
+                                                                              </div>
                                                                             </div>
-                                                                            <div class="d-inline ml-2">
-                                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                          </div>
+                                                                      {% endif %}
 
-                                                                    <div class="hidden-area" id="year-{{forloop.counter}}">
-                                                                        <div class="recipient-list">
-                                                                            <div class="recipient-data">
-                                                                                <div class="recipient-selection">
-                                                                                    <div class="form-control" onclick="click_hidden('section-{{forloop.counter}}')">
-                                                                                        <div class="d-inline-block">
-                                                                                            <p>Section&nbsp;{{section.section_id}}</p>
-                                                                                        </div>
-                                                                                        <div class="d-inline ml-2">
+                                                                      <div class="recipient-data">
+                                                                          <div class="recipient-selection form-control">
+                                                                              <div class='d-inline-block' onclick="click_hidden('add-year-{{forloop.counter}}')">
+                                                                                  <div class="d-inline mx-2">
+                                                                                      Year {{teaches.year}}
+                                                                                  </div>
+                                                                                  <div class="d-inline">
+                                                                                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                  </div>
+                                                                              </div>
+                                                                          </div>
+
+                                                                          <div class="recipient-data-hidden hidden-area" id="add-year-{{forloop.counter}}">
+                                                                              <div class="recipient-list">
+                                                                                {% endifchanged %}
+
+                                                                                <div class="recipient-data">
+                                                                                    <div class="recipient-selection form-control">
+                                                                                        <div class='d-inline-block' onclick="click_hidden('add-section-{{forloop.counter}}')">
+                                                                                            <div class="d-inline mx-2">
+                                                                                                Section {{teaches.section_id}}
+                                                                                            </div>
+                                                                                            <div class="d-inline">
                                                                                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="hidden-area" id="section-{{forloop.counter}}">
-                                                                                    <div class="recipient-list">
-                                                                                        {% for course in section.section_takes.all %}
-                                                                                        <div class="recipient-data">
-                                                                                            <div class="my-2 ml-5">
-                                                                                                <div class="d-inline">
-                                                                                                    <input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
-                                                                                                </div>
-
-                                                                                                <div class="d-inline">
-                                                                                                    {{course.name}}
-                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        {% endfor %}
-                                                                                        </div>
-                                                                                        </div>
-                                                                                        </div>
-                                                                            {% else %}
-                                                                            {% ifchanged section.year %}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="recipient-data">
-                                                                    <div class="recipient-selection">
-                                                                        <div class="form-control" onclick="click_hidden('year-{{forloop.counter}}')">
-                                                                            <div class="d-inline-block">
-                                                                                <p>Year {{section.year}}</p>
-                                                                            </div>
-                                                                            <div class="d-inline ml-2">
-                                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="hidden-area" id="year-{{forloop.counter}}">
-                                                                        <div class="recipient-list">
-                                                                            <div class="recipient-data">
-                                                                                <div class="recipient-selection">
-                                                                                    <div class="form-control" onclick="click_hidden('section-{{forloop.counter}}')">
-                                                                                        <div class="d-inline-block">
-                                                                                            <p>Section&nbsp;{{section.section_id}}</p>
-                                                                                        </div>
-                                                                                        <div class="d-inline ml-2">
-                                                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
 
-                                                                                <div class="hidden-area" id="section-{{forloop.counter}}">
-                                                                                    <div class="recipient-list">
-                                                                                        {% for course in section.section_takes.all %}
-                                                                                        <div class="recipient-data">
-                                                                                            <div class="my-2 ml-5">
-                                                                                                <div class="d-inline">
-                                                                                                    <input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
-                                                                                                </div>
-
-                                                                                                <div class="d-inline">
-                                                                                                    {{course.name}}
+                                                                                    <div class="recipient-data-hidden hidden-area" id="add-section-{{forloop.counter}}">
+                                                                                        <div class="recipient-list">
+                                                                                            {% for course in teaches.section_takes.all %}
+                                                                                            {% if course.given_by.id == staff.department_in.id %}
+                                                                                            <div class="recipient-data">
+                                                                                                <div class="recipient-selection ml-5 my-2">
+                                                                                                    <div class="d-inline">
+                                                                                                        <input name="class" value="{{teaches.id}}-{{course.id}}" type="checkbox" />
+                                                                                                    </div>
+                                                                                                    <div class="d-inline mx-2">
+                                                                                                        {{course.name}}
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                        {% endfor %}
-                                                                                        </div>
-                                                                                        </div>
-                                                                                        </div>
-                                                                            {% else %}
-                                                                            <div class="recipient-data">
-                                                                                <div class="recipient-selection">
-                                                                                    <div class="check-box">
-                                                                                        <span onclick="click_hidden('section-{{forloop.counter}}')">></span>
-                                                                                    </div>
+                                                                                            {% endif %}
 
-                                                                                    <div class="recipient-name">
-                                                                                        Section&nbsp;{{section.section_id}}
-                                                                                    </div>
-                                                                                </div>
+                                                                                            {% endfor %}
 
-                                                                                <div class="hidden-area" id="section-{{forloop.counter}}">
-                                                                                    <div class="recipient-list">
-                                                                                        {% for course in section.section_takes.all %}
-                                                                                        <div class="recipient-data">
-                                                                                            <div class="recipient-selection">
-                                                                                                <div class="check-box">
-                                                                                                    <input name="class" value="{{section.id}}-{{course.id}}" type="checkbox" />
-                                                                                                </div>
+                                                                                          </div>
+                                                                                        </div>
+                                                                                      </div>
 
-                                                                                                <div class="recipient-name">
-                                                                                                    {{course.name}}
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        {% endfor %}
-                                                                                        </div>
-                                                                                        </div>
-                                                                                        </div>
-                                                                            {% endifchanged %}
-                                                                            {% endifchanged %}
-
-                                                                            {% empty %}
+                                                                                  {% empty %}
+                                                                                  <div>
                                                                                     <div>
-                                                                                        <div>
-                                                                                            <div>
-                                                                                                <div>
-                                                                                                    <div>
-                                                                                                        <div>
-                                                                            {% endfor %}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                                                      <div>
+                                                                                  {% endfor %}
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </div>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                  </div>
+                                                                                  {% endfor %}
                                                 </div>
 
                                                 <div>
-                                                    <button class="btn mt-3">Add Classes</button>
+                                                    <button class="btn mt-3" type="button" onclick="add_course()">Add Classes</button>
                                                 </div>
 
+                                                <button id="add-class-form-reset" type="reset" hidden></button>
                                                 </form>
 
                                         </div>
@@ -732,8 +674,12 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     </div>
 
                                     <div id="account-setting" class="content hidden-area">
+                                        <div id="profile-form-notif">
+                                          <h3></h3>
+                                        </div>
+
                                         <div id="profile-form" class="card card-body push-corners my-3 col-md-7">
-                                            <form method="post" action="{% url 'Signup' %}">
+                                            <form id="profile-update-form" method="post">
                                             {% csrf_token %}
 
                                             <div>
@@ -748,24 +694,26 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         <div id="error-title" class="error"></div>
                                                         <label for="title">Title</label>
                                                         <select id="title" name="title" required>
-                                                            <option value="Mr.">Mr.</option>
-                                                            <option value="Ms.">Ms.</option>
-                                                            <option value="Mrs.">Mrs.</option>
-                                                            <option value="Dr.">Doctor</option>
-                                                            <option value="Prof.">Professor</option>
-                                                        </select>
+                                                					{% for x, y in titles %}
+                                                						{% if staff.title == x %}
+                                                						<option value="{{x}}" selected>{{y}}</option>
+                                                						{% else%}
+                                                						<option value="{{x}}">{{y}}</option>
+                                                						{% endif %}
+                                                					{% endfor %}
+                                                				</select>
                                                     </div>
 
                                                     <div class="textinput input">
                                                         <div id="error-firstname" class="error"></div>
                                                         <label for="firstname">First Name<br></label>
-                                                        <input name="first-name" id="firstname" type="text" required/>
+                                                        <input name="first-name" id="firstname" type="text" value="{{staff.first_name}}" required/>
                                                     </div>
 
                                                     <div class="textinput input">
                                                         <div id="error-lastname" class="error"></div>
                                                         <label for="lastname">Last Name<br></label>
-                                                        <input name="last-name" id="lastname" type="text" required/>
+                                                        <input name="last-name" id="lastname" type="text" value="{{staff.last_name}}" required/>
                                                     </div>
                                                 </div>
 
@@ -781,7 +729,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 <div class="form-left">
                                                     <div class="textinput input">
                                                         <label for="year">University<br></label>
-                                                        <input id="university" type="text"/>
+                                                        <input id="university" type="text" value="{{staff.department_in.university_in.name}}"/>
                                                     </div>
 
                                                     <div class="textinput input">
@@ -807,7 +755,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         <div class="textinput input">
                                                             <div id="error-role" class="error"></div>
                                                             <label for="role">Role<br></label>
-                                                            <input name="role" id="role" type="text" required/>
+                                                            <input name="role" id="role" type="text" value="{{staff.role}}" required/>
                                                         </div>
 
                                                     </div>
@@ -823,13 +771,13 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 <div class="textinput input">
                                                     <div id="error-phonenum" class="error"></div>
                                                     <label for="phonenum">Phone number<br></label>
-                                                    <input name="phone-number" id="phonenum" type="tel" required/>
+                                                    <input name="phone-number" id="phonenum" type="tel" value="{{staff.phone}}" required/>
                                                 </div>
 
                                                 <div class="textinput input">
                                                     <div id="error-email" class="error"></div>
                                                     <label for="email">Email<br></label>
-                                                    <input name="email" id="email" type="email" required/>
+                                                    <input name="email" id="email" type="email" value="{{staff.email}}" required/>
                                                 </div>
                                                 </div>
 
@@ -844,7 +792,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 </div>
 
                                                 <div class="submitinput input">
-                                                    <button class="btn" id="signup-button" type="button" onclick="submit()">Save Changes</button>
+                                                    <button class="btn" id="signup-button" type="button" onclick="account_update()">Save Changes</button>
                                                 </div>
                                                 </div>
                                             </form>

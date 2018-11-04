@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from .models import *
 
-# Create your views here.
-
 def Push_Page(request,push_page):
     page = PushPage.objects.get(event=push_page)
     page_template = page.template
