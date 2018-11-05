@@ -38,4 +38,8 @@
                 {{ post.post.pub_date | naturaltime}}
         </div>
     </div>
+    {% empty %}
+    <div class="card card-body push-corners mb-3">
+        No posts so far! Enjoy the day.
+    </div>
 {% endfor %}
