@@ -471,10 +471,10 @@ def login(request):
 
         if (request.POST.get('user-type') == 'staff'):
             if not request.POST.get('email') or request.POST.get('email').strip() == "":
-                return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"email-error\", \"html\":\"<p>Email required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"email-error\", \"html\":\"<span>Email required</span>\"}", content_type='application/json')
 
             if not request.POST.get('password') or request.POST.get('password').strip() == "":
-                return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"staff-password-error\", \"html\":\"<p>Password required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"staff-password-error\", \"html\":\"<span>Password required</span>\"}", content_type='application/json')
 
             if not models.Staff.objects.filter(email = request.POST.get('email')).exists():
                 return HttpResponse("{\"role\":\"staff\", \"status\":0, \"remark\":\"Authentication failed\"}", content_type='application/json')
@@ -486,10 +486,10 @@ def login(request):
 
         elif (request.POST.get('user-type') == 'student'):
             if not request.POST.get('reg-id') or request.POST.get('reg-id').strip() == "":
-                return HttpResponse("{\"role\":\"student\", \"status\":2, \"id\":\"reg-id-error\", \"html\":\"<p>Registration ID required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"role\":\"student\", \"status\":2, \"id\":\"reg-id-error\", \"html\":\"<span>Registration ID required</span>\"}", content_type='application/json')
 
             if not request.POST.get('password') or request.POST.get('password').strip() == "":
-                return HttpResponse("{\"role\":\"student\", \"status\":2, \"id\":\"student-password-error\", \"html\":\"<p>Password required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"role\":\"student\", \"status\":2, \"id\":\"student-password-error\", \"html\":\"<span>Password required</span>\"}", content_type='application/json')
 
             if not models.Student.objects.filter(reg_id = request.POST.get('reg-id')).exists():
                 return HttpResponse("{\"role\":\"student\", \"status\":0, \"remark\":\"Authentication failed\"}", content_type='application/json')
@@ -626,23 +626,23 @@ def account_update(request):
 
 
         if not request.POST.get('first-name') or (request.POST.get('first-name').strip() == ""):
-            return HttpResponse("{\"status\":0, \"id\":\"error-firstname\", \"html\":\"<p>First name required</p>\"}", content_type='application/json')
+            return HttpResponse("{\"status\":0, \"id\":\"error-firstname\", \"html\":\"<span>First name required</span>\"}", content_type='application/json')
 
         if not request.POST.get('last-name') or (request.POST.get('last-name').strip() == ""):
-            return HttpResponse("{\"status\":0, \"id\":\"error-lastname\", \"html\":\"<p>Last name required</p>\"}", content_type='application/json')
+            return HttpResponse("{\"status\":0, \"id\":\"error-lastname\", \"html\":\"<span>Last name required</span>\"}", content_type='application/json')
 
         first_name = request.POST.get('first-name')
         last_name = request.POST.get('last-name')
 
         if request.POST.get('user-type') == "staff":
                 if not request.POST.get('email') or (request.POST.get('email').strip() == ""):
-                    return HttpResponse("{\"status\":0, \"id\":\"error-email\", \"html\":\"<p>Email required</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-email\", \"html\":\"<span>Email required</span>\"}", content_type='application/json')
 
                 if not request.POST.get('title') or (request.POST.get('title').strip() == ""):
-                    return HttpResponse("{\"status\":0, \"id\":\"error-title\", \"html\":\"<p>Title required</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-title\", \"html\":\"<span>Title required</span>\"}", content_type='application/json')
 
                 if request.POST.get('phone-number') and (request.POST.get('phone-number').strip() == ""):
-                    return HttpResponse("{\"status\":0, \"id\":\"error-phonenum\", \"html\":\"<p>Phone not valid</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-phonenum\", \"html\":\"<span>Phone not valid</span>\"}", content_type='application/json')
 
                 title = request.POST.get('title')
                 email = request.POST.get('email')
@@ -677,22 +677,22 @@ def account_update(request):
 
         elif request.POST.get('user-type') == "student":
                 if not request.POST.get('phone-number') or (request.POST.get('phone-number').strip() == ""):
-                    return HttpResponse("{\"status\":0, \"id\":\"error-phonenum\", \"html\":\"<p>Phone number required</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-phonenum\", \"html\":\"<span>Phone number required</span>\"}", content_type='application/json')
 
                 if not request.POST.get('year') or (request.POST.get('year').strip() == "") :
-                    return HttpResponse("{\"status\":0, \"id\":\"error-year\", \"html\":\"<p>Year required</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-year\", \"html\":\"<span>Year required</span>\"}", content_type='application/json')
 
                 if not request.POST.get('year').split('-')[-1].isdigit() or not models.Section.objects.filter(department_in = models.Department.objects.get(id = int(request.POST.get('department'))), year = int(request.POST.get('year').split('-')[-1])).exists():
-                    return HttpResponse("{\"status\":0, \"id\":\"error-year\", \"html\":\"<p>Year doesn't exist</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-year\", \"html\":\"<span>Year doesn't exist</span>\"}", content_type='application/json')
 
                 if not request.POST.get('section') or request.POST.get('section').strip() == "":
-                    return HttpResponse("{\"status\":0, \"id\":\"error-section\", \"html\":\"<p>Section required</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-section\", \"html\":\"<span>Section required</span>\"}", content_type='application/json')
 
                 if not models.Section.objects.filter(department_in = models.Department.objects.get(id = int(request.POST.get('department'))), year = int(request.POST.get('year').split('-')[-1]), section_id = request.POST.get('section')).exists():
-                    return HttpResponse("{\"status\":0, \"id\":\"error-section\", \"html\":\"<p>Section not found</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-section\", \"html\":\"<span>Section not found</span>\"}", content_type='application/json')
 
                 if request.POST.get('email') and (request.POST.get('email').strip() == ""):
-                    return HttpResponse("{\"status\":0, \"id\":\"error-email\", \"html\":\"<p>Email not valid</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"id\":\"error-email\", \"html\":\"<span>Email not valid</span>\"}", content_type='application/json')
 
                 year = int(request.POST.get('year'))
                 section = request.POST.get('section')
@@ -900,11 +900,11 @@ def post_action(request):
 
         if request.POST.get('action-type') == "chat":
             if not request.POST.get('post-content') or (request.POST.get('post-content').strip() == ""):
-                    return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#group-chat-post-content-error\", \"html\":\"<p>Post content is required</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#group-chat-post-content-error\", \"html\":\"<span>Post content is required</span>\"}", content_type='application/json')
 
             if request.FILES.get('image-1'):
                 if request.FILES['image-1'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
-                    return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#group-chat-attachment-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#group-chat-attachment-error\", \"html\":\"<span>Image format not supported</span>\"}", content_type='application/json')
 
 
             content = request.POST.get('post-content')
@@ -984,31 +984,31 @@ def post_action(request):
 
 
         if (request.POST.get('post-content').strip() == ""):
-                return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#post-content-error\", \"html\":\"<p>Post content is required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#post-content-error\", \"html\":\"<span>Post content is required</span>\"}", content_type='application/json')
 
         if not request.POST.getlist('section-recipients'):
             if not request.POST.getlist('class-recipients'):
-                return HttpResponse("{\"status\":0, \"remark\":\"Recipient not found\", \"id\":\"#post-recipient-error\", \"html\":\"<p>Choose at least one post recipient</p>\"}", content_type='application/json')
+                return HttpResponse("{\"status\":0, \"remark\":\"Recipient not found\", \"id\":\"#post-recipient-error\", \"html\":\"<span>Choose at least one post recipient</span>\"}", content_type='application/json')
 
         if request.FILES.get('file-1'):
             if request.POST.get('file-name-1').strip() == "":
-                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\", \"id\":\"#post-file-1-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\", \"id\":\"#post-file-1-error\", \"html\":\"<span>File name is required</span>\"}", content_type='application/json')
 
         if request.FILES.get('file-2'):
             if request.POST.get('file-name-2').strip() == "":
-                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-2-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-2-error\", \"html\":\"<span>File name is required</span>\"}", content_type='application/json')
 
         if request.FILES.get('file-3'):
             if request.POST.get('file-name-3').strip() == "":
-                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-3-error\", \"html\":\"<p>File name is required</p>\"}", content_type='application/json')
+                return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#post-file-3-error\", \"html\":\"<span>File name is required</span>\"}", content_type='application/json')
 
         if request.FILES.get('image-1'):
             if request.FILES['image-1'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
-                return HttpResponse("{\"status\":0, \"remark\":\"Image format not supported\",  \"id\":\"#post-image-1-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+                return HttpResponse("{\"status\":0, \"remark\":\"Image format not supported\",  \"id\":\"#post-image-1-error\", \"html\":\"<span>Image format not supported</span>\"}", content_type='application/json')
 
         if request.FILES.get('image-2'):
                 if request.FILES['image-2'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
-                    return HttpResponse("{\"status\":0, \"remark\":\"Image format not supported\",  \"id\":\"#post-image-2-error\", \"html\":\"<p>Image format not supported</p>\"}", content_type='application/json')
+                    return HttpResponse("{\"status\":0, \"remark\":\"Image format not supported\",  \"id\":\"#post-image-2-error\", \"html\":\"<span>Image format not supported</span>\"}", content_type='application/json')
 
         content = request.POST.get('post-content')
         pub_date = datetime.datetime.now()

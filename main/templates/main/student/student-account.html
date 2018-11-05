@@ -4,6 +4,10 @@
 <title>AAU Push</title>
 {% endblock %}
 
+{% block extra %}
+<span class="font-weight-bold text-white">{{student.first_name}} {{student.last_name}}</span>
+{% endblock %}
+
 {% block nav %}
 <!-- Collapse button -->
 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#pushNav"
@@ -38,10 +42,6 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 	<!-- Links -->
 </div>
 <!-- Collapsible content -->
-{% endblock %}
-
-{% block extra %}
-
 {% endblock %}
 
 {% block content%}
@@ -135,9 +135,6 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 										<form id='add-courses-form'>
 										<input name="action_type" type="text" value="add" hidden/>
 										{% csrf_token %}
-										<div id="add-courses-form-notif">
-											<h3></h3>
-										</div>
 
 										<div>
 											<span class="h2-responsive">Add Course</span>
@@ -254,8 +251,10 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 																</div>
 														</div>
 												</div>
-										</div>
-
+											</div>
+											<div id="add-courses-form-notif" class="alert alert-info hidden-area" role="alert">
+													<span></span>
+											</div>
 											<div>
 												<button class="btn mt-3" type="button" onclick="add_course()">Add Classes</button>
 											</div>
@@ -264,11 +263,12 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 										</div>
 
 										<div class="card card-body push-corners my-3">
-											<div id="drop-courses-form-notif">
-												<h3></h3>
-											</div>
 
 											<h3>Your Courses</h3>
+
+											<div id="drop-courses-form-notif" class="alert alert-info hidden-area" role="alert">
+												<span></span>
+											</div>
 
 											<table id="course-table" class="table table-striped table-hover table-borderless table-responsive">
 												<tbody>
@@ -294,10 +294,6 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
 								<div id="account-setting-content" class="content hidden-area">
 										<div id="profile-form" class="card card-body push-corners">
-												<div id="profile-form-notif">
-													<h3></h3>
-												</div>
-
 												<form id="profile-update-form" method="post">
 												<input name="user-type" type="text" value="student" hidden/>
 												{% csrf_token %}
@@ -402,7 +398,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 													<div class="textinput input">
 														<input name="password" id="password" type="password" required/>
 													</div>
-
+													<div id="profile-form-notif" class="mt-1 alert alert-info hidden-area" role="alert">
+															<span></span>
+													</div>
 													<div class="submitinput input">
 														<button id="save-changes" class="btn" type="button" onclick="account_update()">Save Changes</button>
 													</div>
@@ -419,7 +417,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 								<div id="reminder-container">
 									<div id="reminder">
 										{% for rem in reminder %}
-										<div class="card push-corners">
+										<div class="card push-corners mb-3">
 											<div class="exam-reminder-header py-2 px-3">
 												<span class="white-text font-weight-bold">{{ rem.reminder.title }}</span>
 												<span class="meta white-text"> - {{ rem.reminder.due_date | naturaltime }}</span>

@@ -107,7 +107,7 @@ function add_course() {
            if(result.status == 1) {
              $("#course-table > tbody").append(result.html);
              clearTimeout(add_notif_timer);
-             $("#add-courses-form-notif > h3").html("You have added " + result.count + " courses");
+             $("#add-courses-form-notif > span").html("You have added " + result.count + " courses");
              $("#add-courses-form-notif").css("display","block");
 
              add_notif_timer = setTimeout( function() {
@@ -117,7 +117,7 @@ function add_course() {
 
            else {
              clearTimeout(add_notif_timer);
-             $("#add-courses-form-notif > h3").html(result.remark);
+             $("#add-courses-form-notif > span").html(result.remark);
              $("#add-courses-form-notif").css("display","block");
 
              add_notif_timer = setTimeout( function() {
@@ -128,7 +128,7 @@ function add_course() {
 
          else {
            clearTimeout(add_notif_timer);
-           $("#add-courses-form-notif > h3").html("Action Failed");
+           $("#add-courses-form-notif > span").html("Action Failed");
            $("#add-courses-form-notif").css("display","block");
 
            add_notif_timer = setTimeout( function() {
@@ -147,11 +147,11 @@ function drop_course(class_id) {
              $(".row-" + result.class_id).css("display", "none");
              clearTimeout(drop_notif_timer);
              if(result.class_id == '-1') {
-               $("#drop-courses-form-notif > h3").html("You don't take that course");
+               $("#drop-courses-form-notif > span").html("You don't take that course");
              }
 
              else {
-               $("#drop-courses-form-notif > h3").html("You have dropped the course " + result.course);
+               $("#drop-courses-form-notif > span").html("You have dropped the course " + result.course);
              }
 
              $("#drop-courses-form-notif").css("display","block");
@@ -163,7 +163,7 @@ function drop_course(class_id) {
 
            else {
              clearTimeout(drop_notif_timer);
-             $("#drop-courses-form-notif > h3").html(result.remark);
+             $("#drop-courses-form-notif > span").html(result.remark);
              $("#drop-courses-form-notif").css("display","block");
 
              drop_notif_timer = setTimeout( function() {
@@ -174,7 +174,7 @@ function drop_course(class_id) {
 
          else {
            clearTimeout(drop_notif_timer);
-           $("#drop-courses-form-notif > h3").html("Action Failed");
+           $("#drop-courses-form-notif > span").html("Action Failed");
            $("#drop-courses-form-notif").css("display","block");
 
            drop_notif_timer = setTimeout( function() {
@@ -197,7 +197,7 @@ function account_update(page) {
 
             else if(result.status == 1) {
               $(".error").css("display","none");
-             $("#profile-form-notif > h3").html("Update Successful");
+             $("#profile-form-notif > span").html("Update Successful");
              $("#profile-form-notif").css("display", "block");
 
              setTimeout( function() {
@@ -207,7 +207,7 @@ function account_update(page) {
 
            else if(result.status == 2) {
              $(".error").css("display","none");
-             $("#profile-form-notif > h3").html(result.remark);
+             $("#profile-form-notif > span").html(result.remark);
              $("#profile-form-notif").css("display", "block");
 
              setTimeout( function() {
@@ -217,7 +217,7 @@ function account_update(page) {
          }
 
          else {
-           $("#profile-form-notif > h3").html("Update Failed");
+           $("#profile-form-notif > span").html("Update Failed");
            $("#profile-form-notif").css("display", "block");
 
            setTimeout( function() {
