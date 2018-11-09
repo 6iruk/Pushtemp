@@ -7,6 +7,10 @@
                     <span class="font-weight-bold">{{ post.post.post_by }}</span>
                     <span class="meta">{{ post.post.post_by.role }}</span>
             </div>
+
+            <div class="read-post-class">
+                <span class="btn read-post-{{post.post.id}}" onclick="read('{{post.post.id}}')">Read </span>
+            </div>
         </div>
 
         <div class="mt-2">

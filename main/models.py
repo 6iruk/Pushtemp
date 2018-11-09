@@ -383,7 +383,7 @@ class Post_To_Section(models.Model):
    post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
-      return self.post.post_by.__str__() + "-" + self.post_to.__str__()
+      return str(self.post.post_by) + "-" + str(self.post_to)
 
    def recipient(self):
       return self.post_to.department_in.name + " Year " + str(self.post_to.year) + " Section " + self.post_to.section_id
@@ -399,7 +399,7 @@ class Post_To_Student(models.Model):
    post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
-      return self.post_by + "-" + self.post_to
+      return str(self.post.post_by) + "-" + str(self.post_to)
 
 
 
@@ -413,7 +413,7 @@ class Post_To_Chat(models.Model):
    post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
-      return self.post_by + "-" + self.post_to
+      return str(self.post.post_by) + "-" + str(self.post_to)
 
 
 
@@ -427,7 +427,7 @@ class Post_To_Staff(models.Model):
    post = models.ForeignKey(Post,  on_delete=models.CASCADE)
 
    def __str__(self):
-      return self.post_by + "-" + self.post_to
+      return str(self.post.post_by) + "-" + str(self.post_to)
 
 
 #An Instructor sets a reminder for a class

@@ -1110,6 +1110,36 @@ def post_action(request):
         return HttpResponse(output, content_type='application/json')
 
 
+
+def student_read(request):
+        if not request.user.is_authenticated:
+            return HttpResponse("{\"status\":3, \"remark\":\"User not authenticated\"}", content_type='application/json')
+
+        if models.Student.objects.filter(user=request.user).exists():
+            student = models.Student.objects.get(user=request.user)
+
+        else:
+            return HttpResponse("{\"status\":2, \"remark\":\"Student not found\"}", content_type='application/json')
+
+        if not request.POST.get("post") or request.POST.get("post").strip() == "":
+            return HttpResponse("{\"status\":0, \"remark\":\"Post not sent\"}", content_type='application/json')
+
+        if models.Post.objects.filter(id = int(request.POST.get("post"))).exists():
+            post = models.Post.objects.get(id = int(request.POST.get("post")))
+
+        else:
+            return HttpResponse("{\"status\":0, \"remark\":\"Post doesn't exist\"}", content_type='application/json')
+
+        if models.Tracking.objects.filter(student = student, post = post, status = 1).exists():
+            info = models.Tracking.objects.get(student = student, post = post, status = 1)
+            info.status = 2
+            info.read_on = datetime.datetime.now()
+            info.save()
+
+        return HttpResponse("{\"status\":1, \"remark\":\"Successful\"}", content_type='application/json')
+
+
+
 def email_exists(request):
         if request.GET.get('email'):
                 email = request.GET.get('email')

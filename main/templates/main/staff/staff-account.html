@@ -344,16 +344,16 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                             <div class="card card-body push-corners my-3">
                                                 <div class="post">
                                                     <div class="post-content">
-                                                        <p>{{post}}</p>
+                                                        <p>{{post.post}}</p>
                                                     </div>
 
                                                     <div class="flex-container">
                                                         <div class="tracking-delivered">
-                                                            <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.delivered}} students</span>
+                                                            <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.post.delivered}} students</span>
                                                         </div>
 
                                                         <div class="tracking-read">
-                                                            <i class="fa fa-eye" aria-hidden="true"></i> Read by: <span class="font-weight-bold">{{post.read}} students</span>
+                                                            <i class="fa fa-eye" aria-hidden="true"></i> Read by: <span class="font-weight-bold">{{post.post.read}} students</span>
                                                         </div>
 
                                                         <div class="see-more">
@@ -369,13 +369,13 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     </div>
 
                                                     <div class="detail-recipients">
-                                                        {% for recipient in post.post_to_section_set.all %}
+                                                        {% for recipient in post.post.post_to_section_set.all %}
                                                             <div class="recipient">
                                                                 {{recipient.recipient}}
                                                             </div>
                                                             {% endfor %}
 
-                                                            {% for recipient in post.post_to_class_set.all %}
+                                                            {% for recipient in post.post.post_to_class_set.all %}
                                                             <div class="recipient">
                                                                 {{recipient.recipient}}
                                                             </div>
@@ -383,7 +383,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         </div>
 
                                                         <div class="detail-files">
-                                                            {% for file in post.files.all %}
+                                                            {% for file in post.post.files.all %}
                                                             <div class="file-detail">
                                                                 <div class="file-detail-name">
                                                                     {{file.name}}

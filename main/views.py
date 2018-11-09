@@ -20,6 +20,8 @@ def index(request):
     context = {'departments':departments}
     return render(request, 'main/index.html', context)
 
+
+
 def students_signup_page(request):
     if(request.method == "POST"):
         form = request.POST.copy()
@@ -51,18 +53,49 @@ def students_signup_page(request):
     context = {'departments':departments}
     return render(request, 'main/student/students-signup.html', context)
 
+
+
 def login_page(request):
     if request.user.is_authenticated:
         logout(request)
 
     return render(request, 'main/login.html')
 
-def student_account_page(request):
 
-    wall = Post_To_Class.objects.all()
+
+def student_account_page(request):
+    if request.user.is_authenticated and Student.objects.filter(user=request.user).exists():
+        student = Student.objects.get(user=request.user)
+
+    else:
+         return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
+
+    classes_in = student.class_in.all()
+    query = Q()
+    for class_in in classes_in:
+
+        #Add every class the student takes to the query
+        query.add( Q( post_to = class_in ), Q.OR )
+
+    query2 = Q()
+    for section in classes_in:
+
+        #Add every section the student is in to the query
+        query2.add( Q( post_to = section.section ), Q.OR )
+
+    wall = Post_To_Class.objects.filter(query)
+    pushboard = Post_To_Section.objects.filter(query2)
+
+    for post in wall:
+        if not Tracking.objects.filter(student = student, post = post.post).exists():
+            Tracking.objects.create(student = student, post = post.post, status = 1, del_on = datetime.datetime.now())
+
+    for post in pushboard:
+        if not Tracking.objects.filter(student = student, post = post.post).exists():
+            Tracking.objects.create(student = student, post = post.post, status = 1, del_on = datetime.datetime.now())
+
     reminder = Reminder_To_Class.objects.all()
 
-    student = Student.objects.get(user=request.user)
     sections = student.department_in.section_set.all().order_by('department_in','year','section_id')
 
     departments = Department.objects.all()
@@ -70,10 +103,20 @@ def student_account_page(request):
     context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'departments':departments}
     return render(request, 'main/student/student-account.html', context)
 
+
+
 def staff_account_page(request):
 
-    posts = Post.objects.all()
-    staff = Staff.objects.get(user = request.user)
+    if request.user.is_authenticated and Staff.objects.filter(user=request.user).exists():
+        staff = Staff.objects.get(user=request.user)
+
+    else:
+         return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
+    posts_to_class = Post_To_Class.objects.filter(post__post_by = staff)
+    posts_to_section = Post_To_Section.objects.filter(post__post_by = staff)
+    posts = sorted((list(posts_to_section) + list(posts_to_class)), key=lambda x: x.post.pub_date)
+
+    group_posts = Post_To_Chat.objects.filter(post_to = staff.department_in)
 
     classes = Instructor_Teaches.objects.filter(instructor=staff)
 
@@ -88,9 +131,38 @@ def staff_account_page(request):
     context = {'departments':departments, 'posts':posts, 'staff':staff, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
     return render(request, 'main/staff/staff-account.html', context)
 
+
+
 def forgot_password_page(request):
 
     return render(request, 'main/forgot-password.html')
+
+
+
+def first_login(request):
+       if request.method == 'POST':
+               teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], staff_id = request.POST['staffid'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
+               teacher.save()
+
+               for pair in request.POST.getlist('section-course'):
+                       pair_arr = pair.split('-')
+                       teaches = Teacher_Teaches(teacher = teacher, section = Section.objects.get(id = int(pair_arr[0])), course = Course.objects.get(id = int(pair_arr[1])))
+                       teaches.save()
+
+               user = User.objects.get(username=request.user)
+               user.username = request.POST['staffid']
+               user.set_password(request.POST['new_password'])
+               user.save()
+
+               return redirect('login')
+       else:
+               departments = Department.objects.all()
+               sections = Section.objects.all().order_by('year')
+
+               context = {'user':request.user,'departments':departments, 'sections':sections}
+               return render(request,'main/staff/first_login.html',context)
+
+
 
 def feedback_page(request):
 

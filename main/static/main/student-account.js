@@ -226,3 +226,13 @@ function account_update(page) {
          }
        });
 }
+
+function read(post) {
+  $.post("http://localhost:8000/json/student_read/", { post : post, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
+       if(status == "success") {
+         if(result.status == 1) {
+           $(".read-post-" + post).css("display", "none");
+         }
+       }
+     });
+}
