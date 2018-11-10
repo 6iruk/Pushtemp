@@ -362,39 +362,41 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     </div>
                                                 </div>
 
-                                                <div class="mt-2 hidden-area" id="post-detail-{{forloop.counter}}">
+                                                <div class="hidden-area" id="post-detail-{{forloop.counter}}">
                                                     <hr>
                                                     <div class="post-detial-header">
-                                                        <p class="font-weight-bold">Posted to</p>
+                                                        <span class="font-weight-bold">Posted to: </span>
+                                                        <ul>
+                                                        {% for recipient in post.post.post_to_section_set.all %}
+                                                        <li class="ml-3">
+                                                            {{recipient.recipient}}
+                                                        </li>
+                                                        {% endfor %}
+
+                                                        {% for recipient in post.post.post_to_class_set.all %}
+                                                        <li class="recipient">
+                                                            {{recipient.recipient}}
+                                                        </li>
+                                                        {% endfor %}
+                                                        </ul>
                                                     </div>
 
-                                                    <div class="detail-recipients">
-                                                        {% for recipient in post.post.post_to_section_set.all %}
-                                                            <div class="recipient">
-                                                                {{recipient.recipient}}
-                                                            </div>
-                                                            {% endfor %}
-
-                                                            {% for recipient in post.post.post_to_class_set.all %}
-                                                            <div class="recipient">
-                                                                {{recipient.recipient}}
-                                                            </div>
-                                                            {% endfor %}
-                                                        </div>
-
-                                                        <div class="detail-files">
+                                                    <div class="detail-files">
+                                                        <span class="font-weight-bold">Files: </span>
+                                                        <ul>
                                                             {% for file in post.post.files.all %}
-                                                            <div class="file-detail">
-                                                                <div class="file-detail-name">
-                                                                    {{file.name}}
-                                                                </div>
-
-                                                                <div class="file-tracking">
-                                                                    {{file.downloads}}
-                                                                </div>
-                                                            </div>
+                                                            <li class="file">
+                                                                    <div>
+                                                                        <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                    </div>
+                                                
+                                                                    <div>
+                                                                        <i class="fa fa-download" aria-hidden="true"></i><span class="mb-2"> Downloaded by: <span class="font-weight-bold">{{file.downloads}} students</span>
+                                                                    </div>
+                                                            </li>
                                                             {% endfor %}
-                                                        </div>
+                                                        </ul>
+                                                    </div>
                                                     </div>
                                                 </div>
                                                 {% endfor %}
