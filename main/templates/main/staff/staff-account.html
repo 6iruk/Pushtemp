@@ -100,16 +100,18 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                     <div>
-                                                        <h1 class="h2-responsive">Write Post</h1>
+                                                        <span class="h2-responsive">Write Post</span>
                                                     </div>
 
                                                     <div id="post-content-error" class="error alert alert-danger hidden-area" role="alert">
 
                                                     </div>
 
-                                                    <div>
-                                                        <textarea class="form-control push-corners" rows="5" name="post-content" placeholder="Write your message here..." required></textarea>
+                                                    <div class="md-form">
+                                                        <textarea type="text" id="form10" class="md-textarea form-control push-corners" rows="5" name="post-content" required></textarea>
+                                                        <label for="form10">Type your message here...</label>
                                                     </div>
+
                                                         <div>
                                                             <h1 class="h5-responsive mt-3">Send to</h1>
                                                         </div>
@@ -264,7 +266,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                                             </div>
 
-                                                            <input class="form-control" placeholder="Enter file title" name="file-name-1" type="text"/>
+                                                            <div class="md-form mt-1 mb-0 mx-1">
+                                                                    <input class="form-control" placeholder="Enter file title" name="file-name-1" type="text" />
+                                                            </div>
                                                             <div class="input-group mb-3">
                                                                 <div class="custom-file">
                                                                     <input type="file" id="inputGroupFile01" name="file-1" aria-describedby="inputGroupFileAddon01">
@@ -275,7 +279,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                                             </div>
 
-                                                            <input class="form-control" placeholder="Enter file title" name="file-name-2" type="text"/>
+                                                            <div class="md-form mt-1 mb-0 mx-1">
+                                                                <input class="form-control" placeholder="Enter file title" name="file-name-2" type="text" />
+                                                            </div>
                                                             <div class="input-group mb-3">
                                                                 <div class="custom-file">
                                                                     <input type="file" id="inputGroupFile02" name="file-2" aria-describedby="inputGroupFileAddon02">
@@ -286,7 +292,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                                             </div>
 
-                                                            <input class="form-control" placeholder="Enter file title" name="file-name-3" type="text"/>
+                                                            <div class="md-form mt-1 mb-0 mx-1">
+                                                                    <input class="form-control" placeholder="Enter file title" name="file-name-3" type="text" />
+                                                            </div>
                                                             <div class="input-group mb-3">
                                                                 <div class="custom-file">
                                                                     <input type="file" id="inputGroupFile03" name="file-3" aria-describedby="inputGroupFileAddon03">
@@ -421,8 +429,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                                         </div>
 
-                                                        <div id="keyboard-form-textarea">
-                                                            <textarea name="post-content" class="form-control push-corners" placeholder="Write your message to send..." rows="5"></textarea>
+                                                        <div class="md-form">
+                                                            <textarea type="text" id="chatmessage" class="md-textarea form-control push-corners" rows="5" name="post-content" required></textarea>
+                                                            <label for="chatmessage">Type your message here...</label>
                                                         </div>
 
                                                         <div id="keyboard-extra">
@@ -659,120 +668,62 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                         <div id="profile-form" class="card card-body push-corners my-3 col-md-7">
                                             <form id="profile-update-form" method="post">
-                                            {% csrf_token %}
+                                                {% csrf_token %}
 
-                                            <div>
-                                                <p class="h3-responsive">Personal Information</p>
-                                            </div>
-
-                                            <hr>
-
-                                            <div id="form-top">
-                                                <div class="form-left">
-                                                    <div class="textinput input">
-                                                        <div id="error-title" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                        <label for="title">Title</label>
-                                                        <select id="title" name="title" required>
-                                                					{% for x, y in titles %}
-                                                						{% if staff.title == x %}
-                                                						<option value="{{x}}" selected>{{y}}</option>
-                                                						{% else%}
-                                                						<option value="{{x}}">{{y}}</option>
-                                                						{% endif %}
-                                                					{% endfor %}
-                                                				</select>
-                                                    </div>
-
-                                                    <div class="textinput input">
-                                                        <div id="error-firstname" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                        <label for="firstname">First Name<br></label>
-                                                        <input name="first-name" id="firstname" type="text" value="{{staff.first_name}}" required/>
-                                                    </div>
-
-                                                    <div class="textinput input">
-                                                        <div id="error-lastname" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                        <label for="lastname">Last Name<br></label>
-                                                        <input name="last-name" id="lastname" type="text" value="{{staff.last_name}}" required/>
-                                                    </div>
+                                                <div class="h3-responsive mb-2">
+                                                    Account Information
                                                 </div>
 
-                                            </div>
-
-                                            <div>
-                                                <p class="h3-responsive mt-3">School Information</p>
-                                            </div>
-                                            <hr>
-
-                                            <div id="form-middle">
-
-                                                <div class="form-left">
-                                                    <div class="textinput input">
-                                                        <label for="year">University<br></label>
-                                                        <input id="university" type="text" value="{{staff.department_in.university_in.name}}"/>
-                                                    </div>
-
-                                                    <div class="textinput input">
-                                                        <div id="error-department" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                        <label for="department">Choose your department<br></label>
-                                                        <select name="department" id="department" required>
-                                                            {% for department in departments %}
-                                                            {% ifchanged department.university_in %}
-                                                            <option value="" disabled>{{department.university_in}}</option>
-                                                            {% endifchanged %}
-
-                                                            {% if department.id == student.department_in.id %}
-                                                            <option value="{{department.id}}" selected>{{department.name}}</option>
-                                                            {% else %}
-                                                            <option value="{{department.id}}">{{department.name}}</option>
+                                                <div>
+                                                    <div id="error-title" class="error alert alert-danger hidden-area" role="alert"></div>
+                                                    <label for="title">Title</label>
+                                                    <select id="title" name="title" required>
+                                                        {% for x, y in titles %}
+                                                            {% if staff.title == x %}
+                                                            <option value="{{x}}" selected>{{y}}</option>
+                                                            {% else%}
+                                                            <option value="{{x}}">{{y}}</option>
                                                             {% endif %}
-                                                            {% endfor %}
-                                                        </select>
-                                                        </div>
-                                                    </div>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
 
-                                                    <div class="form-right">
-                                                        <div class="textinput input">
-                                                            <div id="error-role" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                            <label for="role">Role<br></label>
-                                                            <input name="role" id="role" type="text" value="{{staff.role}}" required/>
-                                                        </div>
 
-                                                    </div>
+                                                <div id="error-firstname" class="error alert alert-danger hidden-area" role="alert"></div>
+                                                <div class="md-form mt-4 mb-2 mx-1">
+                                                        <input class="form-control" name="first-name" id="firstname" type="text" placeholder="First Name" value="{{staff.first_name}}" required />
+                                                </div>
+
+                                                <div id="error-lastname" class="error alert alert-danger hidden-area" role="alert"></div>
+                                                <div class="md-form mt-4 mb-2 mx-1">
+                                                        <input class="form-control" name="last-name" id="lastname" type="text" placeholder="Last Name" value="{{staff.last_name}}" required />
+                                                </div>
+
+                                                <div id="error-phonenum" class="error alert alert-danger hidden-area" role="alert"></div>
+                                                <div class="md-form mt-4 mb-2 mx-1">
+                                                        <input class="form-control" name="phone-number" id="phonenum" type="tel" value="{{staff.phone}}" required />
+                                                </div>
+
+
+
+                                                <div id="error-email" class="error alert alert-danger hidden-area" role="alert"></div>
+                                                <div class="md-form mt-4 mb-2 mx-1">
+                                                        <input class="form-control" name="email" id="email" type="email" value="{{staff.email}}" required />
+                                                </div>
+
+
+
+                                                <div class="mt-4">
+                                                    <span>Enter your password to save changes</span>
                                                 </div>
 
                                                 <div>
-                                                    <p class="h3-responsive mt-3">Contact Information</p>
-                                                </div>
-                                                <hr>
-
-                                                <div id="form-bottom">
-
-                                                <div class="textinput input">
-                                                    <div id="error-phonenum" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                    <label for="phonenum">Phone number<br></label>
-                                                    <input name="phone-number" id="phonenum" type="tel" value="{{staff.phone}}" required/>
-                                                </div>
-
-                                                <div class="textinput input">
-                                                    <div id="error-email" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                    <label for="email">Email<br></label>
-                                                    <input name="email" id="email" type="email" value="{{staff.email}}" required/>
-                                                </div>
-                                                </div>
-
-                                                <div id="form-footer">
-                                                        <hr>
-                                                <div>
-                                                    <p>Please enter your password to save changes</p>
-                                                </div>
-
-                                                <div class="textinput input">
-                                                    <input name="password" id="password" type="password" required/>
-                                                </div>
-
-                                                <div class="submitinput input">
-                                                    <button class="btn" id="signup-button" type="button" onclick="account_update()">Save Changes</button>
-                                                </div>
+                                                    <div class="d-inline">
+                                                            <input name="password" id="password" type="password" required />
+                                                    </div>
+                                                    <div class="d-inline">
+                                                        <button class="btn" id="signup-button" type="button" onclick="account_update()">Save Changes</button>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>

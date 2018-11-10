@@ -145,4 +145,7 @@ hr {
 .proj-reminder-header {
   background-color: #0074c2; }
 
+.md-form textarea.md-textarea {
+  overflow-y: scroll; }
+
 /*# sourceMappingURL=push.css.map */
