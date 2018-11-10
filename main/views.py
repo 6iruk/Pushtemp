@@ -141,12 +141,12 @@ def forgot_password_page(request):
 
 def first_login(request):
        if request.method == 'POST':
-               teacher = Teacher(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], staff_id = request.POST['staffid'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
+               teacher = Staff(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], staff_id = request.POST['staffid'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
                teacher.save()
 
                for pair in request.POST.getlist('section-course'):
                        pair_arr = pair.split('-')
-                       teaches = Teacher_Teaches(teacher = teacher, section = Section.objects.get(id = int(pair_arr[0])), course = Course.objects.get(id = int(pair_arr[1])))
+                       teaches = Instructor_Teaches(teacher = teacher, section = Section.objects.get(id = int(pair_arr[0])), course = Course.objects.get(id = int(pair_arr[1])))
                        teaches.save()
 
                user = User.objects.get(username=request.user)
