@@ -88,7 +88,8 @@ DATABASES = {
        'ENGINE': 'django.db.backends.mysql',
        'OPTIONS': {
            'read_default_file': os.path.join(BASE_DIR, 'push.cnf'),
-       }
+           'init_command': 'SET innodb_strict_mode=1',
+       },
    }
 }
 
