@@ -1,0 +1,327 @@
+html, body {
+  color: #929292;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.spacer_50px {
+  width: 100%;
+  height: 50px;
+}
+
+.hr_spacer_3per {
+  width: 3%;
+  height: 100%;
+}
+
+.division-line {
+  width: 100%;
+  margin: auto;
+}
+
+.vertical-line-200px {
+  border-left: 2px solid #555555;
+  height: 200px;
+}
+
+.vertical-line-inv {
+  border-left: 2px solid #555555;
+  height: 1px;
+}
+
+.header-right {
+  width: 50%;
+  text-align: center;
+}
+
+.header-left {
+  width: 50%;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 40px;
+  background-color: #555555;
+}
+
+.file {
+  width: 45%;
+  margin: 0px 0px 20px 10px;
+}
+
+.file-name {
+    margin-bottom: 5px;
+}
+
+.list-header h4{
+  margin: 0px 0px 5px 0px;
+}
+
+.recipient-selection {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.recipient-list {
+  margin-left: 10px;
+}
+
+.recipient-data-hidden {
+  display: none;
+}
+
+.post-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post {
+  width: 60%;
+}
+
+.post-detail {
+  display: none;
+  width: 40%;
+}
+
+.chat-date {
+  text-align: center;
+}
+
+.chat-post {
+  width: 100%;
+}
+
+.keyboard-images {
+  padding: 4px;
+}
+
+.keyboard-files {
+  padding: 4px;
+}
+
+.post-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#app {
+  width: 100%;
+  min-height: 100%;
+  position: relative;
+}
+
+#header {
+	height: 50px;
+  width: 100%;
+  background-color: #00cbff;
+  background-image: -webkit-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: -moz-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: -ms-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: -o-linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  background-image: linear-gradient(left, #00cfbf, #00d9e8, #00cbff, #0099e8);
+  position: fixed;
+  top: 0;
+  z-index: 2;
+}
+
+#header-content {
+	height: 100%;
+	max-width: 97%;
+	margin: auto;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+#side-nav {
+  width: 3%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  margin-top: 50px;
+  background-color: #555555;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.side-nav-sections {
+  margin: 10px 0px 15px 0px;
+}
+
+#content-background {
+  position: fixed;
+  left: 12.7%;
+  width: 77.6%;
+  height: 100%;
+  background-color: #FFFDDD;
+  z-index: -1;
+}
+
+#content-container {
+  width: 97%;
+  margin-left: 3%;
+}
+
+#news {
+
+}
+
+#content {
+  width: 80%;
+  margin: auto;
+}
+
+#post-form {
+  width: 100%;
+  padding: 0px 10px 0 10px;
+}
+
+#post-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+#post-data {
+  width: 45%;
+  box-sizing: border-box;
+}
+
+#post-recipient {
+  width: 40%;
+}
+
+#post-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+#post-images {
+  display: flex;
+  justify-content: center;
+}
+
+#post-files {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#header-left {
+  width: 45%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#header-right {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#post-content {
+  width: 100%;
+}
+
+#post-tracker {
+
+
+}
+
+#post-list {
+  width: 100%;
+  padding: 0px 12px 0px 12px;
+}
+
+#post-detail {
+  width: 40%;
+  padding: 0px 8px 0px 8px;
+}
+
+#keyboard-form {
+  width: 70%;
+  margin: auto;
+}
+
+#group-chat {
+
+}
+
+#group-chat > .post-list > .post{
+
+}
+
+#group-chat-keyboard {
+  padding-top: 8px;
+}
+
+#keyboard-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#keyboard-files {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#keyboard-form-button {
+  text-align: right;
+}
+
+#chat-post-list {
+  width: 60%;
+  margin: auto;
+}
+
+#add-class > form > .recipient-list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#add-class > form > .recipient-list > .recipient-data {
+  width: 50%;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0;
+  right: 0;
+	width: 97%;
+	height: 20px;
+	background-color: #252525;
+}
+
+#footer-content {
+	display: flex;
+	justify-content: space-around;
+}

@@ -1,52 +1,123 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 
 {% block title %}
-	<title>AAU Push</title>
+<title>AAU Push - Welcome</title>
 {% endblock %}
 
-{% block style %}
-    <style>
-        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-            padding: 8px 0;
-            border: 0px;
-        }
-    </style>
+{% block nav %}
 {% endblock %}
 
-{% block extra %} <a class="meta link btn btn-default hidden-xs" href="{% url 'login' %}">Teacher's Login</a> {% endblock %}
+{% block extra %}
+<a href="{% url 'Log In' %}" class="btn">Login</a>
+{% endblock %}
 
-{% block content %}
+{% block content%}
+{% load static %}
+    <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        <div class="container">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-lg-6 mt-4">
+                        <h1 class="h1-responsive font-weight-bold">Make the most of college</h1>
+                        <hr>
+                        <p>
+                            AAU Push fills the communication gap between students and teachers. Teachers simply post announcements and upload course textbooks, references and assignments for students. Students get it through website and the Android application.
+                        </p>
+                    </div>
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-4 mt-4">
+                        <div class='card card-body push-corners'>
+                            <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
+                            <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
+                            <form method="post" action="{% url 'Sign Up' %}">
+                                    {% csrf_token %}
+                                    <select name="department" class="form-control my-3 push-corners" required>
+                                            <option value="" disabled selected>Pick your Department</option>
+                                            {% for department in departments%}
+                                            <option value="{{department.id}}">{{department.name}}</option>
+                                            {% endfor %}
+                                    </select>
 
-    <div class="container-fluid push-container">
-        <div class="row">
-            <div class="col-md-6"> 
-                <h1 class="title">Computer Science Department</h1>
-                <p class="detail"> Click on your section to proceed.</p>
-                <div class="spacer2"></div>
-                <table class="table table-striped">
-                    <tr>
-                    {% for section in sections %}
-                        {% ifchanged section.year %}
-                            </tr><tr>
-                            <td class="detail">Year {{section.year}}</td>	
-                        {% endifchanged %}
-                        <td><a class="detail link" href="{% url 'Section' section.code%}">Section {{section.number}}</a></td>
-                    {%endfor%}
-                    </tr>
-                </table>
-                <hr class="hidden-md hidden-lg">
-            </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-5">
-                <h1 class="title">Get inspired!</h1>
-                {% load static %}
-                <img src="{% static 'main/openday.jpg' %}" width="100%">
-                <div class="spacer2"></div>
-                <p class="detail"> The Department of Computer Science is having a “Computer Science Open Day Event” during the Research Week of AAU.
-                    Our aim is to increase & enhance exposure of works done by students of our department.
-                    Di erent attendees from the computer-related industry and media will be attending the event.</p>
-            </div>
-        </div>
+                                    <input class="form-control my-3 push-corners" name="first_name" type="text" placeholder="First Name" required>
+                                    <input class="form-control my-3 push-corners" name="last_name" type="text" placeholder="Last Name" required>
+                                    <input class="form-control my-3 push-corners" name="reg_id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                    <input class="form-control my-3 push-corners" name="email" type="email" placeholder="Email" required>
+
+                                    <button class="btn btn-block my-3" type="submit">Sign up</button>
+                                    <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
+                            </form>
+                        </div>
+                        <div class="card card-body push-corners mt-3 d-md-block d-lg-none">
+                            <p class="link font-weight-bold text-center">Pick your Login</p>
+    
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="staff" aria-selected="false">Staff</a>
+                                </li>
+                            </ul>
+    
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
+                                    <div id="student-form-error" class="error">
+                                    </div>
+                                    <form id="student-login" method="post" action="{% url 'API_Login' %}">
+                                            {% csrf_token %}
+                                            <input name="user-type" type="text" value="student" hidden/>
+                                            <div id="reg-id-error" class="error">
+                                            </div>
+                                            <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                            <div id="student-password-error" class="error">
+                                            </div>
+                                            <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                            <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                            <button class="btn btn-block my-3" type="button" onclick="login('student')">Login</button>
+                                            <p class="text-center">Don't have an account? <a class="link" href="{% url 'Sign Up' %}">Sign up here.</a></p>
+                                            <p class="meta">If there is any problem or if you have a question please contact us at aaupush@gmail.com or 0913 35 00 82.</p>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="staff" role="tabpanel" aria-labelledby="staff-tab">
+                                    <div id="staff-form-error" class="error">
+                                    </div>
+                                    <form id="staff-login" method="post" action="{% url 'API_Login' %}">
+                                            {% csrf_token %}
+                                            <input name="user-type" type="text" value="staff" hidden/>
+                                            <div id="email-error" class="error">
+                                            </div>
+                                            <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                            <div id="staff-password-error" class="error">
+                                            </div>
+                                            <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                            <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                            <button class="btn btn-block my-3" type="button" onclick="login('staff')">Login</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ADD LOGIN OPTION HERE FOR WHEN RESIZED TO SMALLER SCREENS-->
+                <div class="row mt-2">
+                        <p class="meta grey-text">
+                            Copyright 2018 AAU Push
+                        | <a href="#" class="link">About Us</a>
+                        | <a href="#" class="link">Feedback</a>
+                        | <a href="#" class="link">Terms</a>
+                        </p>
+                  </div>
+                <!--Grid row-->
+              </div>
     </div>
+{% endblock %}
 
+{% block script%}
+
+<script>
+    // Tooltips Initialization
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 {% endblock %}

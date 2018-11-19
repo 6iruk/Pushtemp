@@ -1,0 +1,350 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+<title>AAU Push - Account Setup</title>
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block extra %}
+<span class="font-weight-bold text-white">Account Setup</span>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+    <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        <div class="container">
+            <div class="row push-min-height">
+                <div class="col-lg-4 mt-3">
+                    <div class="card push-corners">
+                        <div class="card-header">
+                            <span>Need Help?</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Watch this 2 minute video on how to setup</p>
+
+                            <button type="button" class="btn mx-0" data-toggle="modal" data-target="#modalYT">Open Video</button>
+
+                            <!--Modal: modalYT-->
+                            <div class="modal fade" id="modalYT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+
+                                <!--Content-->
+                                <div class="modal-content">
+
+                                <!--Body-->
+                                <div class="modal-body mb-0 p-0">
+
+                                    <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/A3PDXmYoF5U" allowfullscreen></iframe>
+                                    </div>
+
+                                </div>
+
+                                <!--Footer-->
+                                <div class="modal-footer justify-content-center flex-column flex-md-row">
+                                    <span class="mr-4">Still need help? Call support: 0913 35 00 82 - Addis</span>
+                                    <button type="button" class="btn-outline-primary btn btn-md ml-4" data-dismiss="modal">Close</button>
+                                </div>
+
+                                </div>
+                                <!--/.Content-->
+
+                            </div>
+                            </div>
+                            <!--Modal: modalYT-->
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-lg-6 mt-3">
+                    <div class="card push-corners">
+                        <div class="push-corners card-header light-blue white-text ">Complete your account setup</div>
+                        <div class="card-body">
+                            <form action="{% url 'first_login' %}" method="post">
+                                <input type="hidden" name="user" value="{{user}}" />
+                                <ul class="nav">
+                                    <li class="active">
+                                        <a id="first-page-link" data-toggle="tab" href="#first-page"></a>
+                                    </li>
+                                    <li>
+                                        <a id="second-page-link" data-toggle="tab" href="#second-page"></a>
+                                    </li>
+                                    <li>
+                                        <a id="third-page-link" data-toggle="tab" href="#third-page"></a>
+                                    </li>
+                                    <li>
+                                        <a id="fourth-page-link" data-toggle="tab" href="#fourth-page"></a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="first-page" class="tab-pane active">
+                                        <p id="id_error" class="my-1 alert alert-info hidden-area" role="alert"></p>
+
+                                        <div>
+                                            <select class="" id="id_title" name="title">
+                                                    <option value="" disabled selected>Choose title</option>
+                                                    <option value="Mr.">Mr.</option>
+                                                    <option value="Ms.">Ms.</option>
+                                                    <option value="Mrs.">Mrs.</option>
+                                                    <option value="Dr.">Doctor</option>
+                                                    <option value="Prof.">Professor</option>
+                                            </select>
+                                            
+                                            <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" id="id_name" name="first-name" type="text" />
+                                                <label for="id_name" >First Name</label>
+                                            </div>
+                                    
+                                            <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" id="id_last_name" name="last-name" type="text" />
+                                                <label for="id_last_name" >Last Name</label>
+                                            </div>
+                                        </div>
+                        
+                                        <div class="hidden-area">
+                                            <div class="md-form mt-4 mx-1 d-inline-block">
+                                                <input id="id_department" class="form-control" value="Department of Computer Science" type="text" disabled />
+                                                <label for="id_department" >Department</label>
+                                            </div>
+                                            <div class="md-form mt-4 mx-1 d-inline-block">
+                                                <input id="id_role" value="Instructor" type="text" disabled />
+                                                <label for="id_role" >Role</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex-container">
+                                            <div></div>
+                                            <div><button class="btn mt-4" type="button" onClick="next('second-page-link')">Next</button></div>
+                                        </div>
+                                        
+                                    </div>
+                        
+                                    <div id="second-page" class="tab-pane">
+                                        <p id="id_section_error" class="error-msg text-center"></p>
+                        
+                                        <h4>Choose the sections you teach</h4>
+                                        <div class="row">
+                                            {% for section in sections %}
+                                                {% ifchanged section.year %}
+                                                    </div>
+                                                {% endifchanged %}
+                            
+                                                {% ifchanged section.department %}
+                                                    <h4>{{section.department}}</h4>
+                                                {% endifchanged %}
+                            
+                                                {% ifchanged section.year %}
+                                                    <div class="recipient-selection form-control">
+                                                        <div class='d-inline-block' onclick="click_hidden('add-year-{{forloop.counter}}')">
+                                                            <div class="d-inline mx-2">
+                                                                Year {{teaches.year}}
+                                                            </div>
+                                                            <div class="d-inline">
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                {% endifchanged %}
+
+                                                <div class="recipient-selection ml-5 my-2">
+                                                    <div class="d-inline">
+                                                        <input class="section" type="checkbox" name='sections' value="{{section.id}}" />
+                                                    </div>
+                                                    <div class="d-inline mx-2">
+                                                        Section {{section.id}}
+                                                    </div>
+                                                </div>
+                        
+                                            {% endfor %}
+                                        </div>
+                                        <div class="flex-container">
+                                            <button  class="btn" type="button" value="Back" onClick="previous('first-page-link')">Back</button>
+                                            <button  id="submit" class="btn" type="button" value="Next" onClick="next('third-page-link')">Next</button>        
+                                        </div>
+                                    </div>
+                        
+                                    <div id="third-page" class="tab-pane">
+                                        <input id="check-third-page" type="hidden" value="0">
+                                        <p id='id_course_error' class='error-msg text-center'></p>
+                        
+                                        <h4>Choose courses you give</h4>
+                                        <div id="third-page-row" style="height:auto;"></div>
+                                        
+                                        <div class="flex-container">
+                                            <button  class="btn" type="button" value="Back" onClick="previous('second-page-link')">Back</button>
+                                            <button  id="submit" class="btn" type="button" value="Next" onClick="next('fourth-page-link')">Next</button>        
+                                        </div>    
+                                    </div>
+                        
+                                    <div id="fourth-page" class="tab-pane">
+                                        <div>
+                                            <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" id="email" name="email" type="text" required />
+                                                <label for="email" >Email</label>
+                                            </div>
+                                    
+                                            <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" id="password" type="password" name="new_password" required />
+                                                <label for="password" >Enter New Password</label>
+                                            </div>
+
+                                            <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" id="password_conf" type="password" onKeyUp="password_checker()" required />
+                                                <label for="password_conf" >Confirm New Password</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mx-1 py-3">You will be redirected the Staff Portal after completing this.</div>
+                                        
+                                        {%csrf_token%}
+                                        <div class="flex-container">
+                                            <button  class="btn" type="button" value="Back" onClick="previous('first-page-link')">Back</button>
+                                            <button  id="submit" class="btn" type="submit" value="Submit" disabled>Submit</button>        
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                {% include 'main/snippets/footer.html' %}
+            </div>   
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function previous(page){
+
+        if(page == "first-page-link"){
+                var next_tab = document.getElementById("first-page-link");
+                next_tab.click();
+        }
+
+        if(page == "second-page-link"){
+                var next_tab = document.getElementById("second-page-link");
+                next_tab.click();
+        }
+
+        if(page == "third-page-link"){
+                var next_tab = document.getElementById("third-page-link");
+                next_tab.click();
+        }
+    }
+
+    function next(page){
+
+        if(page == "second-page-link"){
+            var response = false;
+
+            if( document.getElementById("id_title").selectedIndex == 0 ){
+                document.getElementById("id_error").innerHTML = "Your title is required.";
+                return;
+            }
+
+            if( $.trim( $("#id_name").val() ) == "" ){
+                document.getElementById("id_error").innerHTML = "Your first name is required.";
+                return;
+            }
+
+            if( $.trim( $("#id_last_name").val() ) == "" ){
+                document.getElementById("id_error").innerHTML = "Your last name is required.";
+                return;
+            }
+
+            if( document.getElementById("id_department").selectedIndex == 0 ){
+                document.getElementById("id_department_error").innerHTML = "This field is required.";
+                return;
+            }
+        }
+
+        if(page == "third-page-link"){
+            var $checkbox = document.getElementsByName("sections"), $checked=0;
+
+              for(var i=0; i < $checkbox.length; i++){
+                    if($checkbox[i].checked){
+                    $checked++; }
+              }
+
+            if($checked < 1 ){
+                document.getElementById("id_section_error").innerHTML = "Choosing at least one section is required.";
+                return;
+             }
+
+              if(document.getElementById("check-third-page").value == "1"){
+                var next_tab = document.getElementById(page);
+                next_tab.click();
+                return;
+            }
+
+            var url = "/json/get_courses?department=" + document.getElementById("id_department").value + "&sections=";
+
+            $("input:checkbox[name=sections]:checked").each(function(){
+                url += $(this).val() + "-";
+            });
+
+            url = url.slice(0,-1);
+
+            $.getJSON(url,function(data){
+                var i;
+                var prev_section = "";
+                var div;
+                for(i=0;i<data.length;i++){
+                    if(data[i].section != prev_section){
+                        if(i == 0){
+                            div = "<div class='row'>" ;
+                        }
+                        else {
+                            div += "</div>";
+                            $("#third-page-row").prepend(div);
+                            $("#third-page-row").prepend("<div><h4>Year " + data[i-1].year + " Section " + data[i-1].number + "</h4></div>");
+                            div = "<div class='row'>" ;
+                        }
+                        prev_section = data[i].section;
+
+                    }
+                    div += "<p class='col-sm-4'><input name='section-course' type='checkbox' value=" + data[i].section + "-" + data[i].id +" />" + '&nbsp;' + data[i].name + "</p>";
+                }
+                div += "</div>";
+                $("#third-page-row").prepend(div);
+                $("#third-page-row").prepend("<div><h4>Year " + data[data.length - 1].year + " Section " + data[data.length - 1].number + "</h4></div>");
+                document.getElementById("check-third-page").value = "1";
+            });
+        }
+
+        if(page == "fourth-page-link"){
+            var $checkbox = document.getElementsByName("section-course"), $checked=0;
+
+              for(var i=0; i < $checkbox.length; i++){
+                    if($checkbox[i].checked){
+                    $checked++; }
+              }
+
+            if($checked < 1 ){
+                document.getElementById("id_course_error").innerHTML = "Choosing at least one course is required.";
+                return;
+             }
+
+        }
+
+        var next_tab = document.getElementById(page);
+        next_tab.click();
+    }
+
+    function password_checker(){
+        var pass = 	document.getElementById("password").value;
+        var pass_conf = document.getElementById("password_conf").value;
+        if(pass === pass_conf){
+            document.getElementById("submit").disabled = false ;
+        }
+        else{
+            document.getElementById("submit").disabled = true ;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% load humanize %}
+
+{% for post in source %}
+    <div class="card card-body push-corners mb-3">
+        <div class="flex-container">
+            <div class="post-by">
+                    <span class="font-weight-bold">{{ post.post.post_by }}</span>
+                    <span class="meta">{{ post.post.post_by.role }}</span>
+            </div>
+            {% if post.id in read %}
+            <div class="read-post-class">
+                <span class="btn read-post-{{post.post.id}}" onclick="read('{{post.post.id}}')">Read </span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mt-2">
+            <p>{{ post.post }}</p>
+        </div>
+
+        <div class="post-images">
+            {% for image in post.post.images.all %}
+            <div class="image">
+                <img width="100%" src="/media/{{image.image}}"/>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="post-files">
+            {% for file in post.post.files.all %}
+                <div class="file mt-3">
+                    <div>
+                        <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                    </div>
+
+                    <div>
+                        <p class="meta mb-2">File size:  {{ file.file.size | filesizeformat}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="meta">
+                {{ post.post.pub_date | naturaltime}}
+        </div>
+    </div>
+    {% empty %}
+    <div class="card card-body push-corners mb-3">
+        No posts so far! Enjoy the day.
+    </div>
+{% endfor %}

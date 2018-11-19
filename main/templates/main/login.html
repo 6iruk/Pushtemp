@@ -1,107 +1,92 @@
-<!DOCTYPE html>
-<html>
-	<head>
- 		<title>AAU Push | Login</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
- 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    	
-        <style>
-			@font-face {
-				font-family:proxima-nova;
-				src:url(/static/main/Regular.otf);	
-			}
-			
-			@font-face {
-				font-family:proxima-nova-light;
-				src:url(/static/main/Light.otf);	
-			}
-			
-			body {
-			font-family:proxima-nova;
-			}
-			
-			h2 {
-				color:#2D2D2D;	
-			}
-			
-			h5 {
-				color:#555;
-				font-weight:600;
-			}
+{% extends 'main/base.html' %}
 
-			#header {
-				background-size:100% 150%;
-				padding-top:15px;
-				padding-bottom:25px;	
-			}
-			
-			.buttons {
-				margin-top:10px;	
-			}
-        </style>
-    </head>
-    
-    <body style="margin:0px;">
- 		{% load static %}
- 		<div id="header" style="background:url({% static 'main/Gradient.svg' %})">
-			{% load static %}
- 			<center><a href="{% url 'Home' %}"><img src="{% static 'main/White-Logo.svg' %}" width="160px" height="100px"></a></center>
- 		</div>
-        
+{% block title %}
+<title>AAU Push - Login</title>
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block extra %}
+<a href="{% url 'Sign Up' %}" class="btn ">Sign up</a>
+{% endblock %}
+
+{% block content%}
+{% load static %}
+    <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        <div class="container">
+            <div class="row push-min-height">
+                <div class="col-lg-6 mt-3">
+                    <div class="card card-body push-corners">
+                        <p class="link font-weight-bold text-center">Pick your Login</p>
+
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="staff-tab" data-toggle="tab" href="#staff" role="tab" aria-controls="staff" aria-selected="false">Staff</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
+                                <div id="student-form-error" class="error">
+                                </div>
+                                <form id="student-login" method="post" action="{% url 'API_Login' %}">
+                                        {% csrf_token %}
+                                        <input name="user-type" type="text" value="student" hidden/>
+                                        <div id="reg-id-error" class="error">
+                                        </div>
+                                        <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                        <div id="student-password-error" class="error">
+                                        </div>
+                                        <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                        <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                        <button class="btn btn-block my-3" type="button" onclick="login('student')">Login</button>
+                                        <p class="text-center">Don't have an account? <a class="link" href="{% url 'Sign Up' %}">Sign up here.</a></p>
+                                        <p class="meta">If there is any problem or if you have a question please contact us at aaupush@gmail.com or 0913 35 00 82.</p>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="staff" role="tabpanel" aria-labelledby="staff-tab">
+                                <div id="staff-form-error" class="error">
+                                </div>
+                                <form id="staff-login" method="post" action="{% url 'API_Login' %}">
+                                        {% csrf_token %}
+                                        <input name="user-type" type="text" value="staff" hidden/>
+                                        <div id="email-error" class="error">
+                                        </div>
+                                        <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                        <div id="staff-password-error" class="error">
+                                        </div>
+                                        <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
+                                        <p><a href="#" class="meta link">Forgot Password?</a></p>
+                                        <button class="btn btn-block my-3" type="button" onclick="login('staff')">Login</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                {% include 'main/snippets/footer.html' %}
+            </div>
         </div>
-        <div class="container-fluid">
-        <h3 class="page-header text-center">Welcome to AAU Push</h3>
-        <div id="content" style="margin-top:5%;">
-		<form action= "{%url 'login' %}" method='post'>
-		{% csrf_token %}
-        <table width="100%" style="margin-top:-30px;">
-        <tr>
-        <td width="50%" align="center" style="border-right:solid thin #000;">
-        <iframe width="550" height="315" src="https://www.youtube.com/embed/Fmh8V8Fxd9g?rel=0" frameborder="0" style="margin:10px 0 10px 0px;"allowfullscreen></iframe>
-        </td>
-        <td width="50%">
-		<table align="center">
-			<tr>
-            	<td colspan="2">			
-				<label for='username'><h5>Staff ID:</h5></label>
-                </td>
-			</tr>
-            <tr>
-				<td colspan="2">
-				<input class="log" type='text' name='username' /></br>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-				<label  for = 'password'><h5>Password:</h5></label>
-				</td>
-            </tr>
-            <tr>
-				<td colspan="2">
-				<input class="log" type='password' name='password' /></br>
-				</td>
-			</tr>
-			<tr>
-            	<td colspan="1" align='left'>
-                <input class="btn btn-link btn-md buttons" data-toggle="tooltip" data-placement="left" title="Contact Addis 0913350082" type="button" value="Help" />					
-				</td>
-				<td colspan="1" align='right'>
-				<input class="btn btn-info btn-sm buttons" type="submit" value="Login" />
-				</td>
-			</tr>
-		</table>
-        </td>
-        </tr>
-        </table>
-		<center><font color='red'>{{ message }}</font></center>
-		</form>
-        </div>
-        </div>
-        <script>
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();   
-});
+    </div>
+
+
+                <!--Grid row-->
+              </div>
+    </div>
+{% endblock %}
+
+{% block script%}
+{% load static %}
+<script src="{% static 'main/login.js' %}"></script>
+<script>
+    // Tooltips Initialization
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 </script>
-	</body>
-</html>
+{% endblock %}

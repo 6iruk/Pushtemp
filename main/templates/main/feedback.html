@@ -1,0 +1,49 @@
+{% extends "main/base.html" %}
+
+{% load humanize %}
+
+{% block title %}
+	<title>AAU Push | {{section.code}}</title>
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block extra %} Section Code: <strong>{{section.code}}</strong> {% endblock %}
+
+{% block content %}
+	<div class="spacer"></div>
+	<div class="container-fluid push-container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="title">Announcements</h1>
+				<div class="spacer2"></div>
+				{% for announcement in announcements %}
+					<h2 class="subtitle">{{announcement.to.teacher}}</h2>
+					<p class="detail">{{announcement.announcement.message}}</p>
+					<p class="meta">{{announcement.announcement.pub_date | naturaltime}}</p>
+					<div class="spacer2"></div>
+					{% 	empty %}
+					<h2 class="detail">No announcements right now!</h2>
+				{% endfor %}
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-6">
+				<h1 class="title">Latest Uploads</h1>
+				<div class="spacer2"></div>
+				{% for upload in this_week %}
+					<a class="subtitle link" href="{% url 'File' upload.material.id %}">{{upload.material.name | capfirst}}</a>
+					<p class="detail">{{upload.material.file.size | filesizeformat }} [{{upload.material.ext | upper}}] by {{upload.to.teacher}}</p>
+					<p class="meta">{{upload.material.pub_date | naturalday}}</p>
+					<div class="spacer2"></div>
+					{% 	empty %}
+					<h2 class="detail">No uploads right now!</h2>
+				{% endfor %}
+				<div class="spacer2"></div>
+			</div>
+			{% include "main/courses_snippet.html" with class="col-md-6"%}
+		</div>
+	</div>
+{% endblock %}

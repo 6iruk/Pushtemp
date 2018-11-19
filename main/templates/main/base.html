@@ -1,39 +1,52 @@
 <!DOCTYPE html>
-{% load static %}
-
 <html>
-	<head>		
-        {% block title %}{% endblock %}
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="{% static 'main/push.css' %}">
-        {% block style %}{% endblock %}
-    </head>
 
-    <body>
-        
-        <div class="navigation">
-            <div class="flex-container push-container">
-                <div><a href="{% url 'Home' %}"><img width=60px src="{% static 'main/White-Logo.svg' %}"></a></div>
-                <div><span style="color:white">{% block extra %}{% endblock %}</span></div> 
-            </div>
-        </div>
-        <div class="spacer2"></div>
-        {% block content %}
-        {% endblock %}
-        <div class="container-fluid push-container">
-            <div class="row footer">
-                <div class="col-md-12">
-                    <div class="spacer2"></div>
-                    {% load static %}
-                    <a href="{% static 'Push/AAUPush_v1.apk' %}" class="meta link">Android App</a> <span> - </span>
-                    <a href="#" class="meta link">Send Feedback</a> <span> - </span>
-                    <a href="{% url 'login' %}" class="meta link">Teacher's Login</a>
-                    <div class="spacer1"></div>
-                </div>
-            </div>
-        </div>
-        {% block script %}{% endblock %}
-    </body>
+	<head>
+		{% load static %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'main/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Material Design Bootstrap -->
+		<link href="{% static 'main/css/mdb.min.css' %}" rel="stylesheet">
+		<!-- Your custom styles -->
+		<link rel="stylesheet" href="{% static 'main/push.css' %}">
+        {% block title %}{% endblock %}
+        {% block style %}{% endblock %}
+	</head>
+
+
+  	<body>
+		 
+		<!--Navbar-->
+		<nav class="navbar navbar-dark navigation-container">
+			<div class="container flex-container">
+				<!-- Navbar brand -->
+				<div>
+					<a class='navbar-brand' href="{% url 'Home' %}"><img alt=">)(< AAUPUSH" width=210px src="{% static 'main/AAUPushLogo.svg' %}"></a>
+				</div>
+				{% block nav %}
+				{% endblock %}
+				<div class="d-none d-lg-block">{% block extra %}{% endblock %}</div>
+			</div>
+	  </nav>
+	  <!--/.Navbar-->	
+	  
+	  {% block content %}{% endblock %}
+				
+		<!-- SCRIPTS -->
+		<!-- JQuery -->
+		<script type="text/javascript" src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
+		<!-- Bootstrap tooltips -->
+		<script type="text/javascript" src="{% static 'main/js/popper.min.js' %}"></script>
+		<!-- Bootstrap core JavaScript -->
+		<script type="text/javascript" src="{% static 'main/js/bootstrap.min.js' %}"></script>
+		<!-- MDB core JavaScript -->
+		<script type="text/javascript" src="{% static 'main/js/mdb.min.js' %}"></script>
+		{% block script %}{% endblock %}
+  	</body>
+
 </html>

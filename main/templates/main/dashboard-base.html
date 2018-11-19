@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		{% load static %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'main/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Material Design Bootstrap -->
+		<link href="{% static 'main/css/mdb.min.css' %}" rel="stylesheet">
+		<!-- Your custom styles -->
+		<link rel="stylesheet" href="{% static 'main/push.css' %}">
+        {% block title %}{% endblock %}
+        {% block style %}{% endblock %}
+	</head>
+
+
+  	<body>
+		 
+		<!--Navbar-->
+		<nav class="navbar navbar-dark navigation-container">
+			<div class="container-fluid">
+				<!-- Navbar brand -->
+				<div>
+					<div class='navbar-brand'><img alt=">)(< AAUPUSH" width=210px src="{% static 'main/AAUPushLogo.svg' %}"></div>
+				</div>
+				{% block nav %}
+				{% endblock %}
+				<div class="d-none d-lg-block">{% block extra %}{% endblock %}</div>
+			</div>
+	  </nav>
+	  <!--/.Navbar-->	
+	  
+      {% block content %}
+      {% endblock %}
+				
+		<!-- SCRIPTS -->
+		<!-- JQuery -->
+		<script type="text/javascript" src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
+		<!-- Bootstrap tooltips -->
+		<script type="text/javascript" src="{% static 'main/js/popper.min.js' %}"></script>
+		<!-- Bootstrap core JavaScript -->
+		<script type="text/javascript" src="{% static 'main/js/bootstrap.min.js' %}"></script>
+		<!-- MDB core JavaScript -->
+		<script type="text/javascript" src="{% static 'main/js/mdb.min.js' %}"></script>
+		{% block script %}{% endblock %}
+  	</body>
+
+</html>
