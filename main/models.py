@@ -198,6 +198,11 @@ class Post(models.Model):
 
       return count
 
+   def is_read(self):
+      count = models.Tracking.objects.filter(student = student, post = post, status = 1).count()
+
+      return count
+
    def recipients_string(self):
       recipients = ""
       for recipient in self.post_to_class_set.all():

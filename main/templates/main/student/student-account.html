@@ -94,11 +94,11 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 					<div class="row push-min-height">
 							<div class="col-md-6 mt-3">
 								<div id="your-wall-content" class="content">
-									{% include 'main/snippets/post-snippet.html' with source=wall %}
+									{% include 'main/snippets/post-snippet.html' with source=wall read=read_tracker%}
 								</div>
 
 								<div id="push-board-content" class="content hidden-area">
-									{% include 'main/snippets/post-snippet.html' with source=pushboard %}
+									{% include 'main/snippets/post-snippet.html' with source=pushboard%}
 								</div>
 								<div id="course-bucket-content" class="content hidden-area">
 									<div id='course-list' class="card card-body push-corners">

@@ -83,12 +83,16 @@ def student_account_page(request):
         #Add every section the student is in to the query
         query2.add( Q( post_to = section.section ), Q.OR )
 
-    wall = Post_To_Class.objects.filter(query)
+    wall = list(Post_To_Class.objects.filter(query))
+    read_tracker = []
     pushboard = Post_To_Section.objects.filter(query2)
 
     for post in wall:
         if not Tracking.objects.filter(student = student, post = post.post).exists():
             Tracking.objects.create(student = student, post = post.post, status = 1, del_on = datetime.datetime.now())
+
+        if not Tracking.objects.filter(student = student, post = post.post, status = 2).exists():
+            read_tracker.append(post.id)
 
     for post in pushboard:
         if not Tracking.objects.filter(student = student, post = post.post).exists():
@@ -100,7 +104,7 @@ def student_account_page(request):
 
     departments = Department.objects.all()
 
-    context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'departments':departments}
+    context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'departments':departments,'read_tracker':read_tracker}
     return render(request, 'main/student/student-account.html', context)
 
 
