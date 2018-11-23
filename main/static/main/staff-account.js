@@ -51,7 +51,7 @@ function post_action(action) {
       formdata =  new FormData(form);
 
       $.ajax({
-      url: 'http://aaupush.com/json/post_action/',
+      url: 'http://localhost:8000/json/post_action/',
       data: formdata,
       processData: false,
       contentType: false,
@@ -92,7 +92,7 @@ function post_action(action) {
     formdata =  new FormData(form);;
 
     $.ajax({
-    url: 'http://aaupush.com/json/post_action/',
+    url: 'http://localhost:8000/json/post_action/',
     data: formdata,
     processData: false,
     contentType: false,
@@ -130,7 +130,7 @@ function post_action(action) {
 var add_notif_timer;
 
 function add_course() {
-    $.post("http://aaupush.com/json/add_drop/", $( "#add-courses-form" ).serialize(), function (result,status) {
+    $.post("http://localhost:8000/json/add_drop/", $( "#add-courses-form" ).serialize(), function (result,status) {
          if(status == "success") {
            if(result.status == 1) {
              $("#class-table > tbody").append(result.html);
@@ -170,7 +170,7 @@ function add_course() {
 var drop_notif_timer;
 
 function drop_course(class_id) {
-  $.post("http://aaupush.com/json/add_drop/", { action_type : "drop", class : class_id, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
+  $.post("http://localhost:8000/json/add_drop/", { action_type : "drop", class : class_id, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
        if(status == "success") {
          if(result.status == 1) {
            $(".row-" + result.class_id).css("display", "none");
@@ -216,7 +216,7 @@ function drop_course(class_id) {
 
 
 function account_update() {
-    $.post("http://aaupush.com/json/account_update/", $( "#profile-update-form" ).serialize(), function (result,status) {
+    $.post("http://localhost:8000/json/account_update/", $( "#profile-update-form" ).serialize(), function (result,status) {
       if(status == "success") {
         if(result.status == 0) {
           $(".error").css("display","none");
