@@ -9,8 +9,6 @@ from django.utils import timezone
 from django.core import serializers
 import datetime, zipfile, io
 import os
-import random
-
 ##import sendgrid
 ##from sendgrid.helpers.mail import *
 
@@ -145,32 +143,6 @@ def forgot_password_page(request):
 
 
 
-def teacher_xls_page(request):
-    if request.method == 'POST':
-        wb = load_workbook(filename=request.FILES['xlsx'])
-        sheet = wb.active
-
-        rows = sheet.rows
-        not_sent = []
-
-        for row in rows:
-            for cell in row:
-                email = cell.value
-            password = str(random.randint(10000,99999))
-
-            User.objects.create(username = email, password = password, email = "staff@aau.com")
-
-            response = requests.post("https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages", auth=("api", "YOUR_API_KEY"), data={"from": "Excited User <mailgun@YOUR_DOMAIN_NAME>", "to": ["bar@example.com", "YOU@YOUR_DOMAIN_NAME"], "subject": "Hello", "text": "Testing some Mailgun awesomness!"})
-
-            if response.status_code != 200:
-                not_sent.append(email)
-                
-        return render(request, 'main/staff/teacher-xls.html', 'not_sent':not_sent)
-
-    return render(request, 'main/staff/teacher-xls.html')
-
-
-
 def first_login(request):
        if request.method == 'POST':
                teacher = Staff(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], staff_id = request.POST['staffid'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
@@ -181,7 +153,7 @@ def first_login(request):
                        teaches = Instructor_Teaches(teacher = teacher, section = Section.objects.get(id = int(pair_arr[0])), course = Course.objects.get(id = int(pair_arr[1])))
                        teaches.save()
 
-               user = User.objects.get(username=request.user.username)
+               user = User.objects.get(username=request.user)
                user.username = request.POST['staffid']
                user.set_password(request.POST['new_password'])
                user.save()
