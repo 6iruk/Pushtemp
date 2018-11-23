@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <form method="post" action="{% url 'XLS' %}">
+    <input type="file" name="xlsx">
+    <input type="submit">
+  </form>
+
+  {% for email in not_sent %}
+    <p>email</p>
+  {% endfor %}
+</body>
+</html>
