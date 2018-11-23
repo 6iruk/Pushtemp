@@ -14,7 +14,7 @@ function password_checker(){
 function get_sections() {
     var year = $("select#year-select").children("option:selected").val();
 
-    $.get("http://aaupush.com/json/Section?by-year=" + year, function (result,status) {
+    $.get("http://www.aaupush.com/json/Section?by-year=" + year, function (result,status) {
         if(status == "success"){
           if(result.status == 1) {
              $("select#section-select").html(result.html);
@@ -27,7 +27,7 @@ function get_sections() {
 }
 
 function sign_up(){
-  $.post("http://aaupush.com/json/signup/", $( "#sign-up-form" ).serialize(), function (result,status) {
+  $.post("http://www.aaupush.com/json/signup/", $( "#sign-up-form" ).serialize(), function (result,status) {
        if(status == "success") {
          if(result.status == 1) {
            document.location.href='/login/';
