@@ -1,6 +1,6 @@
 function login(user){
   if(user == "student") {
-    $.post("http://localhost:8000/json/login/", $( "#student-login" ).serialize(), function (result,status) {
+    $.post("http://www.aaupush.com/json/login/", $( "#student-login" ).serialize(), function (result,status) {
          if(status == "success") {
            if(result.status == 0) {
              $(".error").css("display", "none");
@@ -40,7 +40,7 @@ function login(user){
   }
 
   else if(user == "staff") {
-    $.post("http://localhost:8000/json/login/", $( "#staff-login" ).serialize(), function (result,status) {
+    $.post("http://www.aaupush.com/json/login/", $( "#staff-login" ).serialize(), function (result,status) {
          if(status == "success") {
            if(result.status == 0) {
              $(".error").css("display", "none");

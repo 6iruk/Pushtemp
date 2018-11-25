@@ -18,8 +18,8 @@ class Educational_Institution(models.Model):
 
    #Possible values for the 'institution_type' field
    institution_type_choices = (
-      ('clg','College'),
-      ('uni','University'),
+      ('College','College'),
+      ('University','University'),
    )
 
    #The name of the institution
@@ -274,11 +274,8 @@ class Staff(models.Model):
    #The last name of the staff member
    last_name = models.CharField(max_length=50)
 
-   #The phone number of the staff member
-   phone = models.CharField(max_length=20)   #optional?
-
    #The email of the staff member
-   email = models.EmailField(max_length=254, null=True)  #must be mandatory
+   email = models.EmailField(max_length=254)  #must be mandatory
 
    #The role of the staff member
    role = models.CharField(max_length=15, choices=role_choices)   #this shouldn't be the option for the user
@@ -328,7 +325,7 @@ class Student(models.Model):
    phone = models.CharField(max_length=20)
 
    #The email of the student
-   email = models.EmailField(max_length=254, null=True)
+   email = models.EmailField(max_length=254, null=True, blank=True)
 
    #The telegram chat id of the student
    chat_id = models.IntegerField(default=0)
