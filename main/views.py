@@ -45,6 +45,9 @@ def students_signup_page(request):
         if not request.POST.get('department') or not Department.objects.filter(id = int(request.POST.get('department'))).exists():
             error[3] = True
 
+        else:
+            department = Department.objects.get(id = int(form['department']))
+
         if not request.POST.get('reg_id') or (request.POST.get('reg_id').strip() == ""):
             error[4] = True
 
