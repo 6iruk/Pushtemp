@@ -10,6 +10,9 @@ from django.core import serializers
 import datetime, zipfile, io
 import os
 import random
+from openpyxl import load_workbook
+from validate_email import validate_email
+import requests
 
 ##import sendgrid
 ##from sendgrid.helpers.mail import *
@@ -27,18 +30,27 @@ def index(request):
 def students_signup_page(request):
     if(request.method == "POST"):
         form = request.POST.copy()
-        error = [False,False]
+        error = [False,False,False,False,False]
 
-        if not Department.objects.filter(id = int(form['department'])).exists():
+        if not request.POST.get('first_name') or (request.POST.get('first_name').strip() == ""):
             error[0] = True
 
-        else:
-            department = Department.objects.get(id = int(form['department']))
-
-        if form['first_name'].strip() == "" or form['last_name'].strip() == "" or form['reg_id'].strip() == "":
+        if not request.POST.get('last_name') or (request.POST.get('last_name').strip() == ""):
             error[1] = True
 
-        if error[0] or error[1]:
+        if request.POST.get('email') and request.POST.get('email').strip() != "" and not validate_email(request.POST.get('email'), verify=True):
+            error[2] = True
+
+        if not request.POST.get('department') or not Department.objects.filter(id = int(request.POST.get('department'))).exists():
+            error[3] = True
+
+        if not request.POST.get('reg_id') or (request.POST.get('reg_id').strip() == ""):
+            error[4] = True
+
+        if request.POST.get('reg_id').split('/')[0].upper() != "NSR" or not request.POST.get('reg_id').split('/')[1].isdigit() or not request.POST.get('reg_id').split('/')[2].isdigit():
+            error[4] = True
+
+        if error[0] or error[1] or error[2] or error[3] or error[4]:
             return render(request, 'main/student/students-signup.html', {'form': form, 'error':error})
 
         max_year = department.section_set.all().aggregate(Max('year'))
@@ -151,21 +163,36 @@ def teacher_xls_page(request):
         sheet = wb.active
 
         rows = sheet.rows
+        sent = []
         not_sent = []
-
+        exists = []
+        code = []
         for row in rows:
             for cell in row:
                 email = cell.value
-            password = str(random.randint(10000,99999))
 
-            User.objects.create(username = email, password = password, email = "staff@aau.com")
+                if email:
+                    password = "aau" + str(random.randint(10000,99999))
 
-            response = requests.post("https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages", auth=("api", "YOUR_API_KEY"), data={"from": "Excited User <mailgun@YOUR_DOMAIN_NAME>", "to": ["bar@example.com", "YOU@YOUR_DOMAIN_NAME"], "subject": "Hello", "text": "Testing some Mailgun awesomness!"})
+                    if not User.objects.filter(username = email).exists():
+                        user = User(username = email, email = "staff@aau.com")
+                        user.set_password(password)
+                        cnf = open(os.path.join(BASE_DIR, 'mailgin_api.cnf'), "r")
+                        key = cnf.readline().strip()
 
-            if response.status_code != 200:
-                not_sent.append(email)
-                
-        return render(request, 'main/staff/teacher-xls.html', 'not_sent':not_sent)
+                        response = requests.post("https://api.mailgun.net/v3/sandbox70636f6c092c459b9e602b6106dca6d1.mailgun.org/messages", auth=("api", key), data={"from": "AAU PUSH <mailgun@sandbox70636f6c092c459b9e602b6106dca6d1.mailgun.org>", "to": email, "subject": "AAU Push Account Activation", "text": "Username: " + email + "Password: " + password})
+
+                        code.append(response.text)
+                        if response.status_code != 200:
+                            not_sent.append(email)
+
+                        else:
+                            user.save()
+                            sent.append(email)
+
+                    else:
+                        exists.append(email)
+        return render(request, 'main/staff/teacher-xls.html', {'not_sent':not_sent, 'sent':sent, 'exists':exists, 'code':code})
 
     return render(request, 'main/staff/teacher-xls.html')
 
@@ -173,26 +200,24 @@ def teacher_xls_page(request):
 
 def first_login(request):
        if request.method == 'POST':
-               teacher = Staff(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], staff_id = request.POST['staffid'], email = request.POST['email'], department = Department.objects.get(id=int(request.POST['department'])))
-               teacher.save()
+               if request.user.is_authenticated and not Staff.objects.filter(user=request.user).exists() and not Student.objects.filter(user=request.user).exists() and request.user.email == "staff@aau.com":
+                   department = Department.objects.get(id=int(request.POST['department']))
+                   teacher = Staff(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], email = request.POST['email'], university_in = department.university_in , department_in = department, role = "Instructor")
+                   teacher.save()
 
-               for pair in request.POST.getlist('section-course'):
-                       pair_arr = pair.split('-')
-                       teaches = Instructor_Teaches(teacher = teacher, section = Section.objects.get(id = int(pair_arr[0])), course = Course.objects.get(id = int(pair_arr[1])))
-                       teaches.save()
+                   user = request.user
+                   user.set_password(request.POST['new_password'])
+                   user.username = request.POST['email']
+                   user.save()
 
-               user = User.objects.get(username=request.user.username)
-               user.username = request.POST['staffid']
-               user.set_password(request.POST['new_password'])
-               user.save()
-
-               return redirect('login')
+                   return redirect('Staff Account')
        else:
-               departments = Department.objects.all()
-               sections = Section.objects.all().order_by('year')
+               if request.user.is_authenticated and not Staff.objects.filter(user=request.user).exists() and not Student.objects.filter(user=request.user).exists() and request.user.email == "staff@aau.com":
+                   departments = Department.objects.all()
+                   sections = Section.objects.all().order_by('year')
 
-               context = {'user':request.user,'departments':departments, 'sections':sections}
-               return render(request,'main/staff/first_login.html',context)
+                   context = {'user':request.user,'departments':departments, 'sections':sections}
+                   return render(request,'main/staff/first_login.html',context)
 
 
 

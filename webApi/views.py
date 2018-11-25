@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth import authenticate, login as auth_login, logout
@@ -6,6 +6,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Q
 from django.contrib.auth.models import User
 import datetime, zipfile, io
+from validate_email import validate_email
 from main import models
 
 # Create your views here.
@@ -477,6 +478,11 @@ def login(request):
                 return HttpResponse("{\"role\":\"staff\", \"status\":2, \"id\":\"staff-password-error\", \"html\":\"<span>Password required</span>\"}", content_type='application/json')
 
             if not models.Staff.objects.filter(email = request.POST.get('email')).exists():
+                if models.User.objects.filter(username =request.POST.get('email')).exists() and not models.Student.objects.filter(user = models.User.objects.get(username =request.POST.get('email'))).exists():
+                    if models.User.objects.get(username =request.POST.get('email')).email == "staff@aau.com":
+                        if authenticate(username=staff.user.username, password=password) is not None:
+                            return redirect('First login')
+
                 return HttpResponse("{\"role\":\"staff\", \"status\":0, \"remark\":\"Authentication failed\"}", content_type='application/json')
 
             staff = models.Staff.objects.get(email = request.POST.get('email'))
@@ -543,7 +549,7 @@ def signup(request):
         if not request.POST.get('phone-number') or (request.POST.get('phone-number').strip() == ""):
             return HttpResponse("{\"status\":0, \"remark\":\"Phone number required\"}", content_type='application/json')
 
-        if request.POST.get('email') and (request.POST.get('email').strip() == ""):
+        if request.POST.get('email') and request.POST.get('email').strip() != "" and not validate_email(request.POST.get('email'), verify=True):
             return HttpResponse("{\"status\":0, \"remark\":\"Email not valid\"}", content_type='application/json')
 
         if not request.POST.get('department') or not models.Department.objects.filter(id = int(request.POST.get('department'))).exists():
@@ -564,7 +570,7 @@ def signup(request):
         if not request.POST.get('reg-id') or (request.POST.get('reg-id').strip() == ""):
             return HttpResponse("{\"status\":0, \"remark\":\"Registration ID required\"}", content_type='application/json')
 
-        if request.POST.get('reg-id').split('/')[0] != "NSR" or not request.POST.get('reg-id').split('/')[1].isdigit() or not request.POST.get('reg-id').split('/')[2].isdigit():
+        if request.POST.get('reg-id').split('/')[0].upper() != "NSR" or not request.POST.get('reg-id').split('/')[1].isdigit() or not request.POST.get('reg-id').split('/')[2].isdigit():
             return HttpResponse("{\"status\":0, \"remark\":\"ID not correct\"}", content_type='application/json')
 
         if User.objects.filter(username = request.POST.get('reg-id').replace("/","-")).exists():
