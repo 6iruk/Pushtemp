@@ -11,7 +11,6 @@ import datetime, zipfile, io
 import os
 import random
 from openpyxl import load_workbook
-from validate_email import validate_email
 import requests
 
 ##import sendgrid
@@ -38,8 +37,10 @@ def students_signup_page(request):
         if not request.POST.get('last_name') or (request.POST.get('last_name').strip() == ""):
             error[1] = True
 
-        if request.POST.get('email') and request.POST.get('email').strip() != "" and not validate_email(request.POST.get('email'), verify=True):
-            error[2] = True
+        if request.POST.get('email') and request.POST.get('email').strip() != "":
+            e = request.POST.get('email')
+            if (e.strip().rfind('.') == -1 or e.strip().rfind('@') == -1 or (e.strip().rfind('.') <= e.strip().rfind('@'))):
+                error[2] = True
 
         if not request.POST.get('department') or not Department.objects.filter(id = int(request.POST.get('department'))).exists():
             error[3] = True

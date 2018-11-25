@@ -6,7 +6,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Q
 from django.contrib.auth.models import User
 import datetime, zipfile, io
-from validate_email import validate_email
 from main import models
 
 # Create your views here.
@@ -549,8 +548,10 @@ def signup(request):
         if not request.POST.get('phone-number') or (request.POST.get('phone-number').strip() == ""):
             return HttpResponse("{\"status\":0, \"remark\":\"Phone number required\"}", content_type='application/json')
 
-        if request.POST.get('email') and request.POST.get('email').strip() != "" and not validate_email(request.POST.get('email'), verify=True):
-            return HttpResponse("{\"status\":0, \"remark\":\"Email not valid\"}", content_type='application/json')
+        if request.POST.get('email') and request.POST.get('email').strip() != "":
+            e = request.POST.get('email')
+            if (e.strip().rfind('.') == -1 or e.strip().rfind('@') == -1 or (e.strip().rfind('.') <= e.strip().rfind('@'))):
+                return HttpResponse("{\"status\":0, \"remark\":\"Email not valid\"}", content_type='application/json')
 
         if not request.POST.get('department') or not models.Department.objects.filter(id = int(request.POST.get('department'))).exists():
             return HttpResponse("{\"status\":0, \"remark\":\"Valid department ID required\"}", content_type='application/json')
