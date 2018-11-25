@@ -26,11 +26,23 @@
 
                                     <div id="form-error">
                                       {% if error.0 %}
+                                        <p>First name is required</p>
+                                      {% endif %}
+
+                                      {% if error.1 %}
+                                        <p>Last name is required</p>
+                                      {% endif %}
+
+                                      {% if error.2 %}
+                                        <p>Email not valid</p>
+                                      {% endif %}
+
+                                      {% if error.3 %}
                                         <p>Department doesn't exist</p>
                                       {% endif %}
-                                      
-                                      {% if error.1 %}
-                                        <p>Personal information incorrect</p>
+
+                                      {% if error.4 %}
+                                        <p>Valid registration number required</p>
                                       {% endif %}
                                     </div>
                                     <select name="department" class="form-control my-3 push-corners" required>
@@ -49,7 +61,7 @@
                                     <input class="form-control my-3 push-corners" name="first_name" type="text" placeholder="First Name" value="{{form.first_name}}" required>
                                     <input class="form-control my-3 push-corners" name="last_name" type="text" placeholder="Last Name" value="{{form.last_name}}" required>
                                     <input class="form-control my-3 push-corners" name="reg_id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" value="{{form.reg_id}}" required>
-                                    <input class="form-control my-3 push-corners" name="email" type="email" placeholder="Email" value="{{form.email}}" required>
+                                    <input class="form-control my-3 push-corners" name="email" type="email" placeholder="Email(Optional)" value="{{form.email}}">
 
                                     <button class="btn btn-block my-3" type="submit">Sign up</button>
                                     <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
