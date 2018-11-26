@@ -55,13 +55,13 @@
                             </div>
                             <!--Modal: modalYT-->
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <div class="col-lg-6 mt-3">
                     <div class="card push-corners">
                         <div class="push-corners card-header light-blue white-text ">Complete your account setup</div>
                         <div class="card-body">
-                            <form action="{% url 'first_login' %}" method="post">
+                            <form  method="post" action="{% url 'First Login' %}">
                                 <input type="hidden" name="user" value="{{user}}" />
                                 <ul class="nav">
                                     <li class="active">
@@ -69,12 +69,6 @@
                                     </li>
                                     <li>
                                         <a id="second-page-link" data-toggle="tab" href="#second-page"></a>
-                                    </li>
-                                    <li>
-                                        <a id="third-page-link" data-toggle="tab" href="#third-page"></a>
-                                    </li>
-                                    <li>
-                                        <a id="fourth-page-link" data-toggle="tab" href="#fourth-page"></a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -90,18 +84,18 @@
                                                     <option value="Dr.">Doctor</option>
                                                     <option value="Prof.">Professor</option>
                                             </select>
-                                            
+
                                             <div class="md-form mt-4 mb-2 mx-1">
                                                 <input class="form-control" id="id_name" name="first-name" type="text" />
                                                 <label for="id_name" >First Name</label>
                                             </div>
-                                    
+
                                             <div class="md-form mt-4 mb-2 mx-1">
                                                 <input class="form-control" id="id_last_name" name="last-name" type="text" />
                                                 <label for="id_last_name" >Last Name</label>
                                             </div>
                                         </div>
-                        
+
                                         <div class="hidden-area">
                                             <div class="md-form mt-4 mx-1 d-inline-block">
                                                 <input id="id_department" class="form-control" value="Department of Computer Science" type="text" disabled />
@@ -112,81 +106,23 @@
                                                 <label for="id_role" >Role</label>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="flex-container">
                                             <div></div>
                                             <div><button class="btn mt-4" type="button" onClick="next('second-page-link')">Next</button></div>
                                         </div>
-                                        
-                                    </div>
-                        
-                                    <div id="second-page" class="tab-pane">
-                                        <p id="id_section_error" class="error-msg text-center"></p>
-                        
-                                        <h4>Choose the sections you teach</h4>
-                                        <div class="row">
-                                            {% for section in sections %}
-                                                {% ifchanged section.year %}
-                                                    </div>
-                                                {% endifchanged %}
-                            
-                                                {% ifchanged section.department %}
-                                                    <h4>{{section.department}}</h4>
-                                                {% endifchanged %}
-                            
-                                                {% ifchanged section.year %}
-                                                    <div class="recipient-selection form-control">
-                                                        <div class='d-inline-block' onclick="click_hidden('add-year-{{forloop.counter}}')">
-                                                            <div class="d-inline mx-2">
-                                                                Year {{teaches.year}}
-                                                            </div>
-                                                            <div class="d-inline">
-                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                {% endifchanged %}
 
-                                                <div class="recipient-selection ml-5 my-2">
-                                                    <div class="d-inline">
-                                                        <input class="section" type="checkbox" name='sections' value="{{section.id}}" />
-                                                    </div>
-                                                    <div class="d-inline mx-2">
-                                                        Section {{section.id}}
-                                                    </div>
-                                                </div>
-                        
-                                            {% endfor %}
-                                        </div>
-                                        <div class="flex-container">
-                                            <button  class="btn" type="button" value="Back" onClick="previous('first-page-link')">Back</button>
-                                            <button  id="submit" class="btn" type="button" value="Next" onClick="next('third-page-link')">Next</button>        
-                                        </div>
                                     </div>
-                        
-                                    <div id="third-page" class="tab-pane">
-                                        <input id="check-third-page" type="hidden" value="0">
-                                        <p id='id_course_error' class='error-msg text-center'></p>
-                        
-                                        <h4>Choose courses you give</h4>
-                                        <div id="third-page-row" style="height:auto;"></div>
-                                        
-                                        <div class="flex-container">
-                                            <button  class="btn" type="button" value="Back" onClick="previous('second-page-link')">Back</button>
-                                            <button  id="submit" class="btn" type="button" value="Next" onClick="next('fourth-page-link')">Next</button>        
-                                        </div>    
-                                    </div>
-                        
-                                    <div id="fourth-page" class="tab-pane">
+
+                                    <div id="second-page" class="tab-pane">
                                         <div>
                                             <div class="md-form mt-4 mb-2 mx-1">
                                                 <input class="form-control" id="email" name="email" type="text" required />
                                                 <label for="email" >Email</label>
                                             </div>
-                                    
+
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="password" type="password" name="new_password" required />
+                                                <input class="form-control" id="password" type="password" onKeyUp="password_checker()" name="new_password" required />
                                                 <label for="password" >Enter New Password</label>
                                             </div>
 
@@ -195,13 +131,13 @@
                                                 <label for="password_conf" >Confirm New Password</label>
                                             </div>
                                         </div>
-                                        
-                                        <div class="mx-1 py-3">You will be redirected the Staff Portal after completing this.</div>
-                                        
+
+                                        <div class="mx-1 py-3">You will be redirected to your account after completing this.</div>
+
                                         {%csrf_token%}
                                         <div class="flex-container">
                                             <button  class="btn" type="button" value="Back" onClick="previous('first-page-link')">Back</button>
-                                            <button  id="submit" class="btn" type="submit" value="Submit" disabled>Submit</button>        
+                                            <button  id="submit" class="btn" type="submit" value="Submit" disabled>Submit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +148,7 @@
             </div>
             <div class="row mt-2">
                 {% include 'main/snippets/footer.html' %}
-            </div>   
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -223,16 +159,6 @@
 
         if(page == "first-page-link"){
                 var next_tab = document.getElementById("first-page-link");
-                next_tab.click();
-        }
-
-        if(page == "second-page-link"){
-                var next_tab = document.getElementById("second-page-link");
-                next_tab.click();
-        }
-
-        if(page == "third-page-link"){
-                var next_tab = document.getElementById("third-page-link");
                 next_tab.click();
         }
     }
@@ -261,75 +187,6 @@
                 document.getElementById("id_department_error").innerHTML = "This field is required.";
                 return;
             }
-        }
-
-        if(page == "third-page-link"){
-            var $checkbox = document.getElementsByName("sections"), $checked=0;
-
-              for(var i=0; i < $checkbox.length; i++){
-                    if($checkbox[i].checked){
-                    $checked++; }
-              }
-
-            if($checked < 1 ){
-                document.getElementById("id_section_error").innerHTML = "Choosing at least one section is required.";
-                return;
-             }
-
-              if(document.getElementById("check-third-page").value == "1"){
-                var next_tab = document.getElementById(page);
-                next_tab.click();
-                return;
-            }
-
-            var url = "/json/get_courses?department=" + document.getElementById("id_department").value + "&sections=";
-
-            $("input:checkbox[name=sections]:checked").each(function(){
-                url += $(this).val() + "-";
-            });
-
-            url = url.slice(0,-1);
-
-            $.getJSON(url,function(data){
-                var i;
-                var prev_section = "";
-                var div;
-                for(i=0;i<data.length;i++){
-                    if(data[i].section != prev_section){
-                        if(i == 0){
-                            div = "<div class='row'>" ;
-                        }
-                        else {
-                            div += "</div>";
-                            $("#third-page-row").prepend(div);
-                            $("#third-page-row").prepend("<div><h4>Year " + data[i-1].year + " Section " + data[i-1].number + "</h4></div>");
-                            div = "<div class='row'>" ;
-                        }
-                        prev_section = data[i].section;
-
-                    }
-                    div += "<p class='col-sm-4'><input name='section-course' type='checkbox' value=" + data[i].section + "-" + data[i].id +" />" + '&nbsp;' + data[i].name + "</p>";
-                }
-                div += "</div>";
-                $("#third-page-row").prepend(div);
-                $("#third-page-row").prepend("<div><h4>Year " + data[data.length - 1].year + " Section " + data[data.length - 1].number + "</h4></div>");
-                document.getElementById("check-third-page").value = "1";
-            });
-        }
-
-        if(page == "fourth-page-link"){
-            var $checkbox = document.getElementsByName("section-course"), $checked=0;
-
-              for(var i=0; i < $checkbox.length; i++){
-                    if($checkbox[i].checked){
-                    $checked++; }
-              }
-
-            if($checked < 1 ){
-                document.getElementById("id_course_error").innerHTML = "Choosing at least one course is required.";
-                return;
-             }
-
         }
 
         var next_tab = document.getElementById(page);

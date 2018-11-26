@@ -70,6 +70,11 @@ function login(user){
              $("#staff-form-error").html("<p>User type not found</p>");
              $("#staff-form-error").css("display", "block");
            }
+
+           else if(result.status == 5) {
+             $(".error").css("display", "none");
+             document.location.href='/first_login/'
+           }
          }
 
          else {

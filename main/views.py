@@ -215,6 +215,8 @@ def first_login(request):
                    user.save()
 
                    return redirect('Staff Account')
+               else:
+                   return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
        else:
                if request.user.is_authenticated and not Staff.objects.filter(user=request.user).exists() and not Student.objects.filter(user=request.user).exists() and request.user.email == "staff@aau.com":
                    departments = Department.objects.all()
@@ -222,6 +224,8 @@ def first_login(request):
 
                    context = {'user':request.user,'departments':departments, 'sections':sections}
                    return render(request,'main/staff/first_login.html',context)
+               else:
+                   return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
 
 
 

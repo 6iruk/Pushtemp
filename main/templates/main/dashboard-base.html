@@ -16,11 +16,21 @@
 		<link rel="stylesheet" href="{% static 'main/push.css' %}">
         {% block title %}{% endblock %}
         {% block style %}{% endblock %}
+		<!-- SCRIPTS -->
+		<!-- JQuery -->
+		<script type="text/javascript" src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
+		<!-- Bootstrap tooltips -->
+		<script type="text/javascript" src="{% static 'main/js/popper.min.js' %}"></script>
+		<!-- Bootstrap core JavaScript -->
+		<script type="text/javascript" src="{% static 'main/js/bootstrap.min.js' %}"></script>
+		<!-- MDB core JavaScript -->
+		<script type="text/javascript" src="{% static 'main/js/mdb.min.js' %}"></script>
+		{% block script %}{% endblock %}
 	</head>
 
 
   	<body>
-		 
+
 		<!--Navbar-->
 		<nav class="navbar navbar-dark navigation-container">
 			<div class="container-fluid">
@@ -33,21 +43,11 @@
 				<div class="d-none d-lg-block">{% block extra %}{% endblock %}</div>
 			</div>
 	  </nav>
-	  <!--/.Navbar-->	
-	  
+	  <!--/.Navbar-->
+
       {% block content %}
       {% endblock %}
-				
-		<!-- SCRIPTS -->
-		<!-- JQuery -->
-		<script type="text/javascript" src="{% static 'main/js/jquery-3.3.1.min.js' %}"></script>
-		<!-- Bootstrap tooltips -->
-		<script type="text/javascript" src="{% static 'main/js/popper.min.js' %}"></script>
-		<!-- Bootstrap core JavaScript -->
-		<script type="text/javascript" src="{% static 'main/js/bootstrap.min.js' %}"></script>
-		<!-- MDB core JavaScript -->
-		<script type="text/javascript" src="{% static 'main/js/mdb.min.js' %}"></script>
-		{% block script %}{% endblock %}
+
   	</body>
 
 </html>
