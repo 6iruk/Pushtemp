@@ -206,7 +206,7 @@ def first_login(request):
        if request.method == 'POST':
                if request.user.is_authenticated and not Staff.objects.filter(user=request.user).exists() and not Student.objects.filter(user=request.user).exists() and request.user.email == "staff@aau.com":
                    department = Department.objects.get(id=int(request.POST['department']))
-                   teacher = Staff(title = request.POST['title'], user = request.user, first_name = request.POST['first_name'], last_name = request.POST['last_name'], email = request.POST['email'], university_in = department.university_in , department_in = department, role = "Instructor")
+                   teacher = Staff(title = request.POST['title'], user = request.user, first_name = request.POST['first-name'], last_name = request.POST['last-name'], email = request.POST['email'], university_in = department.university_in , department_in = department, role = "Instructor")
                    teacher.save()
 
                    user = request.user
@@ -220,9 +220,8 @@ def first_login(request):
        else:
                if request.user.is_authenticated and not Staff.objects.filter(user=request.user).exists() and not Student.objects.filter(user=request.user).exists() and request.user.email == "staff@aau.com":
                    departments = Department.objects.all()
-                   sections = Section.objects.all().order_by('year')
 
-                   context = {'user':request.user,'departments':departments, 'sections':sections}
+                   context = {'user':request.user,'departments':departments}
                    return render(request,'main/staff/first_login.html',context)
                else:
                    return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')

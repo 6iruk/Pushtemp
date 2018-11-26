@@ -98,8 +98,13 @@
 
                                         <div class="hidden-area">
                                             <div class="md-form mt-4 mx-1 d-inline-block">
-                                                <input id="id_department" class="form-control" value="Department of Computer Science" type="text" disabled />
-                                                <label for="id_department" >Department</label>
+                                              <select id="id_department" name="department" class="form-control my-3 push-corners" required>
+                                                      <option value="" disabled selected>Pick your Department</option>
+                                                      {% for department in departments %}
+                                                          <option value="{{department.id}}">{{department.name}}</option>
+                                                      {% endfor %}
+                                              </select>
+                                              <label for="id_department" >Department</label>
                                             </div>
                                             <div class="md-form mt-4 mx-1 d-inline-block">
                                                 <input id="id_role" value="Instructor" type="text" disabled />
