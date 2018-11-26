@@ -19,8 +19,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
+cnf = open(os.path.join(BASE_DIR, 's_k.cnf'), "r")
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0*s7ii8o$w-i@m5d+epl$5&kigwnd8sgxvj0glw&)ch^3^w^t8'
+SECRET_KEY = cnf.readline().strip()
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

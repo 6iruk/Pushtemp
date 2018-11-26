@@ -29,7 +29,7 @@ function nav_click(page) {
     $(".side-nav-sections").css("background-color","inherit");
     $("#nav-account-setting").css("background-color","#ffffff");
   }
-  
+
   else if(page == 'log-out') {
     document.location.href='/login/'
   }
