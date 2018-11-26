@@ -480,6 +480,7 @@ def login(request):
                 if models.User.objects.filter(username =request.POST.get('email')).exists() and not models.Student.objects.filter(user = models.User.objects.get(username =request.POST.get('email'))).exists():
                     if models.User.objects.get(username =request.POST.get('email')).email == "staff@aau.com":
                         if authenticate(username=request.POST.get('email'), password=request.POST.get('password')) is not None:
+                            auth_login(request, models.User.objects.get(username =request.POST.get('email')))
                             return HttpResponse("{\"role\":\"staff\", \"status\":5, \"remark\":\"Go to first login\"}", content_type='application/json')
 
                 return HttpResponse("{\"role\":\"staff\", \"status\":0, \"remark\":\"Authentication failed\"}", content_type='application/json')
