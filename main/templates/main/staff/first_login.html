@@ -96,7 +96,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="hidden-area">
+                                        <div class="">
                                             <div class="md-form mt-4 mx-1 d-inline-block">
                                               <select id="id_department" name="department" class="form-control my-3 push-corners" required>
                                                       <option value="" disabled selected>Pick your Department</option>
@@ -122,7 +122,7 @@
                                     <div id="second-page" class="tab-pane">
                                         <div>
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="email" name="email" type="text" required />
+                                                <input class="form-control" id="email" name="email" type="text" value="{{user.username}}" required />
                                                 <label for="email" >Email</label>
                                             </div>
 
@@ -171,31 +171,36 @@
     function next(page){
 
         if(page == "second-page-link"){
-            var response = false;
 
             if( document.getElementById("id_title").selectedIndex == 0 ){
                 document.getElementById("id_error").innerHTML = "Your title is required.";
+                $("#id_error").css("display", "block");
                 return;
             }
 
             if( $.trim( $("#id_name").val() ) == "" ){
                 document.getElementById("id_error").innerHTML = "Your first name is required.";
+                $("#id_error").css("display", "block");
                 return;
             }
 
             if( $.trim( $("#id_last_name").val() ) == "" ){
                 document.getElementById("id_error").innerHTML = "Your last name is required.";
+                $("#id_error").css("display", "block");
                 return;
             }
 
             if( document.getElementById("id_department").selectedIndex == 0 ){
-                document.getElementById("id_department_error").innerHTML = "This field is required.";
+                document.getElementById("id_error").innerHTML = "Your department is required.";
+                $("#id_error").css("display", "block");
                 return;
             }
         }
 
         var next_tab = document.getElementById(page);
         next_tab.click();
+        document.getElementById("id_error").innerHTML = "";
+        $("#id_error").css("display", "none");
     }
 
     function password_checker(){
