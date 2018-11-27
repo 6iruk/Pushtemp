@@ -214,7 +214,7 @@ def first_login(request):
                    user.username = request.POST['email']
                    user.save()
 
-                   return redirect('Staff Account')
+                   return redirect('Log In')
                else:
                    return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
        else:
