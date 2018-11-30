@@ -24,7 +24,7 @@
                             <form method="post" action="{% url 'Sign Up' %}">
                                     {% csrf_token %}
 
-                                    <div id="form-error">
+                                    <div id="form-error" class="my-1 alert alert-warning hidden-area" role="alert">
                                       {% if error.0 %}
                                         <p>First name is required</p>
                                       {% endif %}

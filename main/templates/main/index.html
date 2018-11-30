@@ -61,15 +61,15 @@
 
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
-                                    <div id="student-form-error" class="error">
+                                    <div id="student-form-error" class="my-1 alert alert-danger hidden-area" role="alert">
                                     </div>
                                     <form id="student-login" method="post" action="{% url 'API_Login' %}">
                                             {% csrf_token %}
                                             <input name="user-type" type="text" value="student" hidden/>
-                                            <div id="reg-id-error" class="error">
+                                            <div id="reg-id-error" class="my-1 alert alert-warning hidden-area" role="alert">
                                             </div>
                                             <input class="form-control my-3 push-corners" name="reg-id" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
-                                            <div id="student-password-error" class="error">
+                                            <div id="student-password-error" class="my-1 alert alert-warning hidden-area" role="alert">
                                             </div>
                                             <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
                                             <p><a href="#" class="meta link">Forgot Password?</a></p>
@@ -79,15 +79,15 @@
                                     </form>
                                 </div>
                                 <div class="tab-pane fade" id="staff" role="tabpanel" aria-labelledby="staff-tab">
-                                    <div id="staff-form-error" class="error">
+                                    <div id="staff-form-error" class="my-1 alert alert-danger hidden-area" role="alert">
                                     </div>
                                     <form id="staff-login" method="post" action="{% url 'API_Login' %}">
                                             {% csrf_token %}
                                             <input name="user-type" type="text" value="staff" hidden/>
-                                            <div id="email-error" class="error">
+                                            <div id="email-error" class="my-1 alert alert-warning hidden-area" role="alert">
                                             </div>
                                             <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
-                                            <div id="staff-password-error" class="error">
+                                            <div id="staff-password-error" class="my-1 alert alert-warning hidden-area" role="alert">
                                             </div>
                                             <input class="form-control my-3 push-corners" name="password" type="password" placeholder="Password" required>
                                             <p><a href="#" class="meta link">Forgot Password?</a></p>
