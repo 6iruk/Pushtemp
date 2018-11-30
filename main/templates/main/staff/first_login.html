@@ -85,36 +85,29 @@
                                                     <option value="Prof.">Professor</option>
                                             </select>
 
-                                            <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="id_name" name="first-name" type="text" />
-                                                <label for="id_name" >First Name</label>
+                                            <div class="md-form mt-3 mx-1">
+                                                <input class="form-control" id="id_name" name="first-name" type="text" placeholder="First Name"/>
                                             </div>
 
-                                            <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="id_last_name" name="last-name" type="text" />
-                                                <label for="id_last_name" >Last Name</label>
+                                            <div class="md-form mt-3 mx-1">
+                                                <input class="form-control" id="id_last_name" name="last-name" type="text" placeholder="Last Name"/>
                                             </div>
                                         </div>
 
                                         <div class="">
-                                            <div class="md-form mt-4 mx-1 d-inline-block">
+                                            <div class="md-form mt-3">
                                               <select id="id_department" name="department" class="form-control my-3 push-corners" required>
                                                       <option value="" disabled selected>Pick your Department</option>
                                                       {% for department in departments %}
                                                           <option value="{{department.id}}">{{department.name}}</option>
                                                       {% endfor %}
                                               </select>
-                                              <label for="id_department" >Department</label>
-                                            </div>
-                                            <div class="md-form mt-4 mx-1 d-inline-block">
-                                                <input id="id_role" value="Instructor" type="text" disabled />
-                                                <label for="id_role" >Role</label>
                                             </div>
                                         </div>
 
                                         <div class="flex-container">
                                             <div></div>
-                                            <div><button class="btn mt-4" type="button" onClick="next('second-page-link')">Next</button></div>
+                                            <div><button class="btn" type="button" onClick="next('second-page-link')">Next</button></div>
                                         </div>
 
                                     </div>
@@ -122,22 +115,19 @@
                                     <div id="second-page" class="tab-pane">
                                         <div>
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="email" name="email" type="text" value="{{user.username}}" required />
-                                                <label for="email" >Email</label>
+                                                <input class="form-control" id="email" name="email" type="text" value="{{user.username}}" placeholder="Email" required />
                                             </div>
 
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="password" type="password" onKeyUp="password_checker()" name="new_password" required />
-                                                <label for="password" >Enter New Password</label>
+                                                <input class="form-control" id="password" type="password" onKeyUp="password_checker()" name="new_password" placeholder="Enter New Password" required />
                                             </div>
 
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="password_conf" type="password" onKeyUp="password_checker()" required />
-                                                <label for="password_conf" >Confirm New Password</label>
+                                                <input class="form-control" id="password_conf" type="password" onKeyUp="password_checker()" placeholder="Confirm New Password" required />
                                             </div>
                                         </div>
 
-                                        <div class="mx-1 py-3">You will be redirected to your account after completing this.</div>
+                                        <div class="mx-1 py-3">You will be <span class="font-weight-bold">redirected to login page</span> after completing.</div>
 
                                         {%csrf_token%}
                                         <div class="flex-container">
