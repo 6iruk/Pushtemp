@@ -24,7 +24,12 @@
                             <form method="post" action="{% url 'Sign Up' %}">
                                     {% csrf_token %}
 
+                                    {% if error.0 or error.1 or error.2 or error.3 or error.4 or error.5%}
+                                    <div id="form-error" class="my-1 alert alert-warning" role="alert">
+                                    {% else %}
                                     <div id="form-error" class="my-1 alert alert-warning hidden-area" role="alert">
+                                    {% endif %}
+
                                       {% if error.0 %}
                                         <p>First name is required</p>
                                       {% endif %}
@@ -43,6 +48,10 @@
 
                                       {% if error.4 %}
                                         <p>Valid registration number required</p>
+                                      {% endif %}
+
+                                      {% if error.5 %}
+                                        <p>ID is already taken</p>
                                       {% endif %}
                                     </div>
                                     <select name="department" class="form-control my-3 push-corners" required>

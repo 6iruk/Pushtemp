@@ -40,9 +40,10 @@
                                         <option disabled selected>No options (pick your year first)</option>
                                 </select>
                                 <input class="form-control my-3 push-corners" name="phone-number" placeholder="Phone Number" type="tel" required/>
-                                <input class="form-control my-3 push-corners" name="password" id="password" type="password" onKeyUp="password_checker()" placeholder="Password" required>
-                                <input class="form-control my-3 push-corners" name="repeat-password" type="password" placeholder="Repeat Password" id="repass" onKeyUp="password_checker()" required>
-                                <button class="btn btn-block my-3" id="signup-button" type="button" onclick="sign_up()" disabled>Complete Sign up</button>
+                                <input class="form-control my-3 push-corners" name="password" id="password" type="password" placeholder="Password" required>
+                                <input class="form-control my-3 push-corners" name="repeat-password" type="password" placeholder="Repeat Password" id="repass" required>
+                                <p id="password-notif"></p>
+                                <button class="btn btn-block my-3" id="signup-button" type="button" onclick="sign_up()">Complete Sign up</button>
                                 <p class="meta text-center">By signing up, you agree to <a class="link" href="#">Terms and Conditions.</a></p>
                         </form>
                     </div>

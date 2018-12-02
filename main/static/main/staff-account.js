@@ -1,3 +1,5 @@
+base_url = "http://localhost:8000"
+
 function nav_click(page) {
   if(page == 'post') {
     $(".content").css("display","none");
@@ -50,14 +52,16 @@ function post_action(action) {
       form = document.forms.namedItem("group-chat-post-form");
       formdata =  new FormData(form);
 
+      $("#push-loader").css("display", "block");
       $.ajax({
-      url: 'https://www.aaupush.com/json/post_action/',
+      url: base_url + '/json/post_action/',
       data: formdata,
       processData: false,
       contentType: false,
       type: 'POST',
       dataType:'json',
       success: function (result) {
+             $("#push-loader").css("display", "none");
              if(result.status == 1) {
                $("#chat-post-list").append(result.html);
                $("#group-chat-post-notif").html("<span>Post Successful</span>");
@@ -77,6 +81,7 @@ function post_action(action) {
              }
          },
        error: function(result){
+         $("#push-loader").css("display", "none");
          $("#group-chat-post-notif").html("<p>Post Failed</p>");
          $("#group-chat-post-notif").css("display", "block");
 
@@ -91,14 +96,16 @@ function post_action(action) {
     form = document.forms.namedItem("post-form-form");
     formdata =  new FormData(form);;
 
+    $("#push-loader").css("display", "block");
     $.ajax({
-    url: 'https://www.aaupush.com/json/post_action/',
+    url: base_url + '/json/post_action/',
     data: formdata,
     processData: false,
     contentType: false,
     type: 'POST',
     dataType:'json',
     success: function (result) {
+           $("#push-loader").css("display", "none");
            if(result.status == 1) {
              $("#post-form-notif > span").html("Post Successful");
              $("#post-form-notif").css("display", "block");
@@ -117,6 +124,7 @@ function post_action(action) {
            }
        },
       error: function (){
+        $("#push-loader").css("display", "none");
         $("#post-form-notif > span").html("Post Failed");
         $("#post-form-notif").css("display", "block");
 
@@ -130,18 +138,17 @@ function post_action(action) {
 var add_notif_timer;
 
 function add_course() {
-    $.post("https://www.aaupush.com/json/add_drop/", $( "#add-courses-form" ).serialize(), function (result,status) {
+    $("#push-loader").css("display", "block");
+    $.post(base_url + "/json/add_drop/", $( "#add-courses-form" ).serialize(), function (result,status) {
+         $("#push-loader").css("display", "none");
          if(status == "success") {
            if(result.status == 1) {
              $("#class-table > tbody").append(result.html);
              clearTimeout(add_notif_timer);
              $("#add-courses-form-notif > span").html("You have added " + result.count + " courses");
              $("#add-courses-form-notif").css("display","block");
-             $("#add-class-form-reset").click();
+             document.location.href='/staff/account'
 
-             add_notif_timer = setTimeout( function() {
-               $("#add-courses-form-notif").css("display", "none");
-             },7000);
            }
 
            else {
@@ -170,7 +177,9 @@ function add_course() {
 var drop_notif_timer;
 
 function drop_course(class_id) {
-  $.post("https://www.aaupush.com/json/add_drop/", { action_type : "drop", class : class_id, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
+  $("#push-loader").css("display", "block");
+  $.post(base_url + "/json/add_drop/", { action_type : "drop", class : class_id, csrfmiddlewaretoken :  $( "#add-courses-form > input[name='csrfmiddlewaretoken']" ).val()}, function (result,status) {
+       $("#push-loader").css("display", "none");
        if(status == "success") {
          if(result.status == 1) {
            $(".row-" + result.class_id).css("display", "none");
@@ -181,6 +190,8 @@ function drop_course(class_id) {
 
            else {
              $("#drop-courses-form-notif > span").html("You have dropped the course " + result.course);
+             $("#drop-courses-form-notif").css("display","block");
+             document.location.href='/staff/account'
            }
 
            $("#drop-courses-form-notif").css("display","block");
@@ -216,7 +227,9 @@ function drop_course(class_id) {
 
 
 function account_update() {
-    $.post("https://www.aaupush.com/json/account_update/", $( "#profile-update-form" ).serialize(), function (result,status) {
+    $("#push-loader").css("display", "block");
+    $.post(base_url + "/json/account_update/", $( "#profile-update-form" ).serialize(), function (result,status) {
+      $("#push-loader").css("display", "none");
       if(status == "success") {
         if(result.status == 0) {
           $(".error").css("display","none");

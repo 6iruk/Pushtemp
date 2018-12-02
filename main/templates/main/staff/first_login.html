@@ -119,20 +119,21 @@
                                             </div>
 
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="password" type="password" onKeyUp="password_checker()" name="new_password" placeholder="Enter New Password" required />
+                                                <input class="form-control" id="password" type="password" name="new_password" placeholder="Enter New Password" required />
                                             </div>
 
                                             <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" id="password_conf" type="password" onKeyUp="password_checker()" placeholder="Confirm New Password" required />
+                                                <input class="form-control" id="password_conf" type="password" placeholder="Confirm New Password" required />
                                             </div>
                                         </div>
-
+                                        <p id="password-notif"></p>
                                         <div class="mx-1 py-3">You will be <span class="font-weight-bold">redirected to login page</span> after completing.</div>
 
                                         {%csrf_token%}
                                         <div class="flex-container">
                                             <button  class="btn" type="button" value="Back" onClick="previous('first-page-link')">Back</button>
-                                            <button  id="submit" class="btn" type="submit" value="Submit" disabled>Submit</button>
+                                            <button  class="btn" type="button" onclick="first_login()" value="Submit">Submit</button>
+                                            <button  id="submit" class="btn" type="submit" value="Submit" disabled hidden></button>
                                         </div>
                                     </div>
                                 </div>
@@ -202,6 +203,20 @@
         else{
             document.getElementById("submit").disabled = true ;
         }
+    }
+
+    function first_login(){
+      var pass = 	document.getElementById("password").value;
+      var pass_conf = document.getElementById("password_conf").value;
+
+      if(pass.trim() != "" && pass === pass_conf){
+        $("#submit").click();
+      }
+
+      else{
+        $("#password-notif").html("Passwords didn't match");
+        $("#password-notif").css("display", "block");
+      }
     }
 </script>
 {% endblock %}

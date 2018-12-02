@@ -20,14 +20,28 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
     <!-- Links -->
     <ul class="navbar-nav mr-auto d-lg-none">
-        <li class="nav-item active">
+        {% if is_first %}
+        <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('post')" data-toggle="collapse" data-target="#pushNav">Post</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('tracker')" data-toggle="collapse" data-target="#pushNav">Tracker</a>
         </li>
+        <li class="nav-item active">
+                <a class="nav-link" href="#" onclick="nav_click('class-list')" data-toggle="collapse" data-target="#pushNav">Class List</a>
+        </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" onclick="nav_click('group-chat')" data-toggle="collapse" data-target="#pushNav">Group Chat</a>
+                <a class="nav-link" href="#" onclick="nav_click('account-setting')" data-toggle="collapse" data-target="#pushNav">Account</a>
+        </li>
+        <li class="nav-item">
+                <a class="nav-link" href="/login/" data-toggle="collapse" data-target="#pushNav">Log out</a>
+        </li>
+        {% else %}
+        <li class="nav-item active">
+            <a class="nav-link" href="#" onclick="nav_click('post')" data-toggle="collapse" data-target="#pushNav">Post</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="nav_click('tracker')" data-toggle="collapse" data-target="#pushNav">Tracker</a>
         </li>
         <li class="nav-item">
                 <a class="nav-link" href="#" onclick="nav_click('class-list')" data-toggle="collapse" data-target="#pushNav">Class List</a>
@@ -38,6 +52,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
         <li class="nav-item">
                 <a class="nav-link" href="/login/" data-toggle="collapse" data-target="#pushNav">Log out</a>
         </li>
+        {% endif %}
     </ul>
     <!-- Links -->
 </div>
@@ -61,16 +76,12 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Tracker
                                 </a>
                             </div>
-                            <div class="push-sidebar-item" onclick="nav_click('group-chat')">
-                                <a href="#">
-                                    <i class="fa fa-comments mr-3" aria-hidden="true"></i>Group Chat
-                                </a>
-                            </div>
                             <div class="push-sidebar-item" onclick="nav_click('class-list')">
                                 <a href="#">
                                     <i class="fa fa-list-ol mr-3" aria-hidden="true"></i>Class List
                                 </a>
                             </div>
+
                             <div class="push-sidebar-item" onclick="nav_click('account-setting')">
                                 <a href="#">
                                     <i class="fa fa-user mr-3" aria-hidden="true"></i>Account
@@ -397,7 +408,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                     <div>
                                                                         <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
                                                                     </div>
-                                                
+
                                                                     <div>
                                                                         <i class="fa fa-download" aria-hidden="true"></i><span class="mb-2"> Downloaded by: <span class="font-weight-bold">{{file.downloads}} students</span>
                                                                     </div>
@@ -413,6 +424,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                     </div>
 
+                                    {% if doesnt_exist %}
                                     <div id="group-chat" class="content hidden-area">
                                         <div class="row">
                                         <div class="col-md-6 order-md-2">
@@ -473,7 +485,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                             </div>
                                         </div>
                                         <div id="chat-post-list" class="col-md-6 order-md-1">
-                                            {% for post in posts %}
+                                            {% for post in group_posts %}
                                                 {% ifchanged post.pub_date.month or post.pub_date.day %}
                                                     <div class="mx-3 mt-3">
                                                         <p>{{post.pub_date | date:"F j"}}</p>
@@ -521,6 +533,8 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+
 
                                 <div id="class-list" class="content hidden-area">
                                     <div class="card card-body push-corners my-3">

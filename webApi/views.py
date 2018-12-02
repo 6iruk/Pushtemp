@@ -549,6 +549,12 @@ def signup(request):
         if not request.POST.get('phone-number') or (request.POST.get('phone-number').strip() == ""):
             return HttpResponse("{\"status\":0, \"remark\":\"Phone number required\"}", content_type='application/json')
 
+        if not request.POST.get('phone-number').startswith("09") and not request.POST.get('phone-number').startswith("251") and not request.POST.get('phone-number').startswith("+251"):
+            return HttpResponse("{\"status\":0, \"remark\":\"Phone number format not correct\"}", content_type='application/json')
+
+        if not request.POST.get('phone-number').isdigit():
+            return HttpResponse("{\"status\":0, \"remark\":\"Phone number format not correct\"}", content_type='application/json')
+
         if request.POST.get('email') and request.POST.get('email').strip() != "":
             e = request.POST.get('email')
             if (e.strip().rfind('.') == -1 or e.strip().rfind('@') == -1 or (e.strip().rfind('.') <= e.strip().rfind('@'))):

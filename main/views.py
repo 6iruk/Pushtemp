@@ -30,6 +30,7 @@ def students_signup_page(request):
     if(request.method == "POST"):
         form = request.POST.copy()
         error = [False,False,False,False,False]
+        departments = Department.objects.all()
 
         if not request.POST.get('first_name') or (request.POST.get('first_name').strip() == ""):
             error[0] = True
@@ -54,8 +55,11 @@ def students_signup_page(request):
         if request.POST.get('reg_id').split('/')[0].upper() != "NSR" or not request.POST.get('reg_id').split('/')[1].isdigit() or not request.POST.get('reg_id').split('/')[2].isdigit():
             error[4] = True
 
-        if error[0] or error[1] or error[2] or error[3] or error[4]:
-            return render(request, 'main/student/students-signup.html', {'form': form, 'error':error})
+        if User.objects.filter(username = request.POST.get('reg-id').replace("/","-")).exists():
+            error[5] = True
+
+        if error[0] or error[1] or error[2] or error[3] or error[4] or error[5]:
+            return render(request, 'main/student/students-signup.html', {'form': form, 'error':error, 'departments':departments})
 
         max_year = department.section_set.all().aggregate(Max('year'))
         year_html = ""
@@ -63,7 +67,7 @@ def students_signup_page(request):
         for x in range(max_year['year__max']):
             year_html += "<option value=" + str(department.id) + "-" + str(x + 1) + ">Year " + str(x + 1) + "</option>"
 
-        context = {'form' : form, 'year_html' : year_html}
+        context = {'form' : form, 'year_html' : year_html, 'departments':departments}
         return render(request, 'main/student/students-signup2.html', context)
 
     departments = Department.objects.all()
@@ -128,12 +132,12 @@ def student_account_page(request):
 
 
 def staff_account_page(request):
-
     if request.user.is_authenticated and Staff.objects.filter(user=request.user).exists():
         staff = Staff.objects.get(user=request.user)
 
     else:
          return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
+
     posts_to_class = Post_To_Class.objects.filter(post__post_by = staff)
     posts_to_section = Post_To_Section.objects.filter(post__post_by = staff)
     posts = sorted((list(posts_to_section) + list(posts_to_class)), key=lambda x: x.post.pub_date)
@@ -150,7 +154,12 @@ def staff_account_page(request):
     department_sections = staff.department_in.section_set.all().order_by('department_in','year','section_id')
     departments = Department.objects.all()
 
-    context = {'departments':departments, 'posts':posts, 'staff':staff, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
+    if classes.count() < 1:
+        is_first = True
+
+    else:
+        is_first = False
+    context = {'departments':departments, 'posts':posts, 'staff':staff, 'is_first':is_first, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
     return render(request, 'main/staff/staff-account.html', context)
 
 

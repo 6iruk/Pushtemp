@@ -1,6 +1,11 @@
+base_url = "http://localhost:8000"
+
 function login(user){
   if(user == "student") {
-    $.post("https://www.aaupush.com/json/login/", $( "#student-login" ).serialize(), function (result,status) {
+    $("#push-loader").css("display", "block");
+    $.post(base_url + "/json/login/", $( "#student-login" ).serialize(), function (result,status) {
+         $("#push-loader").css("display", "none");
+
          if(status == "success") {
            if(result.status == 0) {
              $(".error").css("display", "none");
@@ -8,7 +13,7 @@ function login(user){
              $("#student-form-error").css("display", "block");
            }
 
-           if(result.status == 1) {
+           else if(result.status == 1) {
              $(".error").css("display", "none");
               document.location.href='/student/account/';
            }
@@ -40,7 +45,10 @@ function login(user){
   }
 
   else if(user == "staff") {
-    $.post("https://www.aaupush.com/json/login/", $( "#staff-login" ).serialize(), function (result,status) {
+    $("#push-loader").css("display", "block");
+    $.post(base_url + "/json/login/", $( "#staff-login" ).serialize(), function (result,status) {
+         $("#push-loader").css("display", "none");
+         
          if(status == "success") {
            if(result.status == 0) {
              $(".error").css("display", "none");
