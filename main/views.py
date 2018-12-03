@@ -29,7 +29,7 @@ def index(request):
 def students_signup_page(request):
     if(request.method == "POST"):
         form = request.POST.copy()
-        error = [False,False,False,False,False]
+        error = [False,False,False,False,False, False]
         departments = Department.objects.all()
 
         if not request.POST.get('first_name') or (request.POST.get('first_name').strip() == ""):
@@ -55,7 +55,7 @@ def students_signup_page(request):
         if request.POST.get('reg_id').split('/')[0].upper() != "NSR" or not request.POST.get('reg_id').split('/')[1].isdigit() or not request.POST.get('reg_id').split('/')[2].isdigit():
             error[4] = True
 
-        if User.objects.filter(username = request.POST.get('reg-id').replace("/","-")).exists():
+        if User.objects.filter(username = request.POST.get('reg_id').replace("/","-")).exists():
             error[5] = True
 
         if error[0] or error[1] or error[2] or error[3] or error[4] or error[5]:
