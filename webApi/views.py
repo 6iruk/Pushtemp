@@ -578,7 +578,7 @@ def signup(request):
         if not request.POST.get('reg-id') or (request.POST.get('reg-id').strip() == ""):
             return HttpResponse("{\"status\":0, \"remark\":\"Registration ID required\"}", content_type='application/json')
 
-        if request.POST.get('reg-id').split('/')[0].upper() != "NSR" or not request.POST.get('reg-id').split('/')[1].isdigit() or not request.POST.get('reg-id').split('/')[2].isdigit():
+        if len(request.POST.get('reg-id').split('/')) != 3 or request.POST.get('reg-id').split('/')[0].upper() != "NSR" or not request.POST.get('reg-id').split('/')[1].isdigit() or not request.POST.get('reg-id').split('/')[2].isdigit():
             return HttpResponse("{\"status\":0, \"remark\":\"ID not correct\"}", content_type='application/json')
 
         if User.objects.filter(username = request.POST.get('reg-id').replace("/","-")).exists():
@@ -638,6 +638,8 @@ def account_update(request):
         if not request.user.is_authenticated:
             return HttpResponse("{\"role\":\"null\", \"status\":4, \"remark\":\"User not authenticated\"}", content_type='application/json')
 
+        if not authenticate(username=request.user.username, password=password):
+            return HttpResponse("{\"status\":0, \"id\":\"error-password\", \"html\":\"<span>Password not correct</span>\"}", content_type='application/json')
 
         if not request.POST.get('first-name') or (request.POST.get('first-name').strip() == ""):
             return HttpResponse("{\"status\":0, \"id\":\"error-firstname\", \"html\":\"<span>First name required</span>\"}", content_type='application/json')
