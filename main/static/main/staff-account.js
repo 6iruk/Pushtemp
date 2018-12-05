@@ -1,4 +1,4 @@
-base_url = "http://localhost:8000"
+base_url = "http://localhost:8000";
 
 function nav_click(page) {
   if(page == 'post') {
@@ -33,7 +33,7 @@ function nav_click(page) {
   }
 
   else if(page == 'log-out') {
-    document.location.href='/login/'
+    document.location.href='/login/';
   }
 }
 
@@ -147,7 +147,7 @@ function add_course() {
              clearTimeout(add_notif_timer);
              $("#add-courses-form-notif > span").html("You have added " + result.count + " courses");
              $("#add-courses-form-notif").css("display","block");
-             document.location.href='/staff/account'
+             document.location.href='/staff/account';
 
            }
 
@@ -191,7 +191,7 @@ function drop_course(class_id) {
            else {
              $("#drop-courses-form-notif > span").html("You have dropped the course " + result.course);
              $("#drop-courses-form-notif").css("display","block");
-             document.location.href='/staff/account'
+             document.location.href='/staff/account';
            }
 
            $("#drop-courses-form-notif").css("display","block");
@@ -241,10 +241,7 @@ function account_update() {
            $(".error").css("display","none");
           $("#profile-form-notif > span").html("Update Successful");
           $("#profile-form-notif").css("display", "block");
-
-          setTimeout( function() {
-            $("#profile-form-notif").css("display", "none");
-          },7000);
+          document.location.href='/staff/account';
         }
 
         else if(result.status == 2) {
