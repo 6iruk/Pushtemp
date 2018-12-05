@@ -133,7 +133,7 @@
                                         <div class="flex-container">
                                             <button  class="btn" type="button" value="Back" onClick="previous('first-page-link')">Back</button>
                                             <button  class="btn" type="button" onclick="first_login()" value="Submit">Submit</button>
-                                            <button  id="submit" class="btn" type="submit" value="Submit" disabled hidden></button>
+                                            <button  id="submit" class="btn" type="submit" value="Submit" hidden></button>
                                         </div>
                                     </div>
                                 </div>
@@ -206,6 +206,7 @@
     }
 
     function first_login(){
+      $("#push-loader").css("display", "block");
       var pass = 	document.getElementById("password").value;
       var pass_conf = document.getElementById("password_conf").value;
 
@@ -214,6 +215,7 @@
       }
 
       else{
+        $("#push-loader").css("display", "none");
         $("#password-notif").html("Passwords didn't match");
         $("#password-notif").css("display", "block");
       }
