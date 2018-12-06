@@ -1,4 +1,4 @@
-base_url = "http://localhost:8000";
+base_url = "https://www.aaupush.com";
 
 function nav_click(page) {
   if(page == 'push-board') {
