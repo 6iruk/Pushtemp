@@ -52,7 +52,7 @@ def students_signup_page(request):
         if not request.POST.get('reg_id') or (request.POST.get('reg_id').strip() == ""):
             error[4] = True
 
-        if len(request.POST.get('reg-id').split('/')) != 3 or request.POST.get('reg_id').split('/')[0].upper() != "NSR" or not request.POST.get('reg_id').split('/')[1].isdigit() or not request.POST.get('reg_id').split('/')[2].isdigit():
+        if len(request.POST.get('reg_id').split('/')) != 3 or request.POST.get('reg_id').split('/')[0].upper() != "NSR" or not request.POST.get('reg_id').split('/')[1].isdigit() or not request.POST.get('reg_id').split('/')[2].isdigit():
             error[4] = True
 
         if User.objects.filter(username = request.POST.get('reg_id').replace("/","-")).exists():
