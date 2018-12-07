@@ -1,4 +1,4 @@
-base_url = "http://localhost:8000"
+base_url = "https://www.aaupush.com";
 
 function login(user){
   if(user == "student") {
@@ -48,7 +48,7 @@ function login(user){
     $("#push-loader").css("display", "block");
     $.post(base_url + "/json/login/", $( "#staff-login" ).serialize(), function (result,status) {
          $("#push-loader").css("display", "none");
-         
+
          if(status == "success") {
            if(result.status == 0) {
              $(".error").css("display", "none");
