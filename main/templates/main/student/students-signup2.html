@@ -36,7 +36,7 @@
                                         <option value="-1" disabled selected>Pick your year</option>
                                         {{year_html|safe}}
                                 </select>
-                                <select id="section-select" name="section" class="form-control my-3 push-corners" data-toggle="tooltip" data-placement="left" title="Can't find your section? Check if the correct year is selected." required>
+                                <select id="section-select" name="section" class="form-control my-3 push-corners" required>
                                         <option disabled selected>No options (pick your year first)</option>
                                 </select>
                                 <input class="form-control my-3 push-corners" name="phone-number" placeholder="Phone Number" type="tel" required/>
@@ -62,14 +62,4 @@
 
 <script src="{% static 'main/students-signup.js' %}"></script>
 
-<script>
-
-// Tooltips Initialization
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-
-//populating sections
-
-</script>
 {% endblock %}
