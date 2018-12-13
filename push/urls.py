@@ -24,7 +24,7 @@ urlpatterns = [
     path('login/',views.login_page, name='Log In'),
     path('student/account/' ,views.student_account_page, name='Student Account'),
     path('staff/account/' ,views.staff_account_page, name='Staff Account'),
-    #path('invite/' ,views.teacher_xls_page, name='XLS'),
+    path('invite/' ,views.teacher_xls_page, name='XLS'),
     path('first_login/' ,views.first_login, name='First Login'),
     path('Push_Page/', include('pushPages.urls')),
     path('admin/', admin.site.urls),
