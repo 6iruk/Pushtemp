@@ -193,7 +193,14 @@ def teacher_xls_page(request):
                         cnf = open(os.path.join(BASE_DIR, 'mailgin_api.cnf'), "r")
                         key = cnf.readline().strip()
 
-                        response = requests.post("https://api.mailgun.net/v3/sandbox70636f6c092c459b9e602b6106dca6d1.mailgun.org/messages", auth=("api", key), data={"from": "AAU PUSH <mailgun@sandbox70636f6c092c459b9e602b6106dca6d1.mailgun.org>", "to": email, "subject": "AAU Push Account Activation", "text": "Username: " + email + "Password: " + password})
+                        template1 = open(os.path.join(BASE_DIR, 'email_template1.html'), "r")
+                        html = template1.read()
+                        html += email+ "<br>Password: " + password
+
+                        template2 = open(os.path.join(BASE_DIR, 'email_template2.html'), "r")
+                        html += template2.read()
+
+                        response = requests.post("https://api.mailgun.net/v3/aaupush.com/messages", auth=("api", key), data={"from": "AAU PUSH <aaupush@gmail.com>", "to": email, "subject": "AAU Push Account Activation", "html": html})
 
                         code.append(response.text)
                         if response.status_code != 200:
