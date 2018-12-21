@@ -105,9 +105,9 @@ def student_account_page(request):
         #Add every section the student is in to the query
         query2.add( Q( post_to = section.section ), Q.OR )
 
-    wall = list(Post_To_Class.objects.filter(query).order_by('-post.pub_date'))
+    wall = list(Post_To_Class.objects.filter(query).order_by('-post__pub_date'))
     read_tracker = []
-    pushboard = Post_To_Section.objects.filter(query2).order_by('-post.pub_date')
+    pushboard = Post_To_Section.objects.filter(query2).order_by('-post__pub_date')
 
     for post in wall:
         if not Tracking.objects.filter(student = student, post = post.post).exists():
@@ -138,8 +138,8 @@ def staff_account_page(request):
     else:
          return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
 
-    posts_to_class = Post_To_Class.objects.filter(post__post_by = staff).order_by('-post.pub_date')
-    posts_to_section = Post_To_Section.objects.filter(post__post_by = staff).order_by('-post.pub_date')
+    posts_to_class = Post_To_Class.objects.filter(post__post_by = staff).order_by('-post__pub_date')
+    posts_to_section = Post_To_Section.objects.filter(post__post_by = staff).order_by('-post__pub_date')
     posts = sorted((list(posts_to_section) + list(posts_to_class)), key=lambda x: x.post.pub_date)
 
     group_posts = Post_To_Chat.objects.filter(post_to = staff.department_in)
