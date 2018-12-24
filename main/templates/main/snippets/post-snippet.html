@@ -5,7 +5,7 @@
         <div class="flex-container">
             <div class="post-by">
                     <span class="font-weight-bold">{{ post.post.post_by }}</span>
-                    <span class="meta">{{ post.post.post_by.role }}</span>
+                    <span class="meta">{{ post.post_to.course.name }}</span>
             </div>
             {% if post.id in read %}
             <div class="read-post-class">
