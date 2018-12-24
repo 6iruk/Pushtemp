@@ -105,10 +105,15 @@ def student_account_page(request):
         #Add every section the student is in to the query
         query2.add( Q( post_to = section.section ), Q.OR )
 
-    wall = list(Post_To_Class.objects.filter(query).order_by('-post__pub_date'))
-    read_tracker = []
-    pushboard = Post_To_Section.objects.filter(query2).order_by('-post__pub_date')
 
+    read_tracker = []
+    wall = []
+    pushboard = []
+    
+    if not classes_in.count() == 0:
+        wall = list(Post_To_Class.objects.filter(query).order_by('-post__pub_date'))
+        pushboard = Post_To_Section.objects.filter(query2).order_by('-post__pub_date')
+    
     for post in wall:
         if not Tracking.objects.filter(student = student, post = post.post).exists():
             Tracking.objects.create(student = student, post = post.post, status = 1, del_on = datetime.datetime.now())
