@@ -169,9 +169,28 @@ def staff_account_page(request):
 
 
 
-def forgot_password_page(request):
+def forum_home(request):
 
-    return render(request, 'main/forgot-password.html')
+
+    return render(request, 'main/forum/forum_home.html')
+
+
+
+def forum_create(request):
+
+    return render(request, 'main/forum/forum_create.html', context)
+
+
+
+def forum_feed(request):
+
+    return render(request, 'main/forum/forum_feed.html', context)
+
+
+
+def forum_search(request):
+
+    return render(request, 'main/forum/forum_search.html', context)
 
 
 
