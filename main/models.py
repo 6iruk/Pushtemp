@@ -258,7 +258,7 @@ class Forum(models.Model):
     creator = models.OneToOneField(User,  on_delete=models.CASCADE)
 
     #The restrictions on the forum
-    members = models.ManyToManyField(User, blank=True)
+    members = models.ManyToManyField(User, blank=True, related_name='+')
 
     def __str__(self):
         return self.name

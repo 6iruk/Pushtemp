@@ -19,19 +19,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-cnf = open(os.path.join(BASE_DIR, 's_k.cnf'), "r")
+# cnf = open(os.path.join(BASE_DIR, 's_k.cnf'), "r")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = cnf.readline().strip()
+SECRET_KEY = 'vn0x!4y14&=@d!5eb**gk0uefdbo(j_f5q6vq$ljfl_4vqe)n-'
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.aaupush.com', 'localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -85,18 +85,18 @@ WSGI_APPLICATION = 'push.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 
-   'default': {
-       'ENGINE': 'django.db.backends.mysql',
-       'OPTIONS': {
-           'read_default_file': os.path.join(BASE_DIR, 'push.cnf'),
-           'init_command': 'SET innodb_strict_mode=1',
-       },
-   }
+   # 'default': {
+   #     'ENGINE': 'django.db.backends.mysql',
+   #     'OPTIONS': {
+   #         'read_default_file': os.path.join(BASE_DIR, 'push.cnf'),
+   #         'init_command': 'SET innodb_strict_mode=1',
+   #     },
+   # }
 }
 
 
