@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'webApi',
     'mobileApi',
     'pushPages',
+    'forum',
     'django.contrib.humanize',
 ]
 
