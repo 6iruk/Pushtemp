@@ -27,6 +27,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
         <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('tracker')" data-toggle="collapse" data-target="#pushNav">Tracker</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="nav_click('forums')" data-toggle="collapse" data-target="#pushNav">Forums</a>
+        </li>
         <li class="nav-item active">
                 <a class="nav-link" href="#" onclick="nav_click('class-list')" data-toggle="collapse" data-target="#pushNav">Class List</a>
         </li>
@@ -74,6 +77,11 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                             <div class="push-sidebar-item" onclick="nav_click('tracker')">
                                 <a href="#">
                                     <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Tracker
+                                </a>
+                            </div>
+                            <div class="push-sidebar-item" onclick="nav_click('forums')">
+                                <a href="#">
+                                    <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Forums
                                 </a>
                             </div>
                             <div class="push-sidebar-item" onclick="nav_click('class-list')">
@@ -441,7 +449,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 <input type="hidden" value="chat" name="action-type"/>
 
                                                     <div>
-                                                        <h1 class="h2-responsive">Group Chat</h1>
+                                                        <h1 class="h2-responsive">Department Chat</h1>
                                                     </div>
                                                     <div id="keyboard-form">
                                                         <div id="group-chat-post-content-error" class="error alert alert-danger hidden-area" role="alert">
@@ -517,15 +525,15 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                                         <div>
                                                             {% for file in post.files.all %}
-                                                            <div class="file">
-                                                                <div>
-                                                                    <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
-                                                                </div>
+                                                                <div class="file">
+                                                                    <div>
+                                                                        <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                    </div>
 
-                                                                <div>
-                                                                    <p class="meta mb-2">File size:  {{ file.file.size | filesizeformat}}</p>
+                                                                    <div>
+                                                                        <p class="meta mb-2">File size:  {{ file.file.size | filesizeformat}}</p>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
                                                             {% endfor %}
                                                         </div>
 
@@ -542,6 +550,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                 </div>
                                 {% endif %}
 
+                                <div id="forums" class="content hidden-area">
+                                    //include forums snippet.
+                                </div>
 
                                 <div id="class-list" class="content hidden-area">
                                     <div class="card card-body push-corners my-3">
