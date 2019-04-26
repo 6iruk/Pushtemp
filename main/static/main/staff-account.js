@@ -13,6 +13,12 @@ function nav_click(page) {
     $(".side-nav-sections").css("background-color","inherit");
     $("#nav-tracker").css("background-color","#ffffff");
   }
+  else if(page == 'forums') {
+    $(".content").css("display","none");
+    $("#forums").css("display","block");
+    $(".side-nav-sections").css("background-color","inherit");
+    $("#nav-tracker").css("background-color","#ffffff");
+  }
   else if(page == 'group-chat') {
     $(".content").css("display","none");
     $("#group-chat").css("display","block");

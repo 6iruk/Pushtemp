@@ -1,0 +1,64 @@
+//this page will be a snippet that will be embedded in the student and staff dashboard pages
+
+<div id="forum-home">
+    <div>
+        <p>My forums</p>
+        <input type="button" value="Create Forum">
+        <div id="my-forums">
+            //fetch forums that the user is in
+        </div>
+
+        <p>Trending forums</p>
+        <input type="button" value="Search Forums">
+        <div id="trending-forums">
+            //fetch forums that are trending (forums with largest messages maybe?)
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div id="create-forum">
+    <form>
+        <input type="text" placeholder="Name">
+        <input type="text" placeholder="Description">
+        Privacy
+        <input type="radio" value="1" placeholder="Open to anyone">
+        <input type="radio" value="0" placeholder="Closed"> //when this is picked, the dep selector appears
+        <select>
+            //fetch for list of departments in the college
+            //once that's picked, fetch for years in that department
+            //once that's picked, fetch for sections in that year and dep
+
+            //on all levels, if it's in the user's department, year or section, the user's data should be disabled.
+            //on all levels, a 'Any department' or 'Any year' option should be there.
+        </select>
+        <input type="submit" value="Create Forum">
+    </form>
+</div>
+
+<hr>
+
+<div id="forum-search">
+    Forum search page
+    <form action="">
+        <input type="text" name="query" id="query">
+        <input type="submit" value="Go">
+    </form>
+    //load here trending forums with pictures and descriptions
+    //forums loaded must be ones that the user can possibly join into
+</div>
+
+<hr>
+
+<div id="forum-feed">
+    Forum messages
+    //fetch and display here the last 20 messages from the forum here.
+    <form>
+        <input type="text" placeholder="type message here">
+        <input type="file" name="file" id="file">
+        <input type="file" name="image" id="image">
+        <input type="submit" value="Send Message">
+    </form>
+</div>
+

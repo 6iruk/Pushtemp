@@ -30,6 +30,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 			<a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav" onclick="nav_click('course-bucket')">Courses</a>
 		</li>
 		<li class="nav-item">
+			<a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav" onclick="nav_click('forums')">Forums</a>
+		</li>
+		<li class="nav-item">
 				<a class="nav-link" href="#" data-toggle="collapse" data-target="#pushNav" onclick="nav_click('add-drop')">Add/Drop</a>
 		</li>
 		<li class="nav-item">
@@ -65,6 +68,11 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 							<div class="push-sidebar-item" onclick="nav_click('course-bucket')">
 								<a href="#">
 									<i class="fa fa-book mr-3" aria-hidden="true"></i>Courses
+								</a>
+							</div>
+							<div class="push-sidebar-item" onclick="nav_click('forums')">
+								<a href="#">
+									<i class="fa fa-book mr-3" aria-hidden="true"></i>Forums
 								</a>
 							</div>
 							<div class="push-sidebar-item" onclick="nav_click('add-drop')">
@@ -129,6 +137,10 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 									</div>
 								</div>
 
+								<div id="forums" class="content hidden-area">
+                                    //include forums snippet.
+								</div>
+								
 								<div id='add-drop-content' class="content hidden-area">
 
 									<div class="card card-body push-corners">
