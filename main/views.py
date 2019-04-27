@@ -4,6 +4,7 @@ from itertools import chain
 from operator import attrgetter
 from django.db.models import Q, Max, Count
 from main.models import *
+from forum.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from django.core import serializers
@@ -131,7 +132,13 @@ def student_account_page(request):
 
     departments = Department.objects.all()
 
-    context = {'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'departments':departments,'read_tracker':read_tracker}
+    user_forums = Forum.objects.filter(members=request.user)
+    temp1 = Forum.objects.filter(restrictions=None)
+    temp2 = Forum.objects.filter(restrictions__department=student.department_in ,restrictions__year=None, restrictions__section=None)
+    temp3 = Forum.objects.filter(restrictions__department=student.department_in ,restrictions__year=student.year, restrictions__section=None)
+    temp4 = Forum.objects.filter(restrictions__department=student.department_in ,restrictions__year=student.year, restrictions__section=student.section)
+    trending_forums = sorted((list(temp1) + list(temp2) + list(temp3) + list(temp4)), key=lambda x: x.members.count())
+    context = {'user_forums':user_forums,'trending_forums':trending_forums,'wall':wall, 'sections':sections, 'reminder':reminder, 'student':student, 'departments':departments,'read_tracker':read_tracker}
     return render(request, 'main/student/student-account.html', context)
 
 
@@ -164,7 +171,12 @@ def staff_account_page(request):
 
     else:
         is_first = False
-    context = {'departments':departments, 'posts':posts, 'staff':staff, 'is_first':is_first, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
+
+    user_forums = Forum.objects.filter(members=request.user)
+    temp1 = Forum.objects.filter(restrictions=None)
+    temp2 = Forum.objects.filter(restrictions__department=staff.department_in ,restrictions__year=None, restrictions__section=None)
+    trending_forums = sorted((list(temp1) + list(temp2)), key=lambda x: x.members.count())
+    context = {'user_forums':user_forums,'trending_forums':trending_forums,'departments':departments, 'posts':posts, 'staff':staff, 'is_first':is_first, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
     return render(request, 'main/staff/staff-account.html', context)
 
 
