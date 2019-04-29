@@ -551,8 +551,8 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                 {% endif %}
 
                                 <div id="forums" class="content hidden-area">
-                                    //include forums snippet.
-                                </div>
+                                    {% include 'forum/snippets/forum.html' with user_forums=user_forums trending_forums=trending_forums%}
+								</div>
 
                                 <div id="class-list" class="content hidden-area">
                                     <div class="card card-body push-corners my-3">

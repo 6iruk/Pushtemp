@@ -1,17 +1,28 @@
-//this page will be a snippet that will be embedded in the student and staff dashboard pages
+<!-- //this page will be a snippet that will be embedded in the student and staff dashboard pages -->
+{% load humanize %}
 
-<div id="forum-home">
+<div id="forum-home" class="">
     <div>
         <p>My forums</p>
         <input type="button" value="Create Forum">
         <div id="my-forums">
-            //fetch forums that the user is in
+            <!-- //fetch forums that the user is in -->
+            {% for forum in user_forums %}
+                <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
+                    <a>{{forum.name}}</a>
+                </div>
+            {% endfor %}
         </div>
 
         <p>Trending forums</p>
         <input type="button" value="Search Forums">
         <div id="trending-forums">
-            //fetch forums that are trending (forums with largest messages maybe?)
+            <!-- //fetch forums that are trending (forums with largest messages maybe?) -->
+            {% for forum in trending_forums %}
+            <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
+                <a>{{forum.name}}</a>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>

@@ -138,7 +138,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 								</div>
 
 								<div id="forums" class="content hidden-area">
-                                    //include forums snippet.
+                                    {% include 'forum/snippets/forum.html' with user_forums=user_forums trending_forums=trending_forums%}
 								</div>
 								
 								<div id='add-drop-content' class="content hidden-area">
