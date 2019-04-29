@@ -9,3 +9,5 @@ aaupush/
 main/static/main/push.css.map
 main/static/main/push.css.map
 main/static/main/.sass-cache/ceb8eeff7f3d801e44c9f67535647c3624e212fa/push.scssc
+*.scssc
+*.map

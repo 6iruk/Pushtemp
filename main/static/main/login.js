@@ -1,4 +1,4 @@
-base_url = "https://www.aaupush.com";
+base_url = "http://localhost:8000";
 
 function login(user){
   if(user == "student") {
