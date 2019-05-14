@@ -2,74 +2,139 @@
 {% load humanize %}
 
 <div id="forum-home" class="">
-    <div>
-        <p>My forums</p>
-        <input type="button" value="Create Forum">
-        <div id="my-forums">
-            <!-- //fetch forums that the user is in -->
-            {% for forum in user_forums %}
-                <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
-                    <a>{{forum.name}}</a>
-                </div>
-            {% endfor %}
+    <div class="card card-body push-corners mb-3">
+        <div class="flex-container">
+            <div>
+                <p class="h3-responsive">My Forums</p>
+            </div>
+            <div>
+                <span class="btn" onclick="read('{{post.post.id}}')">Create Forum</span>
+            </div>
         </div>
+            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+                <a>Welcome Freshman</a>
+            </div>
+            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+                <a>Latest Tech</a>
+            </div>
+            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+                <a>Machine Learning</a>
+            </div>
 
-        <p>Trending forums</p>
-        <input type="button" value="Search Forums">
-        <div id="trending-forums">
-            <!-- //fetch forums that are trending (forums with largest messages maybe?) -->
+            <!-- //fetch forums that the user is in
+             {% for forum in user_forums %}
+             <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
+                 <a>{{forum.name}}</a>
+             </div>
+            {% endfor %} -->
+    </div>
+    <div class="card card-body push-corners mb-3">
+            <div class="flex-container">
+                <div>
+                    <p class="h3-responsive">Trending Forums</p>
+                </div>
+                <div>
+                    <span class="btn" onclick="something()">Search Forum</span>
+                </div>
+            </div>
+            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+                    <a>4 Kilo Events</a>
+            </div>
+            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+                <a>Chemistry Unchained</a>
+            </div>
+            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+                <a>Google Trainings</a>
+            </div>
+    
+            <!-- //fetch forums that are trending (forums with largest messages maybe?)
             {% for forum in trending_forums %}
             <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
                 <a>{{forum.name}}</a>
             </div>
-            {% endfor %}
-        </div>
+            {% endfor %} -->
     </div>
 </div>
 
 <hr>
 
 <div id="create-forum">
-    <form>
-        <input type="text" placeholder="Name">
-        <input type="text" placeholder="Description">
-        Privacy
-        <input type="radio" value="1" placeholder="Open to anyone">
-        <input type="radio" value="0" placeholder="Closed"> //when this is picked, the dep selector appears
-        <select>
-            //fetch for list of departments in the college
-            //once that's picked, fetch for years in that department
-            //once that's picked, fetch for sections in that year and dep
-
-            //on all levels, if it's in the user's department, year or section, the user's data should be disabled.
-            //on all levels, a 'Any department' or 'Any year' option should be there.
-        </select>
-        <input type="submit" value="Create Forum">
-    </form>
+    <div class="card card-body push-corners mb-3">
+        <div>
+            <p class="h3-responsive">Create Forum</p>
+        </div>
+        <form action="" method="post">
+            <div class="md-form mt-4 mb-2 mx-1">
+                <input class="form-control" name="forum-name" id="forum-name" type="text" placeholder="Forum Name" required />
+            </div>
+            <div class="md-form mt-4 mb-2 mx-1">
+                <input class="form-control" name="forum-desc" id="forum-desc" type="text" placeholder="Forum Description" required />
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose forum cover image</label>
+                </div>
+            </div>
+            <div>
+                <div class="d-inline align-middle mr-3">Make forum private</div>
+                <div class="d-inline">
+                        <label class="bs-switch align-middle">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                </div>
+            </div>
+            <p>
+                Fetch for list of departments in the college
+                Once that's picked, fetch for years in that department
+                Once that's picked, fetch for sections in that year and dep
+                On all levels, if it's in the user's department, year or section, the user's data should be disabled.
+                On all levels, a 'Any department' or 'Any year' option should be there.
+            </p>
+            <input class="btn btn-block" type="submit" value="Create Forum">
+        </form>
+    </div>
 </div>
-
 <hr>
 
 <div id="forum-search">
-    Forum search page
-    <form action="">
-        <input type="text" name="query" id="query">
-        <input type="submit" value="Go">
-    </form>
-    //load here trending forums with pictures and descriptions
-    //forums loaded must be ones that the user can possibly join into
+    <div class="card card-body push-corners mb-3">
+        <div>
+            <p class="h3-responsive">Search Forum</p>
+        </div>
+        <form action="">
+            <input type="text" name="query" id="query">
+            <input type="submit" value="Go">
+        </form>
+        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+            <a>4 Kilo Events</a>
+        </div>
+        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+            <a>Chemistry Unchained</a>
+        </div>
+        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+            <a>Google Trainings</a>
+        </div>
+        Forums loaded must be ones that the user can possibly join into
+    </div>
 </div>
 
 <hr>
 
 <div id="forum-feed">
-    Forum messages
-    //fetch and display here the last 20 messages from the forum here.
-    <form>
-        <input type="text" placeholder="type message here">
-        <input type="file" name="file" id="file">
-        <input type="file" name="image" id="image">
-        <input type="submit" value="Send Message">
-    </form>
+    <div class="card card-body push-corners mb-3">
+        <button class="btn" onclick="loadmore()">Load More</button>
+
+        <form>
+            <input type="text" placeholder="type message here">
+            <input type="file" name="file" id="file">
+            <input type="file" name="image" id="image">
+            <input type="submit" value="Send Message">
+        </form>
+    </div>
 </div>
 
