@@ -101,7 +101,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 				<div class="col-lg-10">
 					<div class="row push-min-height">
 							<div class="col-md-6 mt-3">
-								<div id="your-wall-content" class="content">
+								<div id="your-wall-content" class="content hidden-area">
 									{% include 'main/snippets/post-snippet.html' with source=wall read=read_tracker%}
 								</div>
 
@@ -137,7 +137,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 									</div>
 								</div>
 
-								<div id="forums" class="content hidden-area">
+								<div id="forums" class="content">
                                     {% include 'forum/snippets/forum.html' with user_forums=user_forums trending_forums=trending_forums%}
 								</div>
 								
@@ -305,123 +305,104 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 								</div>
 
 								<div id="account-setting-content" class="content hidden-area">
-										<div id="profile-form" class="card card-body push-corners">
-												<form id="profile-update-form" method="post">
-												<input name="user-type" type="text" value="student" hidden/>
-												{% csrf_token %}
-
-												<div>
-													<p class="h3-responsive">Personal Information</p>
-												</div>
-												<hr>
-
-												<div id="form-top">
-													<div class="form-left">
-
-														<div class="textinput input">
-															<div id="error-firstname" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-															<label for="firstname">First Name<br></label>
-															<input name="first-name" value="{{student.first_name}}" id="firstname" type="text" required/>
-														</div>
-
-														<div class="textinput input">
-															<div id="error-lastname" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-															<label for="lastname">Last Name<br></label>
-															<input name="last-name" id="lastname" value="{{student.last_name}}" type="text" required/>
-														</div>
-
-														<div class="textinput input">
-															<label for="reg-id">Registration ID Number<br></label>
-															<input name="reg-id" id="lastname" type="text" value="{{student.reg_id}}" required/>
-														</div>
-													</div>
-
-												</div>
-
-												<div>
-													<p class="h3-responsive mt-3">School Information</p>
-												</div>
-												<hr>
-
-												<div id="form-middle">
-
-													<div class="form-left">
-														<div class="textinput input">
-															<label for="year">University<br></label>
-															<input id="university" type="text" value="{{student.university_in.name}}" disabled/>
-														</div>
-
-														<div class="textinput input">
-															<label for="department">Department<br></label>
-															<select name="department" id="profile-update-department" required>
-																{% for department in departments %}
-																{% ifchanged department.university_in %}
-																<option value="" disabled>{{department.university_in}}</option>
-																{% endifchanged %}
-
-																{% if department.id == student.department_in.id %}
-																<option value="{{department.id}}" selected>{{department.name}}</option>
-																{% else %}
-																<option value="{{department.id}}">{{department.name}}</option>
-																{% endif %}
-																{% endfor %}
-															</select>
-															</div>
-														</div>
-
-														<div class="textinput input">
-															<div id="error-year" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-															<label for="year">Year<br></label>
-															<input name="year" id="profile-update-year" type="number" value="{{student.year}}"required/>
-														</div>
-														<div class="textinput input">
-															<div id="error-section" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-															<label for="section">Section<br></label>
-															<input name="section" id="profile-update-section" type="text" value="{{student.section}}" required/>
-														</div>
-													</div>
-
-													<div>
-														<p class="h3-responsive mt-3">Contact Information</p>
-													</div>
-													<hr>
-
-													<div id="form-bottom">
-
-													<div class="textinput input">
-														<div id="error-phonenum" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-														<label for="phonenum">Phone number<br></label>
-														<input name="phone-number" id="phonenum" type="tel" value="{{student.phone}}" required/>
-													</div>
-
-													<div class="textinput input">
-														<div id="error-email" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-														<label for="email">Email<br></label>
-														<input name="email" id="email" type="email" value="{{student.email}}" required/>
-													</div>
-													</div>
-
-													<div id="form-footer">
-															<hr>
-													<div>
-														<p>Please enter your password to save changes</p>
-													</div>
-
-													<div class="textinput input">
-														<div id="error-password" class="my-1 alert alert-warning hidden-area" role="alert"></div>
-														<input name="password" id="password" type="password" required/>
-													</div>
-													<div id="profile-form-notif" class="mt-1 alert alert-info hidden-area" role="alert">
-															<span></span>
-													</div>
-													<div class="submitinput input">
-														<button id="save-changes" class="btn" type="button" onclick="account_update()">Save Changes</button>
-													</div>
-													</div>
-												</form>
-											</div>
+									<div id="profile-form-notif" class="alert alert-info hidden-area" role="alert">
+										<span></span>
 									</div>
+									<form id="profile-update-form" method="post">
+										<div class="card card-body push-corners mb-3">
+											<input name="user-type" type="text" value="student" hidden/>
+											{% csrf_token %}
 
+											<div>
+												<p class="h3-responsive">Personal Information</p>
+											</div>
+
+											<div id="error-firstname" class="error alert alert-danger hidden-area" role="alert"></div>
+											<div class="md-form mt-3 mb-2 mx-1">
+												<input class="form-control" name="first-name" id="firstname" type="text" placeholder="First Name" value="{{student.first_name}}" required />
+											</div>
+											
+											<div id="error-lastname" class="error alert alert-danger hidden-area" role="alert"></div>
+											<div class="md-form mt-3 mb-2 mx-1">
+												<input class="form-control" name="last-name" id="lastname" type="text" placeholder="Last Name" value="{{student.last_name}}" required />
+											</div>
+
+											<div class="md-form mt-3 mb-2 mx-1">
+												<input class="form-control" name="reg-id" id="lastname" type="text" placeholder="Registration ID" value="{{student.reg_id}}" required />
+											</div>
+										</div>
+
+										<div class="card card-body push-corners mb-3">
+											<div>
+												<p class="h3-responsive">School Information</p>
+											</div>
+
+											<div class="md-form mt-3 mb-2 mx-1">
+												<input class="form-control" id="university" type="text" value="{{student.university_in}}" disabled />
+											</div>
+											
+											<select name="department" id="profile-update-department" required>
+												{% for department in departments %}
+													{% ifchanged department.university_in %}
+														<option value="" disabled>{{department.university_in}}</option>
+													{% endifchanged %}
+
+													{% if department.id == student.department_in.id %}
+														<option value="{{department.id}}" selected>{{department.name}}</option>
+													{% else %}
+														<option value="{{department.id}}">{{department.name}}</option>
+													{% endif %}
+												{% endfor %}
+											</select>
+
+											<div id="error-year" class="error alert alert-danger hidden-area" role="alert"></div>
+											<div class="md-form mt-4 mb-2 mx-1">
+												Year
+												<input class="form-control" name="year" id="profile-update-year" type="number" placeholder="Year" value="{{student.year}}" required />
+											</div>
+
+											<div id="error-section" class="error alert alert-danger hidden-area" role="alert"></div>
+											<div class="md-form mt-4 mb-2 mx-1">
+												Section
+												<input class="form-control" name="section" id="profile-update-section" type="number" placeholder="Section" value="{{student.section}}" required />
+											</div>
+
+										</div>
+
+										
+										<div class="card card-body push-corners mb-3">
+											<div>
+												<p class="h3-responsive mt-3">Contact Information</p>
+											</div>
+											
+											<div class="md-form mt-3 mb-2 mx-1">
+												<div id="error-phonenum" class="my-1 alert alert-warning hidden-area" role="alert"></div>
+												<input class="form-control" name="phone-number" id="phonenum" type="tel" placeholder="Phone Number" value="{{student.phone}}" required />
+											</div>
+
+											<div class="md-form mt-3 mb-2 mx-1">
+												<div id="error-email" class="my-1 alert alert-warning hidden-area" role="alert"></div>
+												<input class="form-control" name="email" id="email" type="email" placeholder="Email" value="{{student.email}}" required />
+											</div>
+										</div>
+
+										<div class="card card-body push-corners mb-3">
+											<div>
+												<p>Please enter your password to save changes</p>
+											</div>
+											<div id="profile-form-notif" class="mt-1 alert alert-info hidden-area" role="alert">
+													<span></span>
+											</div>
+											<div class="md-form mt-3 mb-2 mx-1">
+												<div id="error-password" class="my-1 alert alert-warning hidden-area" role="alert"></div>
+												<input class="form-control" name="password" id="password" type="password" placeholder="Password" required />
+											</div>
+											<div>
+												<span id="save-changes" class="btn" onclick="account_update()">Save Changes</span>
+											</div>
+										</div>
+									</form>
+								</div>
 							</div>
 
 							<div class="col-lg-2 d-none d-lg-block"></div>
