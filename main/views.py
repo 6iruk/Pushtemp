@@ -87,12 +87,12 @@ def login_page(request):
 
 
 def student_account_page(request):
-    if request.user.is_authenticated and Student.objects.filter(user=request.user).exists():
-        student = Student.objects.get(user=request.user)
-
-    else:
-         return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
-
+    # if request.user.is_authenticated and Student.objects.filter(user=request.user).exists():
+    #     student = Student.objects.get(user=request.user)
+    #
+    # else:
+    #      return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
+    student = Student.objects.get(id=1)
     classes_in = student.class_in.all()
     query = Q()
     for class_in in classes_in:

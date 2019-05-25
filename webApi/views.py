@@ -1126,6 +1126,20 @@ def post_action(request):
         return HttpResponse(output, content_type='application/json')
 
 
+def edit_post(request):
+    post = Post.objects.get(id = int(request.POST.get('post-id')))
+    post.content = request.POST.get('content')
+    post.save()
+
+    return HttpResponse("{\"status\":1, \"remark\":\"Edit successful\"}", content_type='application/json')
+
+
+def delete_post(request):
+    post = Post.objects.get(id = int(request.GET.get('post-id')))
+    post.delete()
+
+    return HttpResponse("{\"status\":1, \"remark\":\"Edit successful\"}", content_type='application/json')
+
 
 def student_read(request):
         if not request.user.is_authenticated:

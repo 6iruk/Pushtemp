@@ -143,7 +143,7 @@ class File(models.Model):
    extension = models.CharField(max_length=8)
 
    #The staff member that uploaded the file
-   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
+   post_by = models.ForeignKey(User,  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.name
@@ -159,7 +159,7 @@ class Image(models.Model):
    image = models.FileField(upload_to=upload_path_image, max_length=300)
 
    #The staff member that uploaded the image
-   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
+   post_by = models.ForeignKey(User,  on_delete=models.CASCADE)
 
    def __str__(self):
       return self.image.name
@@ -180,7 +180,7 @@ class Post(models.Model):
    post_type = models.IntegerField()
 
    #The staff member that posted the post
-   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
+   post_by = models.ForeignKey(User,  on_delete=models.CASCADE)
 
    #The date and time the post was posted
    pub_date = models.DateTimeField('Date Published')
@@ -198,10 +198,10 @@ class Post(models.Model):
 
       return count
 
-   def is_read(self):
-      count = models.Tracking.objects.filter(student = student, post = post, status = 1).count()
-
-      return count
+   # def is_read(self):
+   #    count = models.Tracking.objects.filter(student = student, post = post, status = 1).count()
+   #
+   #    return count
 
    def recipients_string(self):
       recipients = ""

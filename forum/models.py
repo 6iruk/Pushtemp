@@ -1,4 +1,3 @@
-from django.db import models
 from main.models import *
 
 # Create your models here.
@@ -28,6 +27,9 @@ class Forum(models.Model):
 
     # The restrictions on the forum
     members = models.ManyToManyField(User, blank=True, related_name='+')
+
+    # The posts of the forum
+    posts = models.ManyToManyField(Post, blank=True, related_name='+')
 
     def __str__(self):
         return self.name
