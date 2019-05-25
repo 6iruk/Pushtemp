@@ -8,6 +8,6 @@ urlpatterns = [
 	path('sendmessage/', views.send_message, name="Send Message"),
 	path('joinforum/', views.join_forum, name="Join Forum"),
 	path('leaveforum/', views.leave_forum, name="Leave Forum"),
-	path('createforum/', views.create_forum, name="Create Forum"),
+	#path('createforum/', views.create_forum, name="Create Forum"),
 	path('deleteforum/', views.delete_forum, name="Delete Forum"),
 ]
