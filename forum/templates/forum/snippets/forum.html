@@ -1,32 +1,29 @@
 <!-- //this page will be a snippet that will be embedded in the student and staff dashboard pages -->
 {% load humanize %}
 
-<div id="forum-home" class="">
+<button class="forum-home-button">
+    Home
+</button>
+
+<button class="create-forum-button">Create Forum</button>
+
+<button class="search-forum-button">Search Forum</button>
+
+<button class="forum-feed-button">Forum Feed</button>
+
+<div id="forum-home" class="forum-content">
     <div class="card card-body push-corners mb-3">
         <div class="flex-container">
             <div>
                 <p class="h3-responsive">My Forums</p>
             </div>
             <div>
-                <span class="btn" onclick="read('{{post.post.id}}')">Create Forum</span>
+                <span class="btn create-forum-button">Create Forum</span>
             </div>
         </div>
-            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-                <a>Welcome Freshman</a>
-            </div>
-            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-                <a>Latest Tech</a>
-            </div>
-            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-                <a>Machine Learning</a>
-            </div>
+            <div id="user-forums">
 
-            <!-- //fetch forums that the user is in
-             {% for forum in user_forums %}
-             <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
-                 <a>{{forum.name}}</a>
-             </div>
-            {% endfor %} -->
+            </div>
     </div>
     <div class="card card-body push-corners mb-3">
             <div class="flex-container">
@@ -34,31 +31,18 @@
                     <p class="h3-responsive">Trending Forums</p>
                 </div>
                 <div>
-                    <span class="btn" onclick="something()">Search Forum</span>
+                    <span class="btn search-forum-button">Search Forum</span>
                 </div>
             </div>
-            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-                    <a>4 Kilo Events</a>
+            <div id="trending-forums">
+                
             </div>
-            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-                <a>Chemistry Unchained</a>
-            </div>
-            <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-                <a>Google Trainings</a>
-            </div>
-    
-            <!-- //fetch forums that are trending (forums with largest messages maybe?)
-            {% for forum in trending_forums %}
-            <div class="link font-weight-bold mt-2" onclick="forum_click('pass variables to display the forum')">
-                <a>{{forum.name}}</a>
-            </div>
-            {% endfor %} -->
     </div>
 </div>
 
 <hr>
 
-<div id="create-forum">
+<div id="create-forum" class="forum-content">
     <div class="card card-body push-corners mb-3">
         <div>
             <p class="h3-responsive">Create Forum</p>
@@ -95,13 +79,14 @@
                 On all levels, if it's in the user's department, year or section, the user's data should be disabled.
                 On all levels, a 'Any department' or 'Any year' option should be there.
             </p>
+            Would you like to add a Join Code? (Optional) <input type="text" placeholder="Join Code">
             <input class="btn btn-block" type="submit" value="Create Forum">
         </form>
     </div>
 </div>
 <hr>
 
-<div id="forum-search">
+<div id="search-forum" class="forum-content">
     <div class="card card-body push-corners mb-3">
         <div>
             <p class="h3-responsive">Search Forum</p>
@@ -125,16 +110,22 @@
 
 <hr>
 
-<div id="forum-feed">
+<div id="forum-feed" class="forum-content">
     <div class="card card-body push-corners mb-3">
         <button class="btn" onclick="loadmore()">Load More</button>
 
-        <form>
-            <input type="text" placeholder="type message here">
-            <input type="file" name="file" id="file">
-            <input type="file" name="image" id="image">
-            <input type="submit" value="Send Message">
+        <div id="forum-messages">
+
+        </div>
+        
+        <form onsubmit="return false" id="forum-send">
+            <input type="number" hidden name="forum_id" value="" id="forum-message-id">
+            <input type="text" name="content" placeholder="Type message here" id="forum-message" required>
+            <input type="file" name="file" id="forum-file">
+            <input type="file" name="image" id="forum-image">
+            <input class="btn send-message-button" type="submit" value="Send Message">
         </form>
+        <span class="btn" id="leave-forum-button">Leave Forum</span>
     </div>
 </div>
 

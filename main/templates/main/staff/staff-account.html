@@ -115,7 +115,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                     <!--Grid row-->
                     <div class="push-min-height">
                             <div class="mt-3">
-                                <div id="post-form" class="content card card-body push-corners mb-3">
+                                <div id="post-form" class="hidden-area content card card-body push-corners mb-3">
                                     <form name="post-form-form" enctype="multipart/form-data" method="post">
                                         {% csrf_token %}
 
@@ -379,7 +379,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         <div id="post-list">
                                             {% for post in posts %}
                                             <div class="card card-body push-corners mb-3">
-                                                <div class="post">
+                                                <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}')">
                                                     <div class="post-content">
                                                         <p style="white-space: pre-wrap;">{{post.post}}</p>
                                                     </div>
@@ -394,7 +394,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         </div>
 
                                                         <div class="see-more">
-                                                            <span class="btn" onclick="click_hidden('post-detail-{{forloop.counter}}')">See more </span>
+                                                            <span class="btn">See more </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -417,26 +417,92 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         {% endfor %}
                                                         </ul>
                                                     </div>
+                                                    
+                                                    {% if post.post.files.all %}
+                                                        <div class="detail-files">
+                                                                <span class="font-weight-bold">Files: </span>
+                                                            <ul>
+                                                                {% for file in post.post.files.all %}
+                                                                <li class="file">
+                                                                        <div>
+                                                                            <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                        </div>
 
-                                                    <div class="detail-files">
-                                                        <span class="font-weight-bold">Files: </span>
-                                                        <ul>
-                                                            {% for file in post.post.files.all %}
-                                                            <li class="file">
-                                                                    <div>
-                                                                        <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
-                                                                    </div>
+                                                                        <div>
+                                                                            <i class="fa fa-download" aria-hidden="true"></i><span class="mb-2"> Downloaded by: <span class="font-weight-bold">{{file.downloads}} students</span>
+                                                                        </div>
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    {% endif %}
 
-                                                                    <div>
-                                                                        <i class="fa fa-download" aria-hidden="true"></i><span class="mb-2"> Downloaded by: <span class="font-weight-bold">{{file.downloads}} students</span>
+                                                    {% if post.post.images.all %}
+                                                        <div class="detail-images">
+                                                            <span class="font-weight-bold">Images: </span>
+                                                            <ul>
+                                                                {% for image in post.post.images.all %}
+                                                                <li class="file">
+                                                                    <div class="image">
+                                                                        <img src="/media/{{image.image}}" width="100%">
                                                                     </div>
-                                                            </li>
-                                                            {% endfor %}
-                                                        </ul>
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    {% endif %}
+
+                                                    <div class="flex-container">
+                                                        <div></div>
+                                                        <div>
+                                                            <span id="{{post.id}}" class="btn delete-post danger-color">Delete</span>
+                                                            <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}">Edit</span>   
+                                                        </div>
+                                                    </div>                                                
+                                                    <!-- Edit Modal Small -->
+                                                    <div class="modal fade" id="editModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}" aria-hidden="true">
+
+                                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                                        <div class="modal-dialog" role="document">
+
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                <h4 class="modal-title w-100" id="editModel{{post.id}}Label">Edit Post</h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="md-form my-0">
+                                                                        <textarea type="text" id="form10" class="md-textarea form-control push-corners" rows="5" name="post-content" placeholder="Type your message here...">{{post.post}}</textarea>
+                                                                    </div>
+                                                                    {% if post.post.files.all %}
+                                                                        <div class="detail-files">
+                                                                            <span class="font-weight-bold">Files: </span>
+                                                                            <ul>
+                                                                                {% for file in post.post.files.all %}
+                                                                                <li class="file">
+                                                                                    <div>
+                                                                                        <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                                {% endfor %}
+                                                                            </ul>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn">Save changes</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
                                                     </div>
-                                                    </div>
+                                                    <!-- Edit Modal Small -->
                                                 </div>
-                                                {% endfor %}
+                                            </div>
+                                            {% endfor %}
                                         </div>
 
 
@@ -553,7 +619,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                 </div>
                                 {% endif %}
 
-                                <div id="forums" class="content hidden-area">
+                                <div id="forums" class="content">
                                     {% include 'forum/snippets/forum.html' with user_forums=user_forums trending_forums=trending_forums%}
 								</div>
 
@@ -781,6 +847,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 {% block script%}
 {% load static %}
 <script src="{% static 'main/staff-account.js' %}"></script>
+<script src="{% static 'forum/forum.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     // Tooltips Initialization

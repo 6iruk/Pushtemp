@@ -46,7 +46,7 @@ def forums_user_is_in(request):
         output += "\"name\":" + "\"" + forum.name + "\"" + ","
         output += "\"description\":" + "\"" + forum.description + "\"" + ","
         output += "\"forum_id\":" + "\"" + forum.forum_id + "\"" + ","
-        output += "\"privacy\":" + str(forum.privacy)
+        output += "\"privacy\":" + "\"" + str(forum.privacy) + "\""
         output += "},"
 
     # remove the last list separator comma
@@ -73,7 +73,7 @@ def trending_forums(request):
         output += "\"name\":" + "\"" + forum.name + "\"" + ","
         output += "\"description\":" + "\"" + forum.description + "\"" + ","
         output += "\"forum_id\":" + "\"" + forum.forum_id + "\"" + ","
-        output += "\"privacy\":" + str(forum.privacy)
+        output += "\"privacy\":" + "\"" + str(forum.privacy) + "\""
         output += "},"
 
     # remove the last list separator comma
@@ -96,21 +96,21 @@ def forum_posts(request):
     # Loop through every Post and add them as a json object
     for Post in forum.posts.order_by('-pub_date'):
         output += "{"
-        output += "\"id\":" + str(Post.post.id) + ","
-        output += "\"content\":" + "\"" + Post.post.content + "\"" + ","
+        output += "\"id\":" + "\"" + str(Post.id) + "\"" + ","
+        output += "\"content\":" + "\"" + Post.content + "\"" + ","
 
         #Start json array for Post files
         output += "\"files\":" + "["
 
-        for File in Post.post.files.all():
+        for File in Post.files.all():
             output += "{"
-            output += "\"id\":" + str(File.id) + ","
+            output += "\"id\":" + "\"" + str(File.id) + "\"" + ","
             output += "\"name\":" + "\"" + File.name + "\"" + ","
             output += "\"extension\":" + "\"" + File.extension + "\"" + ","
             output += "\"post_by\":" + "\"" + File.post_by.__str__() + "\""
             output += "},"
 
-        if Post.post.files.all().count() > 0:
+        if Post.files.all().count() > 0:
             # remove the last list separator comma
             output = output[::-1].replace(",", "", 1)[::-1]
 
@@ -120,22 +120,22 @@ def forum_posts(request):
         #Start json array for Post images
         output += "\"images\":" + "["
 
-        for Image in Post.post.images.all():
+        for Image in Post.images.all():
             output += "{"
-            output += "\"id\":" + str(Image.id) + ","
+            output += "\"id\":" + "\"" + str(Image.id) + "\"" + ","
             output += "\"post_by\":" + "\"" + Image.post_by.__str__() + "\""
             output += "},"
 
-        if Post.post.images.all().count() > 0:
+        if Post.images.all().count() > 0:
             # remove the last list separator comma
             output = output[::-1].replace(",", "", 1)[::-1]
 
         #Close images array
         output += "],"
 
-        output += "\"post_type\":" + str(Post.post.post_type) + ","
-        output += "\"post_by\":" + "\"" + Post.post.post_by.__str__() + "\"" + ","
-        output += "\"pub_date\":" + str(Post.post.pub_date)
+        output += "\"post_type\":" + "\"" + str(Post.post_type) + "\"" + ","
+        output += "\"post_by\":" + "\"" + Post.post_by.__str__() + "\"" + ","
+        output += "\"pub_date\":" + "\"" + str(Post.pub_date)+ "\"" 
         output += "},"
 
     # remove the last list separator comma
@@ -166,7 +166,7 @@ def send_message(request):
     content = request.POST.get('content')
     pub_date = datetime.datetime.now()
 
-    post = models.Post.objects.create(content = content, post_type = 6, post_by = request.user, pub_date = pub_date)
+    post = Post.objects.create(content = content, post_type = 6, post_by = request.user, pub_date = pub_date)
 
     if request.FILES.get('file-1'):
         name = request.POST.get('file-name-1')

@@ -25,6 +25,8 @@
 		<script type="text/javascript" src="{% static 'main/js/bootstrap.min.js' %}"></script>
 		<!-- MDB core JavaScript -->
 		<script type="text/javascript" src="{% static 'main/js/mdb.min.js' %}"></script>
+		<!-- JS Cookie -->
+		<script type="text/javascript" src="{% static 'main/js-cookie.js' %}"></script>
 		{% block script %}{% endblock %}
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-130212584-1"></script>
@@ -32,7 +34,6 @@
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
-
 			gtag('config', 'UA-130212584-1');
 		</script>
 	</head>
