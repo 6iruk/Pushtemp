@@ -16,9 +16,11 @@
     <div style="min-height: 625px; background-image: url('{% static 'main/luca_bg.jpg' %}'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
         <div class="container">
             <div class="row push-min-height">
-                <div class="col-lg-6 mt-3">
+
+                <!-- This is the normal login area. This div is visible. -->
+                <div class="col-lg-5 mt-3">
                     <div class="card card-body push-corners">
-                        <p class="link font-weight-bold text-center">Pick your Login</p>
+                        <p class="subtitle mb-3">Pick your login</p>
 
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
@@ -67,7 +69,96 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- The login div is closed and this one is opened when the user clicks on Forgot password -->
+                <div class="col-lg-5 mt-3">
+                    <div class="card card-body push-corners">
+                        <p class="subtitle mb-3">Forgot Password</p>
+
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="student-tab" data-toggle="tab" href="#fpstudent" role="tab" aria-controls="student" aria-selected="true">Student</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="staff-tab" data-toggle="tab" href="#fpstaff" role="tab" aria-controls="staff" aria-selected="false">Staff</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="fpstudent" role="tabpanel" aria-labelledby="student-tab">
+                                <p class="my-4">Enter your ID and we will text you a reset code:</p>
+                                <form method="post" action="#">
+                                        {% csrf_token %}
+                                        <input name="user-type" type="text" value="student" hidden/>
+                                        <input class="form-control my-3 push-corners" name="username" data-toggle="tooltip" data-placement="left" title="You can find it on your school ID." type="text" placeholder="Student Registration ID" required>
+                                        <button class="btn btn-block my-3" type="submit">Reset Account</button>
+                                        <p class="text-center">Don't have an account? <a class="link" href="{% url 'Sign Up' %}">Sign up here.</a></p>
+                                </form>    
+                            </div>
+                            <div class="tab-pane fade" id="fpstaff" role="tabpanel" aria-labelledby="staff-tab">
+                                <p class="my-4">Enter your email and we will send you a reset code:</p>
+                                <form method="post" action="#">
+                                        {% csrf_token %}
+                                        <input name="user-type" type="text" value="staff" hidden/>
+                                        <input class="form-control my-3 push-corners" name="email" type="text" placeholder="Email" required>
+                                        <button class="btn btn-block my-3" type="submit">Reset Account</button>
+                                </form>
+                            </div>
+                            <p class="meta">If there is any problem or if you have a question please contact us at aaupush@gmail.com or 0913 35 00 82.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- After user submits email, this part is made visible -->
+            <div class="row push-min-height">
+
+                <!-- this is for students -->
+                <div class="col-lg-4">
+                    <div class="card card-body push-corners">
+                        <p class="subtitle">Code sent!</p>
+                        <p class="">Please check your phone for a text.</p>
+                        <button class="btn btn-block my-3" type="button" onclick="">Continue</button>
+                    </div>
+                </div>
+
+                <!-- this one is to tell the staff to check their email -->
+                <div class="col-lg-4">
+                    <div class="card card-body push-corners">
+                        <p class="subtitle">Code sent!</p>
+                        <p class="">Please check your email.</p>
+                        <button class="btn btn-block my-3" type="button" onclick="">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- When clicking Continue, this part is visible -->
+            <div class="row push-min-height">
+                <div class="col-lg-4">
+                    <div class="card card-body push-corners">
+                            <p class="subtitle">Reset Password</p>
+                            <p class="">Enter the code you received:</p>
+                            <form id="staff-login" method="post" action="{% url 'API_Login' %}">
+                                    <input class="form-control mb-3 push-corners" name="code" type="text" placeholder="CODE" required>
+                                    {% csrf_token %}
+                                    <input name="user-type" type="text" value="staff" hidden/>
+                                    <p>Enter your new password:</p>
+                                    <input class="form-control mb-3 push-corners" name="password" type="password" placeholder="New Password" required>
+                                    <input class="form-control mb-3 push-corners" name="confirmpassword" type="password" placeholder="Confirm New Password" required>
+                                    <button class="btn btn-block my-3" type="button" onclick="">Submit</button>
+                            </form>
+                    </div>
+                </div>
+
+                <!-- A success confirmation is shown once the password is changed. -->
+                <div class="col-lg-4">
+                    <div class="card card-body push-corners">
+                            <p class="subtitle">Password changed!</p>
+                            <a class="link" href="{% url 'Log In' %}">Click here to continue to Login.</a>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row mt-2">
                 {% include 'main/snippets/footer.html' %}
             </div>

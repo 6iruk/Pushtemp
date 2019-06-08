@@ -1073,7 +1073,7 @@ def post_action(request):
 
 
         if len(request.POST.getlist('class-recipients')) > 0:
-            post = models.Post.objects.create(content = content, post_type = 2, post_by = staff, pub_date = pub_date)
+            post = models.Post.objects.create(content = content, post_type = 2, post_by = staff.user, pub_date = pub_date)
 
             if request.FILES.get('file-1'):
                     name = request.POST.get('file-name-1')
