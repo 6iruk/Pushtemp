@@ -1,131 +1,376 @@
-<!-- //this page will be a snippet that will be embedded in the student and staff dashboard pages -->
-{% load humanize %}
+<!-- this page will be a snippet that will be embedded in the student and staff dashboard pages -->
 
-<button class="forum-home-button">
-    Home
-</button>
-
-<button class="create-forum-button">Create Forum</button>
-
-<button class="search-forum-button">Search Forum</button>
-
-<button class="forum-feed-button">Forum Feed</button>
-
-<div id="forum-home" class="forum-content">
-    <div class="card card-body push-corners mb-3">
+<div>
+    <!-- My forums area -->
+    <div class="card card-body push-corners">
         <div class="flex-container">
-            <div>
-                <p class="h3-responsive">My Forums</p>
+                <span class="subtitle">My Forums</span>
+                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Create</span>
+        </div>
+        <div class="row mt-3 no-gutters">
+            <div class="col-auto">
+                {% load static %}
+                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
             </div>
-            <div>
-                <span class="btn create-forum-button">Create Forum</span>
+            <div class="col ml-3">
+                <a href="#" class="link d-block">Complexity Theory</a>
+                <p">Q&A place for this course.</p>
             </div>
         </div>
-            <div id="user-forums">
-
+        <div class="row mt-3 no-gutters">
+            <div class="col-auto">
+                {% load static %}
+                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
             </div>
+            <div class="col ml-3">
+                <a href="#" class="link d-block">Study Help - Chemistry</a>
+                <p">This is the description of the forum.</p>
+            </div>
+        </div>
+        <div class="row mt-3 no-gutters">
+            <div class="col-auto">
+                {% load static %}
+                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+            </div>
+            <div class="col ml-3">
+                <a href="#" class="link d-block">Google Trainings</a>
+                <p">Machine learning and many more trending. Topics are covered here.</p>
+            </div>
+        </div>
     </div>
-    <div class="card card-body push-corners mb-3">
-            <div class="flex-container">
-                <div>
-                    <p class="h3-responsive">Trending Forums</p>
-                </div>
-                <div>
-                    <span class="btn search-forum-button">Search Forum</span>
-                </div>
+    <!-- End of My Forums area -->
+
+    <!-- Trending forums area -->
+    <div class="card card-body push-corners my-3">
+        <div class="flex-container">
+                <span class="subtitle">Trending Forums</span>
+                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Search</span>
+        </div>
+        <div class="row mt-3 no-gutters">
+            <div class="col-auto">
+                {% load static %}
+                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
             </div>
-            <div id="trending-forums">
+            <div class="col ml-3">
+                <a href="#" class="link d-block"> 4 Kilo Unleashed <i class="fa fa-line-chart ml-1" aria-hidden="true"></i></a>
+                <p">Q&A place for this course.</p>
+            </div>
+        </div>
+        <div class="row mt-3 no-gutters">
+            <div class="col-auto">
+                {% load static %}
+                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+            </div>
+            <div class="col ml-3">
+                <a href="#" class="link d-block">GC Cup News</a>
+                <p">This is the description of the forum.</p>
+            </div>
+        </div>
+    </div>
+    <!-- End of Trending forums area -->
+
+    <!-- Create Forum Part -->
+    <div class="card card-body push-corners my-3">
+        <div>
+            <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i>    
+            <span class="subtitle d-inline">New Forum</span>
+        </div>
+        <div class="mt-3">
+            <form action="" class="md-form">
                 
-            </div>
-    </div>
-</div>
+                <input class="form-control" type="text" name="forum-name" id="" placeholder="Forum Name">
+                
+                <textarea class="form-control md-textarea" rows="2" type="textarea" name="forum-desc" id="" placeholder="Forum Description"></textarea>
 
-<hr>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose forum cover image</label>
+                    </div>
+                </div>
+                
+                <div>
+                    <span>Filter users:</span>
+                    <input class="ml-2" type="checkbox" name="filter-users" id="">
+                </div>
 
-<div id="create-forum" class="forum-content">
-    <div class="card card-body push-corners mb-3">
-        <div>
-            <p class="h3-responsive">Create Forum</p>
+                <!-- <div class="mt-2">
+                    <span>Filter users by:</span>
+                    <select class="form-control" name="filter-by" id="">
+                        <option value="department">By department</option>
+                        <option value="year">By year</option>
+                        <option value="section">By section</option>
+                    </select>
+                </div> -->
+
+                <div>
+                    <span>Allow users in the following departments:</span>
+                    <select multiple class="form-control" name="by-department" id="">
+                        <option value="0" selected>All Departments</option>
+                        <option value="1">Computer Science</option>
+                        <option value="2">Mathematics</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <span>Allow users in the following years:</span>
+                    <select multiple class="form-control" name="by-year" id="">
+                        <option value="0" selected>All years</option>
+                        <option value="1">Year 1</option>
+                        <option value="2">Year 2</option>
+                        <option value="3">Year 2</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span>Allow users in the following sections:</span>
+                    <select multiple class="form-control" name="by-section" id="">
+                        <option value="0" selected>All sections</option>
+                        <option value="1">Section 1</option>
+                        <option value="2">Section 2</option>
+                    </select>
+                </div>
+                
+                <div class="row">
+                    <span class="col-auto mt-1">Add join code (optional):</span>
+                    <input class="form-control col" type="text" name="join-code" id="" placeholder="Join Code">
+                </div>
+                
+                <span class="btn float-right"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Create</span>
+            </form>
         </div>
-        <form action="" method="post">
-            <div class="md-form mt-4 mb-2 mx-1">
-                <input class="form-control" name="forum-name" id="forum-name" type="text" placeholder="Forum Name" required />
-            </div>
-            <div class="md-form mt-4 mb-2 mx-1">
-                <input class="form-control" name="forum-desc" id="forum-desc" type="text" placeholder="Forum Description" required />
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+    </div>
+    <!-- End of Create forum form -->
+
+    <!-- Search Forum -->
+    <div class="card card-body push-corners my-3">
+        <div>
+            <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i>    
+            <span class="subtitle d-inline">Search Forum</span>
+        </div>
+        <form action="" class="md-form">
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" type="text" name="forum-query" id="" placeholder="Forum Name">
                 </div>
-                <div class="custom-file">
-                    <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose forum cover image</label>
-                </div>
-            </div>
-            <div>
-                <div class="d-inline align-middle mr-3">Make forum private</div>
-                <div class="d-inline">
-                        <label class="bs-switch align-middle">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                <div class="col-auto">
+                    <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Search</span>
                 </div>
             </div>
+        </form>
+        <div class="row mt-3 no-gutters">
+            <div class="col-auto">
+                {% load static %}
+                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+            </div>
+            <div class="col ml-3">
+                <a href="#" class="link d-block"> <i class="fa fa-line-chart mr-1" aria-hidden="true"></i> 4 Kilo Unleashed</a>
+                <p">Q&A place for this course.</p>
+            </div>
+        </div>
+    </div>
+    <!-- End of search forum -->
+
+    <!-- Interface when user opens a FORUM THEY ARE IN -->
+        <div class="card card-body push-corners my-3">
+            <div class="row">
+                <div class="col">
+                    <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i> 
+                    <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                    <div class="d-inline">
+                        <p class="body d-inline ml-2">Complexity Theory Is Aweseom man</p>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="btn-group">
+                        <button class="btn dropdown-toggle grey" type="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">Options</button>
+
+                        <div class="dropdown-menu push-corners py-0">
+                            <a class="dropdown-item py-2" href="#">Leave Forum</a>
+                            <a class="dropdown-item danger-color white-text py-2" href="#">Delete Forum</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <span class="btn mb-3">Load Older</span>
+        </div>
+
+        <!-- Messages in the forum -->
+        <div class="d-flex flex-column">
+            <div class="card card-body push-corners mb-3 w-75">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Biruk Tamiru</p>
+                    <p class="meta">1 day ago</p>
+                </div>
+                <div>
+                    <img src="{% static 'main/laptop.jpg' %}" alt="" class="img-fluid mb-3">
+                </div>
+                <div>
+                    <p class="body">This is the text attached to the message. An image is shared for you to enjoy!</p>
+                </div>
+                <div>
+                    <span class="link font-weight-bold">Solution for Questions [PDF]</span>
+                    <p class="meta">File size: 1 Mb</p>
+                </div>
+            </div>
+
+            <!-- for a responding card, the 'align-self-end' class is the difference. -->
+            <div class="card card-body push-corners mb-3 w-75 align-self-end">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Addismiraph Abebe</p>
+                    <p class="meta">1 day ago</p>
+                </div>
+                <div>
+                    <span class="body">I really like the image and also thanks for the solutions.</span>
+                </div>
+            </div>
+            <div class="card card-body push-corners mb-3 w-75">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Kuki Geleta</p>
+                    <p class="meta">5 mins ago</p>
+                </div>
+                <div>
+                    <img src="{% static 'main/laptop.jpg' %}" alt="" class="img-fluid mb-3">
+                </div>
+                <div>
+                    <p class="body">Hi guys, I also have another solution.</p>
+                </div>
+                <div>
+                    <span class="link font-weight-bold">Solution 2 for Questions [PDF]</span>
+                    <p class="meta">File size: 1 Mb</p>
+                </div>
+            </div>
+            <div class="card card-body push-corners mb-3 w-75">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Isaac Abadir</p>
+                    <p class="meta">1 day ago</p>
+                </div>
+                <div>
+                    <img src="{% static 'main/laptop.jpg' %}" alt="" class="img-fluid mb-3">
+                </div>
+                <div>
+                    <p class="body">This is the text attached to the message. An image is shared for you to enjoy!</p>
+                </div>
+                <div>
+                    <span class="link font-weight-bold">Solution for Questions [PDF]</span>
+                    <p class="meta">File size: 1 Mb</p>
+                </div>
+            </div>
+            <div class="card card-body push-corners mb-3 w-75 align-self-end">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Addismiraph Abebe</p>
+                    <p class="meta">2 seconds ago</p>
+                </div>
+                <div>
+                    <span class="body">I like this group a lot!</span>
+                </div>
+            </div>
+        </div>
+        <!-- end of forum messages -->
+
+        <div class="card card-body push-corners">
+            <form action="" class="md-form">
+                <div class="row px-3">
+                    <input class="form-control col" type="text" name="message-forum" id="" placeholder="Type your message here">
+                    <span class="btn col-auto">Send</span>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="">
+                        <label class="custom-file-label" for="">Send a file (optional)</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="">
+                        <label class="custom-file-label" for="">Send image (optional)</label>
+                    </div>
+                </div>
+        </div>
+    <!-- End of open forum area -->
+
+
+    <!-- Interface for when user has NOT JOINED FORUM -->
+        <div class="card card-body push-corners my-3">
+            <div class="row">
+                <div class="col">
+                    <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i> 
+                    <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                    <div class="d-inline">
+                        <p class="body d-inline ml-2">GC Cup News</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <span class="btn mb-3">Load Older</span>
+        </div>
+
+        <!-- Messages in the forum -->
+        <div class="d-flex flex-column">
+            <div class="card card-body push-corners mb-3 w-75">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Biruk Tamiru</p>
+                    <p class="meta">1 day ago</p>
+                </div>
+                <div>
+                    <img src="{% static 'main/laptop.jpg' %}" alt="" class="img-fluid mb-3">
+                </div>
+                <div>
+                    <p class="body">This is the text attached to the message. An image is shared for you to enjoy!</p>
+                </div>
+                <div>
+                    <span class="link font-weight-bold">Solution for Questions [PDF]</span>
+                    <p class="meta">File size: 1 Mb</p>
+                </div>
+            </div>
+
+            <!-- for a responding card, the 'align-self-end' class is the difference. -->
+            <div class="card card-body push-corners mb-3 w-75 align-self-end">
+                <div class="flex-container">
+                    <p class="body font-weight-bold">Addismiraph Abebe</p>
+                    <p class="meta">1 day ago</p>
+                </div>
+                <div>
+                    <span class="body">I really like the image and also thanks for the solutions.</span>
+                </div>
+            </div>
+        </div>
+        <!-- end of forum messages -->
+
+        <div class="card  card-body push-corners">
+            <span class="btn">Join Forum</span>
+        </div>
+    <!-- End of NOT JOINED FORUM -->
+
+    <!-- CLOSED forum with Join Code -->
+        <div class="card card-body push-corners my-3">
+            <div class="row">
+                <div class="col">
+                    <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i> 
+                    <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                    <div class="d-inline">
+                        <span class="body d-inline ml-2"> 4 Kilo Unleashed <i class="fa fa-line-chart ml-1" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-body push-corners my-3">
             <p>
-                Fetch for list of departments in the college
-                Once that's picked, fetch for years in that department
-                Once that's picked, fetch for sections in that year and dep
-                On all levels, if it's in the user's department, year or section, the user's data should be disabled.
-                On all levels, a 'Any department' or 'Any year' option should be there.
+                A code is required to join this forum. Please provide that below.
             </p>
-            Would you like to add a Join Code? (Optional) <input type="text" placeholder="Join Code">
-            <input class="btn btn-block" type="submit" value="Create Forum">
-        </form>
-    </div>
+            <form action="">
+                <div class="row mb-3 pr-3 md-form">
+                    <i class="fa fa-line-chart ml-1 col-auto" aria-hidden="true"></i>
+                    <input class="form-control col" type="text" name="join-code" id="" placeholder="Join Code">
+                </div>
+                    <span class="btn my-0">Join Forum</span>
+            </form>
+        </div>
+    <!-- End of closed forum with Join Code -->
+
 </div>
-<hr>
-
-<div id="search-forum" class="forum-content">
-    <div class="card card-body push-corners mb-3">
-        <div>
-            <p class="h3-responsive">Search Forum</p>
-        </div>
-        <form action="">
-            <input type="text" name="query" id="query">
-            <input type="submit" value="Go">
-        </form>
-        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-            <a>4 Kilo Events</a>
-        </div>
-        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-            <a>Chemistry Unchained</a>
-        </div>
-        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
-            <a>Google Trainings</a>
-        </div>
-        Forums loaded must be ones that the user can possibly join into
-    </div>
-</div>
-
-<hr>
-
-<div id="forum-feed" class="forum-content">
-    <div class="card card-body push-corners mb-3">
-        <button class="btn" onclick="loadmore()">Load More</button>
-
-        <div id="forum-messages">
-
-        </div>
-        
-        <form onsubmit="return false" id="forum-send">
-            <input type="number" hidden name="forum_id" value="" id="forum-message-id">
-            <input type="text" name="content" placeholder="Type message here" id="forum-message" required>
-            <input type="file" name="file" id="forum-file">
-            <input type="file" name="image" id="forum-image">
-            <input class="btn send-message-button" type="submit" value="Send Message">
-        </form>
-        <span class="btn" id="leave-forum-button">Leave Forum</span>
-    </div>
-</div>
-
