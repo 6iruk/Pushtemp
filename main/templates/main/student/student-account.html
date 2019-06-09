@@ -222,10 +222,10 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 																										<div class="recipient-selection">
 																												<div class="form-control" onclick="click_hidden('section-{{forloop.counter}}')">
 																														<div class="d-inline-block">
-																																<p>Section&nbsp;{{section.section_id}}</p>
+																															<p>Section&nbsp;{{section.section_id}}</p>
 																														</div>
 																														<div class="d-inline ml-2">
-																																		<i class="fa fa-caret-down" aria-hidden="true"></i>
+																															<i class="fa fa-caret-down" aria-hidden="true"></i>
 																														</div>
 																												</div>
 																										</div>
@@ -407,7 +407,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
 							<div class="col-lg-2 d-none d-lg-block"></div>
 
-							<div class="col-lg-4 col-md-6 mt-3">
+							<!-- <div class="col-lg-4 col-md-6 mt-3">
 								<div id="reminder-container">
 									<div id="reminder">
 										{% for rem in reminder %}
@@ -432,6 +432,100 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 											</div>
 										</div>
 										{% endfor %}
+									</div>
+								</div>
+							</div> -->
+
+							<div class="col-lg-4 col-md-6 mt-3">
+								<div id="reminder-container">
+									<div id="reminder">
+										<div class="card push-corners mb-3">
+											<div class="exam-reminder-header py-2 px-3">
+												<span class="white-text font-weight-bold">Test 1 - Introduction to Computer Science</span>
+												<br>
+												<span class="meta white-text">In 2 weeks from now</span>
+											</div>
+
+											<div class="py-3 px-3">
+												<div class="reminder-note">
+													<p>Read from Chapter 2 and 3. Do end of chapter review questions.</p>
+												</div>
+
+												<div class="reminder-due">
+													<div class="reminder-venue">
+														<p><i class="fa fa-calendar mr-2" aria-hidden="true"></i>Date: March 12, 2019</p>
+														<p><i class="fa fa-clock-o mr-2" aria-hidden="true"></i>Time: 2 PM (Foreign Time)</p>
+													</div>
+												</div>
+												<div>
+													<p class="meta">
+															Mr. Gashaw | Feb. 7, 2018, 9:15 a.m.
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="reminder-container">
+									<div id="reminder">
+										<div class="card push-corners mb-3">
+											<div class="assign-reminder-header py-2 px-3">
+												<span class="white-text font-weight-bold">Assignment 1 - Wireless Communications</span>
+												<br>
+												<span class="meta white-text">In 3 days from now</span>
+											</div>
+
+											<div class="py-3 px-3">
+												<div class="reminder-note">
+													<p>Your assignment is to build a space ship using two pens, a hairband and one banana peel. Group numbers cannot exceed more than 5. ZIP photos and upload it here.</p>
+												</div>
+
+												<div class="reminder-due">
+													<div class="reminder-venue">
+														<p><i class="fa fa-calendar mr-2" aria-hidden="true"></i>Date: February 6, 2019</p>
+														<p><i class="fa fa-clock-o mr-2" aria-hidden="true"></i>Time: 8 AM (Foreign Time)</p>
+													</div>
+												</div>
+												<div>
+													<span class="btn-block btn mb-3" data-toggle="modal" data-target="#assignModal">Submit ZIP File (10 Mb Max)</span>
+												</div>
+												<!-- Assignment Submission Modal -->
+													<div class="modal fade" id="assignModal" tabindex="-1" role="dialog">
+														<div class="modal-dialog modal-dialog-centered" role="document">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="">Assignment 1 - Wireless Communications</h5>
+																	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																		<span aria-hidden="true">&times;</span>
+																	</button>
+																</div>
+																<form action="" class="md-form">
+																	<div class="modal-body">
+																		<p>Upload your assignment file and click submit.</p>
+																		<div class="input-group mb-3">
+																			<div class="custom-file">
+																				<input type="file" class="custom-file-input" id="" name="assign-file">
+																				<label class="custom-file-label" for="">Upload your assignment</label>
+																			</div>
+																		</div>
+																		<textarea class="form-control md-textarea" name="assign-comments" id="" rows="3" placeholder="Comments (optional)"></textarea>
+																	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+																		<button type="button" class="btn">Submit</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												<!-- End of Assignment Submission Modal -->
+												<div>
+													<p class="meta">
+															Ms. Aynalem | Feb. 9, 2018, 9:15 a.m.
+													</p>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
