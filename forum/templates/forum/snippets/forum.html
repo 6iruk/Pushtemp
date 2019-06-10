@@ -5,7 +5,7 @@
     <div class="card card-body push-corners">
         <div class="flex-container">
                 <span class="subtitle">My Forums</span>
-                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Create</span>
+                <span class="btn"><i class="fa fa-plus-square mr-3 align-middle" aria-hidden="true"></i>Create</span>
         </div>
         <div class="row mt-3 no-gutters">
             <div class="col-auto">
@@ -44,7 +44,7 @@
     <div class="card card-body push-corners my-3">
         <div class="flex-container">
                 <span class="subtitle">Trending Forums</span>
-                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Search</span>
+                <span class="btn"><i class="fa fa-search mr-3" aria-hidden="true"></i>Search</span>
         </div>
         <div class="row mt-3 no-gutters">
             <div class="col-auto">
@@ -52,7 +52,7 @@
                 <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
             </div>
             <div class="col ml-3">
-                <a href="#" class="link d-block"> 4 Kilo Unleashed <i class="fa fa-line-chart ml-1" aria-hidden="true"></i></a>
+                <a href="#" class="link d-block"> 4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></a>
                 <p">Q&A place for this course.</p>
             </div>
         </div>
@@ -71,9 +71,13 @@
 
     <!-- Create Forum Part -->
     <div class="card card-body push-corners my-3">
-        <div>
-            <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i>    
-            <span class="subtitle d-inline">New Forum</span>
+        <div class="row">
+            <div class="col-auto">
+                <i class="fa fa-caret-left blue-text fa-3x mr-2 d-inline link" aria-hidden="true"></i>   
+            </div>  
+            <div class="col pl-0">
+                <span class="subtitle align-middle">New Forum</span>
+            </div>
         </div>
         <div class="mt-3">
             <form action="" class="md-form">
@@ -84,8 +88,8 @@
 
                 <div class="input-group mb-3">
                     <div class="custom-file">
-                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose forum cover image</label>
+                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="">
+                        <label class="custom-file-label" for="">Choose forum cover image</label>
                     </div>
                 </div>
                 
@@ -136,7 +140,7 @@
                     <input class="form-control col" type="text" name="join-code" id="" placeholder="Join Code">
                 </div>
                 
-                <span class="btn float-right"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Create</span>
+                <span class="btn float-right"><i class="fa fa-plus-square mr-3" aria-hidden="true"></i>Create</span>
             </form>
         </div>
     </div>
@@ -144,9 +148,13 @@
 
     <!-- Search Forum -->
     <div class="card card-body push-corners my-3">
-        <div>
-            <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i>    
-            <span class="subtitle d-inline">Search Forum</span>
+        <div class="row">
+            <div class="col-auto">
+                <i class="fa fa-caret-left blue-text fa-3x mr-2 d-inline link" aria-hidden="true"></i>   
+            </div>  
+            <div class="col pl-0">
+                <span class="subtitle align-middle">Search Forum</span>
+            </div>
         </div>
         <form action="" class="md-form">
             <div class="row">
@@ -154,7 +162,7 @@
                     <input class="form-control" type="text" name="forum-query" id="" placeholder="Forum Name">
                 </div>
                 <div class="col-auto">
-                    <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Search</span>
+                    <span class="btn"><i class="fa fa-search mr-3" aria-hidden="true"></i>Search</span>
                 </div>
             </div>
         </form>
@@ -164,7 +172,7 @@
                 <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
             </div>
             <div class="col ml-3">
-                <a href="#" class="link d-block"> <i class="fa fa-line-chart mr-1" aria-hidden="true"></i> 4 Kilo Unleashed</a>
+                <a href="#" class="link d-block">4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></a>
                 <p">Q&A place for this course.</p>
             </div>
         </div>
@@ -175,10 +183,16 @@
         <div class="card card-body push-corners my-3">
             <div class="row">
                 <div class="col">
-                    <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i> 
-                    <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
-                    <div class="d-inline">
-                        <p class="body d-inline ml-2">Complexity Theory Is Aweseom man</p>
+                    <div class="row">
+                        <div class="col-auto">
+                            <i class="fa fa-caret-left blue-text fa-3x mr-2 align-middle link" aria-hidden="true"></i>    
+                        </div>
+                        <div class="col-auto pl-0">
+                            <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                        </div>
+                        <div class="col px-0">
+                            <p class="body d-inline">Complexity Theory is Awesome man</p>
+                        </div>
                     </div>
                 </div>
 
@@ -298,10 +312,16 @@
         <div class="card card-body push-corners my-3">
             <div class="row">
                 <div class="col">
-                    <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i> 
-                    <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
-                    <div class="d-inline">
-                        <p class="body d-inline ml-2">GC Cup News</p>
+                    <div class="row">
+                        <div class="col-auto">
+                            <i class="fa fa-caret-left blue-text fa-3x mr-2 align-middle link" aria-hidden="true"></i>    
+                        </div>
+                        <div class="col-auto pl-0">
+                            <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                        </div>
+                        <div class="col px-0">
+                            <p class="body d-inline">GC Cup News</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -351,10 +371,16 @@
         <div class="card card-body push-corners my-3">
             <div class="row">
                 <div class="col">
-                    <i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i> 
-                    <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
-                    <div class="d-inline">
-                        <span class="body d-inline ml-2"> 4 Kilo Unleashed <i class="fa fa-line-chart ml-1" aria-hidden="true"></i></span>
+                    <div class="row">
+                        <div class="col-auto">
+                            <i class="fa fa-caret-left blue-text fa-3x mr-2 align-middle link" aria-hidden="true"></i>    
+                        </div>
+                        <div class="col-auto pl-0">
+                            <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                        </div>
+                        <div class="col px-0">
+                            <span class="body d-inline ml-2"> 4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -365,7 +391,7 @@
             </p>
             <form action="">
                 <div class="row mb-3 pr-3 md-form">
-                    <i class="fa fa-line-chart ml-1 col-auto" aria-hidden="true"></i>
+                    <i class="fa fa-lock ml-1 col-auto pt-1" aria-hidden="true"></i>
                     <input class="form-control col" type="text" name="join-code" id="" placeholder="Join Code">
                 </div>
                     <span class="btn my-0">Join Forum</span>

@@ -90,7 +90,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                             <!-- if user is college dean -->
                             <div class="push-sidebar-item" onclick="nav_click('message-department')">
                                 <a href="#">
-                                    <i class="fa fa-building mr-3" aria-hidden="true"></i>Message Department
+                                    <i class="fa fa-envelope mr-3" aria-hidden="true"></i>Message Department
                                 </a>
                             </div>
                             <!-- end if -->
@@ -112,7 +112,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                             <!-- if user is department head -->
                             <div class="push-sidebar-item" onclick="nav_click('manage-department')">
                                 <a href="#">
-                                    <i class="fa fa-list-ol mr-3" aria-hidden="true"></i>Manage Department
+                                    <i class="fa fa-cog mr-3" aria-hidden="true"></i>Manage Department
                                 </a>
                             </div>
                             <!-- end if -->
@@ -138,7 +138,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                     <!--Grid row-->
                     <div class="push-min-height">
                             <div class="mt-3">
-                                <div id="post-form" class="hidden-area content">
+                                <div id="post-form" class="content">
                                 <div class="card card-body push-corners mb-3">
                                     <form name="post-form-form" enctype="multipart/form-data" method="post">
                                         {% csrf_token %}
@@ -396,7 +396,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     </div>
                                 </div>
                                 <!-- Set Reminder -->
-                                <div class="card card-body push-corners mt-3">
+                                <div class="card card-body push-corners mt-3 col-md-6">
                                     <div>
                                         <span class="subtitle d-inline">Set Reminder</span>
                                     </div>
@@ -423,7 +423,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         <!-- NORMAL POST Interface: if POST is normal post -->
                                         <div class="card card-body push-corners mb-3">
                                             <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}')">
-                                                <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>
+                                                <i class="fa fa-paper-plane mr-1" aria-hidden="true"></i>
                                                 <span class="font-weight-bold mb-4">Post</span>
                                                 <div class="post-content">
                                                     <p style="white-space: pre-wrap;">{{post.post}}</p>
@@ -584,7 +584,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         <!-- REMINDER POST Interface: if POST is a reminder -->
                                         <div class="card card-body push-corners mb-3">
                                             <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}2')">
-                                                <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>
+                                                <i class="fa fa-clock-o fa-lg mr-1" aria-hidden="true"></i>
                                                 <span class="font-weight-bold mb-4">Reminder - Test 1</span>
                                                 <div class="post-content">
                                                     <p style="white-space: pre-wrap;">Hello, this is a test reminder.</p>
@@ -862,7 +862,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 <span class="meta">Click on the title to view responses</span>
                                             </div>
                                             <div>
-                                                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Give New</span>
+                                                <span class="btn"><i class="fa fa-plus-square mr-3" aria-hidden="true"></i>Give New</span>
                                             </div>
                                         </div>
                                         <!-- end of headers -->
@@ -879,7 +879,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 </span>
                                             </div>
                                             <div class="col-auto">
-                                                <span class="btn btn-secondary"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Edit</span>
+                                                <span class="btn btn-secondary"><i class="fa fa-edit mr-3" aria-hidden="true"></i>Edit</span>
                                             </div>
                                         </div>
 
@@ -903,12 +903,16 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     <div class="card card-body push-corners mt-3">
                                         <!-- Assignment submissions header -->
                                         <div class="flex-container">
-                                            <div>
-                                                <!-- When back is clicked, it goes to Assignments initial page -->
-                                                <a href=""><i class="fa fa-line-chart mr-3 align-top pt-3 link" aria-hidden="true"></i></a>
-                                                <div class="d-inline-block">
-                                                    <span class="subtitle">Assignment 1</span>
-                                                    <span class="meta">List of submissions</span>
+                                            <div class="row">
+                                                <div class="col-auto">
+                                                    <!-- When back is clicked, it goes back to Assignments initial page -->
+                                                    <a href=""><i class="fa fa-caret-left blue-text fa-3x mr-2 d-inline link" aria-hidden="true"></i></a> 
+                                                </div>  
+                                                <div class="col pl-0">
+                                                    <div class="d-inline-block">
+                                                        <span class="subtitle">Assignment 1</span>
+                                                        <span class="meta">List of submissions</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div>
@@ -941,9 +945,14 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                     <!-- Give New Assignment -->
                                     <div class="card card-body push-corners mt-3">
-                                        <div>
-                                            <a href=""><i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i></a>   
-                                            <span class="subtitle d-inline">Give New Assignment</span>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <!-- When back is clicked, it goes back to Assignments initial page -->
+                                                <a href=""><i class="fa fa-caret-left blue-text fa-3x mr-2 d-inline link" aria-hidden="true"></i></a> 
+                                            </div>  
+                                            <div class="col pl-0">
+                                                <span class="subtitle d-inline">Give New Assignment</span>
+                                            </div>
                                         </div>
                                         <form action="" class="md-form">
                                             <input class="form-control" type="text" name="assignment-name" id="" placeholder="Assignment Name (Ex. Assignment 1)">
@@ -1109,7 +1118,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                 </div>
                             </div>
 
-                            <div id="manage-department" class="content">
+                            <div id="manage-department" class="content hidden-area">
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="card card-body push-corners">
@@ -1119,7 +1128,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     <span class="meta">Click on each instructor to manage their account.</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#InviteNewInstructor"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Invite New</span>
+                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#InviteNewInstructor"><i class="fa fa-plus-square mr-1" aria-hidden="true"></i>Invite New</span>
                                                     <!-- Invite Instructor Modal -->
                                                     <div class="modal fade" id="InviteNewInstructor" tabindex="-1" role="dialog" aria-labelledby="InviteNewInstructor" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
@@ -1193,7 +1202,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     <span class="meta">Click on each program coordinator to manage their account.</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <span class="btn p-2" data-toggle="modal" data-target="#AddProgramCoordinator"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Make New</span>
+                                                    <span class="btn p-2" data-toggle="modal" data-target="#AddProgramCoordinator"><i class="fa fa-plus-square mr-1" aria-hidden="true"></i>Make New</span>
                                                     <!-- Make New Program Coordinator Modal -->
                                                     <div class="modal fade" id="AddProgramCoordinator" tabindex="-1" role="dialog" aria-labelledby="AddProgramCoordinator" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
@@ -1240,7 +1249,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     <span class="meta">These are courses given by your department.</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#AddCourseModal"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Add New</span>
+                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#AddCourseModal"><i class="fa fa-plus-square mr-1" aria-hidden="true"></i>Add New</span>
                                                     <!-- Add Course Modal -->
                                                     <div class="modal fade" id="AddCourseModal" tabindex="-1" role="dialog" aria-labelledby="AddCourseModal" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
@@ -1301,7 +1310,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     <span class="meta">These are class sections in your department.</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#AddSectionModal"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Add New</span>
+                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#AddSectionModal"><i class="fa fa-plus-square mr-1" aria-hidden="true"></i>Add New</span>
                                                     <!-- Add Section Modal -->
                                                     <div class="modal fade" id="AddSectionModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
@@ -1367,7 +1376,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                             </div>
                                                                             <!-- DELETE Section area -->
                                                                             <div>
-                                                                                <span data-toggle="modal" data-target="#DeleteSection"><i class="fa fa-paper-plane mr-3 red-text" aria-hidden="true"></i></span>
+                                                                                <span data-toggle="modal" data-target="#DeleteSection"><i class="fa fa-trash mr-3 red-text" aria-hidden="true"></i></span>
                                                                                 <!-- DELETE Section Modal -->
                                                                                 <!-- Customize the id of the modal and make it unique for each section rendered. For example "DeleteSection{{year}}{{section.section_id}}" -->
                                                                                 <div class="modal fade" id="DeleteSection" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
