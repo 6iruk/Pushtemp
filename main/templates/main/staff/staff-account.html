@@ -402,6 +402,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     </div>
                                     <form action="" class="md-form">
                                         <input class="form-control" type="text" name="reminder-name" id="" placeholder="Reminder Name (Ex. Test 1)">
+                                        <input class="flatpickr flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
                                         <div>
                                             <span>Send to:</span>
                                             <span>Section picking option should be added here</span>
@@ -648,6 +649,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                 <div class="modal-body">
                                                                     <span>Reminder Title:</span>
                                                                     <input type="text" name="reminder-name-edit" id="" class="form-control mb-4" placeholder="Test 1">
+                                                                    <input class="flatpickr flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
                                                                     <span>Comments:</span>
                                                                     <textarea type="text" id="" class="md-textarea form-control push-corners py-0" rows="5" name="post-content" placeholder="Type your message here...">Hello this is a test reminder.</textarea>
                                                                 </div>
@@ -879,7 +881,36 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 </span>
                                             </div>
                                             <div class="col-auto">
-                                                <span class="btn btn-secondary"><i class="fa fa-edit mr-3" aria-hidden="true"></i>Edit</span>
+                                                <span class="btn btn-secondary" data-toggle="modal" data-target="#editAssignmentUniqueID"><i class="fa fa-edit mr-3" aria-hidden="true"></i>Edit</span>
+                                                <!-- Edit Assignment Modal -->
+                                                <div class="modal fade" id="editAssignmentUniqueID" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="">Edit Assignment</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <form action="" class="md-form">
+                                                                <div class="modal-body">
+                                                                    <span>Assignment Title:</span>
+                                                                    <input type="text" name="assignment-name-edit" id="" class="form-control mb-4" placeholder="Build Space Ship">
+                                                                    <input class="flatpickr flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
+                                                                    <span>Comments:</span>
+                                                                    <textarea type="text" id="" class="md-textarea form-control push-corners py-0" rows="5" name="post-content" placeholder="Type your message here...">Hello this is a test reminder.</textarea>
+                                                                    <span>Would you like to delete the assignment?</span>
+                                                                    <span class="btn danger-color">DELETE</span>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn">Save changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Edit Assigment Modal -->
                                             </div>
                                         </div>
 
@@ -962,6 +993,8 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     <label class="custom-file-label" for="">Attach assignment file (optional):</label>
                                                 </div>
                                             </div>
+
+                                            <input class="flatpickr flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
 
                                             <div>
                                                 <span>Send to:</span>
@@ -1506,9 +1539,20 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 <script src="{% static 'forum/forum.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+    
+    $(document).ready(function(){
+        flatpickr(".flatpickr", {
+            enableTime: true,
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            minDate: "today",
+        });
+    });
+
     // Tooltips Initialization
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-</script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()  
+    })
+    </script>
 {% endblock %}
