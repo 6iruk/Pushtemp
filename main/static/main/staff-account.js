@@ -19,6 +19,12 @@ function nav_click(page) {
     $(".side-nav-sections").css("background-color","inherit");
     $("#nav-tracker").css("background-color","#ffffff");
   }
+  else if(page == 'message-department') {
+    $(".content").css("display","none");
+    $("#message-department").css("display","block");
+    $(".side-nav-sections").css("background-color","inherit");
+    $("#nav-group-chat").css("background-color","#ffffff");
+  }
   else if(page == 'assignments') {
     $(".content").css("display","none");
     $("#assignments").css("display","block");
@@ -34,6 +40,12 @@ function nav_click(page) {
   else if(page == 'class-list') {
     $(".content").css("display","none");
     $("#class-list").css("display","block");
+    $(".side-nav-sections").css("background-color","inherit");
+    $("#nav-class-list").css("background-color","#ffffff");
+  }
+  else if(page == 'manage-department') {
+    $(".content").css("display","none");
+    $("#manage-department").css("display","block");
     $(".side-nav-sections").css("background-color","inherit");
     $("#nav-class-list").css("background-color","#ffffff");
   }

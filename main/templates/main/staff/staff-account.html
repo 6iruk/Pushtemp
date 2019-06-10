@@ -87,6 +87,13 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fa fa-building mr-3" aria-hidden="true"></i>Department Chat
                                 </a>
                             </div>
+                            <!-- if user is college dean -->
+                            <div class="push-sidebar-item" onclick="nav_click('message-department')">
+                                <a href="#">
+                                    <i class="fa fa-building mr-3" aria-hidden="true"></i>Message Department
+                                </a>
+                            </div>
+                            <!-- end if -->
                             <div class="push-sidebar-item" onclick="nav_click('forums')">
                                 <a href="#">
                                     <i class="fa fa-comments mr-3" aria-hidden="true"></i>Forums
@@ -102,12 +109,13 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fa fa-list-ol mr-3" aria-hidden="true"></i>Class List
                                 </a>
                             </div>
-                            <div class="push-sidebar-item" onclick="nav_click('class-list')">
+                            <!-- if user is department head -->
+                            <div class="push-sidebar-item" onclick="nav_click('manage-department')">
                                 <a href="#">
                                     <i class="fa fa-list-ol mr-3" aria-hidden="true"></i>Manage Department
                                 </a>
                             </div>
-
+                            <!-- end if -->
                             <div class="push-sidebar-item" onclick="nav_click('account-setting')">
                                 <a href="#">
                                     <i class="fa fa-user mr-3" aria-hidden="true"></i>Account
@@ -402,738 +410,1076 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         <span class="btn float-right">Set Reminder</span>
                                     </form>
                                 </div>
-                                <!-- End of Give New Assignment -->
+                                <!-- End of Set Reminder -->
                             </div>
 
 
 
 
-                                    <div id="post-tracker" class="content hidden-area row">
-                                        <div class="col-md-7">
-                                            <div id="post-list">
-                                                {% for post in posts %}
-                                                <!-- NORMAL POST Interface: if POST is normal post -->
-                                                <div class="card card-body push-corners mb-3">
-                                                    <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}')">
-                                                        <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>
-                                                        <span class="font-weight-bold mb-4">Post</span>
-                                                        <div class="post-content">
-                                                            <p style="white-space: pre-wrap;">{{post.post}}</p>
-                                                        </div>
+                            <div id="post-tracker" class="content hidden-area row">
+                                <div class="col-md-7">
+                                    <div id="post-list">
+                                        {% for post in posts %}
+                                        <!-- NORMAL POST Interface: if POST is normal post -->
+                                        <div class="card card-body push-corners mb-3">
+                                            <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}')">
+                                                <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>
+                                                <span class="font-weight-bold mb-4">Post</span>
+                                                <div class="post-content">
+                                                    <p style="white-space: pre-wrap;">{{post.post}}</p>
+                                                </div>
 
-                                                        <div class="flex-container">
-                                                            <div class="tracking-delivered">
-                                                                <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.post.delivered}} students</span>
-                                                            </div>
-
-                                                            <div class="tracking-read">
-                                                                <i class="fa fa-eye" aria-hidden="true"></i> Read by: <span class="font-weight-bold">{{post.post.read}} students</span>
-                                                            </div>
-
-                                                            <div class="see-more">
-                                                                <span class="btn">See more </span>
-                                                            </div>
-                                                        </div>
+                                                <div class="flex-container">
+                                                    <div class="tracking-delivered">
+                                                        <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.post.delivered}} students</span>
                                                     </div>
 
-                                                    <div class="hidden-area" id="post-detail-{{forloop.counter}}">
-                                                        <hr>
-                                                        <div class="post-detial-header">
-                                                            <span class="font-weight-bold">Posted to: </span>
-                                                            <ul>
-                                                            {% for recipient in post.post.post_to_section_set.all %}
-                                                            <li class="ml-3">
-                                                                {{recipient.recipient}}
-                                                            </li>
-                                                            {% endfor %}
+                                                    <div class="tracking-read">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i> Read by: <span class="font-weight-bold">{{post.post.read}} students</span>
+                                                    </div>
 
-                                                            {% for recipient in post.post.post_to_class_set.all %}
-                                                            <li class="recipient">
-                                                                {{recipient.recipient}}
-                                                            </li>
-                                                            {% endfor %}
-                                                            </ul>
-                                                        </div>
-                                                        
-                                                        {% if post.post.files.all %}
-                                                            <div class="detail-files">
-                                                                    <span class="font-weight-bold">Files: </span>
-                                                                <ul>
-                                                                    {% for file in post.post.files.all %}
-                                                                    <li class="file">
-                                                                            <div>
-                                                                                <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
-                                                                            </div>
-
-                                                                            <div>
-                                                                                <i class="fa fa-download" aria-hidden="true"></i><span class="mb-2"> Downloaded by: <span class="font-weight-bold">{{file.downloads}} students</span>
-                                                                            </div>
-                                                                    </li>
-                                                                    {% endfor %}
-                                                                </ul>
-                                                            </div>
-                                                        {% endif %}
-
-                                                        {% if post.post.images.all %}
-                                                            <div class="detail-images">
-                                                                <span class="font-weight-bold">Images: </span>
-                                                                <ul>
-                                                                    {% for image in post.post.images.all %}
-                                                                    <li class="file">
-                                                                        <div class="image">
-                                                                            <img src="/media/{{image.image}}" width="100%">
-                                                                        </div>
-                                                                    </li>
-                                                                    {% endfor %}
-                                                                </ul>
-                                                            </div>
-                                                        {% endif %}
-
-                                                        <div class="flex-container">
-                                                            <div></div>
-                                                            <div>
-                                                                <span id="{{post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.id}}">Delete</span>
-                                                                <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}">Edit</span>   
-                                                            </div>
-                                                        </div>                                                
-                                                        <!-- Edit Modal Small -->
-                                                        <div class="modal fade" id="editModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}" aria-hidden="true">
-
-                                                            <!-- Change class .modal-sm to change the size of the modal -->
-                                                            <div class="modal-dialog" role="document">
-
-                                                                <div class="modal-content">
-                                                                    <form action="">
-                                                                        <div class="modal-header">
-                                                                        <h4 class="modal-title w-100" id="editModel{{post.id}}Label">Edit Post</h4>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <div class="md-form my-0">
-                                                                                <textarea type="text" id="form10" class="md-textarea form-control push-corners" rows="5" name="post-content" placeholder="Type your message here...">{{post.post}}</textarea>
-                                                                            </div>
-                                                                            {% if post.post.files.all %}
-                                                                                <div class="detail-files">
-                                                                                    <span class="font-weight-bold">Files: </span>
-                                                                                    <ul>
-                                                                                        {% for file in post.post.files.all %}
-                                                                                        <li class="file">
-                                                                                            <div>
-                                                                                                <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
-                                                                                            </div>
-                                                                                        </li>
-                                                                                        {% endfor %}
-                                                                                    </ul>
-                                                                                </div>
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                        <button type="submit" class="btn">Save changes</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                        <!-- Edit Modal Small -->
-
-                                                        <!-- Delete Modal Small -->
-                                                        <div class="modal fade" id="deleteModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.id}}" aria-hidden="true">
-
-                                                            <!-- Change class .modal-sm to change the size of the modal -->
-                                                            <div class="modal-dialog" role="document">
-
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                    <h4 class="modal-title w-100" id="deleteModel{{post.id}}Label">Delete Post</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <p>
-                                                                            Are you sure? 
-                                                                            <br>
-                                                                            You will permanently delete the post and file or images related.
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn danger-color">Delete</button>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                        <!-- Edit Modal Small -->
+                                                    <div class="see-more">
+                                                        <span class="btn">See more </span>
                                                     </div>
                                                 </div>
-                                                <!-- End of NORMAL POST: Interface if POST is normal post -->
+                                            </div>
 
-                                                <!-- REMINDER POST Interface: if POST is a reminder -->
-                                                <div class="card card-body push-corners mb-3">
-                                                    <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}2')">
-                                                        <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>
-                                                        <span class="font-weight-bold mb-4">Reminder - Test 1</span>
-                                                        <div class="post-content">
-                                                            <p style="white-space: pre-wrap;">Hello, this is a test reminder.</p>
+                                            <div class="hidden-area" id="post-detail-{{forloop.counter}}">
+                                                <hr>
+                                                <div class="post-detial-header">
+                                                    <span class="font-weight-bold">Posted to: </span>
+                                                    <ul>
+                                                    {% for recipient in post.post.post_to_section_set.all %}
+                                                    <li class="ml-3">
+                                                        {{recipient.recipient}}
+                                                    </li>
+                                                    {% endfor %}
+
+                                                    {% for recipient in post.post.post_to_class_set.all %}
+                                                    <li class="recipient">
+                                                        {{recipient.recipient}}
+                                                    </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                
+                                                {% if post.post.files.all %}
+                                                    <div class="detail-files">
+                                                            <span class="font-weight-bold">Files: </span>
+                                                        <ul>
+                                                            {% for file in post.post.files.all %}
+                                                            <li class="file">
+                                                                    <div>
+                                                                        <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                    </div>
+
+                                                                    <div>
+                                                                        <i class="fa fa-download" aria-hidden="true"></i><span class="mb-2"> Downloaded by: <span class="font-weight-bold">{{file.downloads}} students</span>
+                                                                    </div>
+                                                            </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                {% endif %}
+
+                                                {% if post.post.images.all %}
+                                                    <div class="detail-images">
+                                                        <span class="font-weight-bold">Images: </span>
+                                                        <ul>
+                                                            {% for image in post.post.images.all %}
+                                                            <li class="file">
+                                                                <div class="image">
+                                                                    <img src="/media/{{image.image}}" width="100%">
+                                                                </div>
+                                                            </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                {% endif %}
+
+                                                <div class="flex-container">
+                                                    <div></div>
+                                                    <div>
+                                                        <span id="{{post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.id}}">Delete</span>
+                                                        <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}">Edit</span>   
+                                                    </div>
+                                                </div>                                                
+                                                <!-- Edit Modal Small -->
+                                                <div class="modal fade" id="editModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}" aria-hidden="true">
+
+                                                    <!-- Change class .modal-sm to change the size of the modal -->
+                                                    <div class="modal-dialog" role="document">
+
+                                                        <div class="modal-content">
+                                                            <form action="">
+                                                                <div class="modal-header">
+                                                                <h4 class="modal-title w-100" id="editModel{{post.id}}Label">Edit Post</h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="md-form my-0">
+                                                                        <textarea type="text" id="form10" class="md-textarea form-control push-corners" rows="5" name="post-content" placeholder="Type your message here...">{{post.post}}</textarea>
+                                                                    </div>
+                                                                    {% if post.post.files.all %}
+                                                                        <div class="detail-files">
+                                                                            <span class="font-weight-bold">Files: </span>
+                                                                            <ul>
+                                                                                {% for file in post.post.files.all %}
+                                                                                <li class="file">
+                                                                                    <div>
+                                                                                        <a class="link" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                                {% endfor %}
+                                                                            </ul>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn">Save changes</button>
+                                                                </div>
+                                                            </form>
                                                         </div>
 
-                                                        <div class="flex-container">
-                                                            <div class="tracking-delivered">
-                                                                <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.post.delivered}} students</span>
-                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Edit Modal Small -->
 
-                                                            <div class="see-more">
-                                                                <span class="btn">See more</span>
+                                                <!-- Delete Modal Small -->
+                                                <div class="modal fade" id="deleteModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.id}}" aria-hidden="true">
+
+                                                    <!-- Change class .modal-sm to change the size of the modal -->
+                                                    <div class="modal-dialog" role="document">
+
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h4 class="modal-title w-100" id="deleteModel{{post.id}}Label">Delete Post</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>
+                                                                    Are you sure? 
+                                                                    <br>
+                                                                    You will permanently delete the post and file or images related.
+                                                                </p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn danger-color">Delete</button>
                                                             </div>
                                                         </div>
+
+                                                    </div>
+                                                </div>
+                                                <!-- Edit Modal Small -->
+                                            </div>
+                                        </div>
+                                        <!-- End of NORMAL POST: Interface if POST is normal post -->
+
+                                        <!-- REMINDER POST Interface: if POST is a reminder -->
+                                        <div class="card card-body push-corners mb-3">
+                                            <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}2')">
+                                                <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>
+                                                <span class="font-weight-bold mb-4">Reminder - Test 1</span>
+                                                <div class="post-content">
+                                                    <p style="white-space: pre-wrap;">Hello, this is a test reminder.</p>
+                                                </div>
+
+                                                <div class="flex-container">
+                                                    <div class="tracking-delivered">
+                                                        <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.post.delivered}} students</span>
                                                     </div>
 
-                                                    <div class="hidden-area" id="post-detail-{{forloop.counter}}2">
-                                                        <hr>
-                                                        <div class="post-detial-header">
-                                                            <span class="font-weight-bold">Posted to: </span>
-                                                            <ul>
-                                                            {% for recipient in post.post.post_to_section_set.all %}
-                                                            <li class="ml-3">
-                                                                {{recipient.recipient}}
-                                                            </li>
-                                                            {% endfor %}
+                                                    <div class="see-more">
+                                                        <span class="btn">See more</span>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                            {% for recipient in post.post.post_to_class_set.all %}
-                                                            <li class="recipient">
-                                                                {{recipient.recipient}}
-                                                            </li>
-                                                            {% endfor %}
-                                                            </ul>
+                                            <div class="hidden-area" id="post-detail-{{forloop.counter}}2">
+                                                <hr>
+                                                <div class="post-detial-header">
+                                                    <span class="font-weight-bold">Posted to: </span>
+                                                    <ul>
+                                                    {% for recipient in post.post.post_to_section_set.all %}
+                                                    <li class="ml-3">
+                                                        {{recipient.recipient}}
+                                                    </li>
+                                                    {% endfor %}
+
+                                                    {% for recipient in post.post.post_to_class_set.all %}
+                                                    <li class="recipient">
+                                                        {{recipient.recipient}}
+                                                    </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+
+                                                <div>
+                                                    <span class="font-weight-bold">Reminder date: </span>
+                                                    <span>June 20, 2019 - 9 AM</span>
+                                                </div>
+
+                                                <div class="flex-container">
+                                                    <div></div>
+                                                    <div>
+                                                        <span id="{{post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.id}}2">Delete</span>
+                                                        <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}2">Edit</span>   
+                                                    </div>
+                                                </div>                                                
+                                                <!-- Edit Modal Small -->
+                                                <div class="modal fade" id="editModel{{post.id}}2" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}2" aria-hidden="true">
+
+                                                    <!-- Change class .modal-sm to change the size of the modal -->
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <form action="" class="md-form">
+                                                                <div class="modal-header">
+                                                                <h4 class="modal-title w-100" id="editModel{{post.id}}2Label">Edit Reminder</h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <span>Reminder Title:</span>
+                                                                    <input type="text" name="reminder-name-edit" id="" class="form-control mb-4" placeholder="Test 1">
+                                                                    <span>Comments:</span>
+                                                                    <textarea type="text" id="" class="md-textarea form-control push-corners py-0" rows="5" name="post-content" placeholder="Type your message here...">Hello this is a test reminder.</textarea>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn">Save changes</button>
+                                                                </div>
+                                                            </form> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Edit Modal Small -->
+
+                                                <!-- Delete Modal Small -->
+                                                <div class="modal fade" id="deleteModel{{post.id}}2" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.id}}2" aria-hidden="true">
+
+                                                    <!-- Change class .modal-sm to change the size of the modal -->
+                                                    <div class="modal-dialog" role="document">
+
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h4 class="modal-title w-100" id="deleteModel{{post.id}}2Label">Delete Post</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>
+                                                                    Are you sure? 
+                                                                    <br>
+                                                                    You will permanently remove this reminder.
+                                                                </p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn danger-color">Delete</button>
+                                                            </div>
                                                         </div>
 
+                                                    </div>
+                                                </div>
+                                                <!-- Edit Modal Small -->
+                                            </div>
+                                        </div>
+                                        <!-- End of REMINDER POST Interface: if POST is a reminder -->
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if not doesnt_exist %}
+                            <div id="group-chat" class="content hidden-area">
+                                    <div class="row">
+                                    <div class="col-md-6 order-md-2">
+                                        <div id="group-chat-keyboard" class="card card-body push-corners mb-3">
+                                            <form name="group-chat-post-form" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="chat" name="action-type"/>
+
+                                                <div>
+                                                    <h1 class="h2-responsive">Department Chat</h1>
+                                                </div>
+                                                <div id="keyboard-form">
+                                                    <div id="group-chat-post-content-error" class="error alert alert-danger hidden-area" role="alert">
+
+                                                    </div>
+
+                                                    <div class="md-form">
+                                                        <textarea type="text" id="chatmessage" class="md-textarea form-control push-corners" rows="5" name="post-content" required></textarea>
+                                                        <label for="chatmessage">Type your message here...</label>
+                                                    </div>
+
+                                                    <div id="keyboard-extra">
+                                                        <div id="keyboard-files">
+                                                            <div>
+                                                                <h1 class="h5-responsive mt-3">Add attachment</h1>
+                                                            </div>
+
+                                                            <div id="group-chat-attachment-error" class="error alert alert-danger hidden-area" role="alert">
+
+                                                            </div>
+
+                                                            <div class="keyboard-files">
+                                                                <div class="input-group mb-3">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" id="inputGroupFile01" name="group-chat-post-file">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="keyboard-images">
+                                                                <div class="input-group mb-3">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" accept="image/*" name="group-chat-post-image">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="group-chat-post-notif" class="my-1 alert alert-info hidden-area" role="alert">
+
+                                                        </div>
+                                                        <div id="keyboard-form-button">
+                                                            <button class="btn btn-block push-corners" type="button" onclick="post_action('chat')">Send</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button id="group-chat-form-reset" type="reset" hidden></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="chat-post-list" class="col-md-6 order-md-1">
+                                        {% for post in group_posts %}
+                                            {% ifchanged post.pub_date.month or post.pub_date.day %}
+                                                <div class="mx-3 mt-3">
+                                                    <p>{{post.pub_date | date:"F j"}}</p>
+                                                </div>
+                                            {% endifchanged %}
+                                            <div class="card card-body push-corners mb-3">
+                                                    <div class="post-header">
+                                                        <p class="font-weight-bold">{{post.post_by}}</p>
+                                                    </div>
+
+                                                    <div class="post-images">
+                                                        {% for image in post.images.all %}
+                                                        <div class="mb-3">
+                                                            <img width="100%" src="/media/{{image.image}}"/>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+
+                                                    <div class="post-content">
+                                                        <p>{{post}}</p>
+                                                    </div>
+
+                                                    <div>
+                                                        {% for file in post.files.all %}
+                                                            <div class="file">
+                                                                <div>
+                                                                    <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
+                                                                </div>
+
+                                                                <div>
+                                                                    <p class="meta mb-2">File size:  {{ file.file.size | filesizeformat}}</p>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+
+                                                    <div>
                                                         <div>
-                                                            <span class="font-weight-bold">Reminder date: </span>
-                                                            <span>June 20, 2019 - 9 AM</span>
+                                                            <span class="meta">{{post.delivered}} Views | </span>
+                                                            <span class="meta">{{post.pub_date}}</span>
                                                         </div>
-
-                                                        <div class="flex-container">
-                                                            <div></div>
-                                                            <div>
-                                                                <span id="{{post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.id}}2">Delete</span>
-                                                                <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}2">Edit</span>   
-                                                            </div>
-                                                        </div>                                                
-                                                        <!-- Edit Modal Small -->
-                                                        <div class="modal fade" id="editModel{{post.id}}2" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}2" aria-hidden="true">
-
-                                                            <!-- Change class .modal-sm to change the size of the modal -->
-                                                            <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                    <form action="" class="md-form">
-                                                                        <div class="modal-header">
-                                                                        <h4 class="modal-title w-100" id="editModel{{post.id}}2Label">Edit Reminder</h4>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <span>Reminder Title:</span>
-                                                                            <input type="text" name="reminder-name-edit" id="" class="form-control mb-4" placeholder="Test 1">
-                                                                            <span>Comments:</span>
-                                                                            <textarea type="text" id="" class="md-textarea form-control push-corners py-0" rows="5" name="post-content" placeholder="Type your message here...">Hello this is a test reminder.</textarea>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                        <button type="submit" class="btn">Save changes</button>
-                                                                        </div>
-                                                                    </form> 
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- Edit Modal Small -->
-
-                                                        <!-- Delete Modal Small -->
-                                                        <div class="modal fade" id="deleteModel{{post.id}}2" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.id}}2" aria-hidden="true">
-
-                                                            <!-- Change class .modal-sm to change the size of the modal -->
-                                                            <div class="modal-dialog" role="document">
-
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                    <h4 class="modal-title w-100" id="deleteModel{{post.id}}2Label">Delete Post</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <p>
-                                                                            Are you sure? 
-                                                                            <br>
-                                                                            You will permanently remove this reminder.
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn danger-color">Delete</button>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                        <!-- Edit Modal Small -->
                                                     </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div id="message-department" class="content hidden-area row">
+                                <div class="col-md-7">
+                                    <div class="card card-body push-corners">
+                                        <span class="subtitle">Message Department</span>
+                                        <span>The message you send here will appear in the chat area of the selected departments. All members of the faculty will able to see it.</span>
+                                    </div>
+
+                                    <div class="card card-body push-corners mt-3">
+                                        <form action="" class="md-form mt-0">
+                                            <textarea type="text" id="" class="md-textarea form-control push-corners pt-0" rows="5" name="dep-message" placeholder="Type your message" required></textarea>
+                                            <div class="input-group mb-3">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="">
+                                                    <label class="custom-file-label" for="">Attach file (optional):</label>
                                                 </div>
-                                                <!-- End of REMINDER POST Interface: if POST is a reminder -->
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="">
+                                                    <label class="custom-file-label" for="">Attach image (optional):</label>
+                                                </div>
+                                            </div>
+                                                <p class="pb-0 mb-0 pt-3">Send to (you can select multiple):</p>
+                                                <select class="form-control" name="dep-message-for" id="" multiple class="d-block">
+                                                    {% for department in departments %}
+                                                    <option value="{{department.id}}">{{department.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            
+                                            <span class="btn float-right">Send</span>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="forums" class="content hidden-area row">
+                                <div class="col-md-7">
+                                    {% include 'forum/snippets/forum.html' with user_forums=user_forums trending_forums=trending_forums%}
+                                </div>
+                            </div>
+
+                            <div id="assignments" class="content hidden-area row">
+                                <div class="col-md-7">
+
+                                    <!-- Assignments initial page -->
+                                    <div class="card card-body push-corners">
+                                        <!-- assignments header -->
+                                        <div class="flex-container">
+                                            <div>
+                                                <span class="subtitle">Assignments</span>
+                                                <span class="meta">Click on the title to view responses</span>
+                                            </div>
+                                            <div>
+                                                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Give New</span>
+                                            </div>
+                                        </div>
+                                        <!-- end of headers -->
+
+                                        <!-- List of assignments -->
+                                        <div class="row mt-3">
+                                            <div class="col">
+                                                <a href="" class="link mr-2">Build Space Ship</a>
+                                                <span class="green-text mr-2">Accepting</span>
+                                                <span class="meta d-inline-block">July 5, 2019</span>
+                                                <br>
+                                                <span>
+                                                    Your assignment is to build a space ship using two pens, a hairband and one banana peel.
+                                                </span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <span class="btn btn-secondary"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Edit</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col">
+                                                <a href="" class="link mr-2">Assignment 1</a>
+                                                <span class="red-text mr-2">Closed</span>
+                                                <span class="meta d-inline-block">June 20, 2019</span>
+                                                <br>
+                                                <span>
+                                                    Email me your papers by the detailed time at courses.dag@gmail.com.
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- End of list of assignemtns -->
+                                    </div>
+                                    <!-- End of Assignments initial Page -->
+
+
+                                    <!-- List of Submissions -->
+                                    <div class="card card-body push-corners mt-3">
+                                        <!-- Assignment submissions header -->
+                                        <div class="flex-container">
+                                            <div>
+                                                <!-- When back is clicked, it goes to Assignments initial page -->
+                                                <a href=""><i class="fa fa-line-chart mr-3 align-top pt-3 link" aria-hidden="true"></i></a>
+                                                <div class="d-inline-block">
+                                                    <span class="subtitle">Assignment 1</span>
+                                                    <span class="meta">List of submissions</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Download All</span>
+                                            </div>
+                                        </div>
+                                        <!-- End of assignment submissions header -->
+
+                                        <!-- List of detail submissions -->
+                                        <div class="mt-3">
+                                            <!-- The assignment file is downloaded when the name of the student is clicked -->
+                                            <a href="" class="link mr-2">Addismiraph Abebe NSR/2009/08</a>
+                                            <br>
+                                            <span>Comments: Hi teacher, I have switched two of the questions. So one is on the back side of the pages.</span>
+                                        </div>
+                                        <div class="mt-3">
+                                            <a href="" class="link mr-2">Biruk Tamiru NSR/6191/08</a>
+                                        </div>
+                                        <div class="mt-3">
+                                            <a href="" class="link mr-2">Ammanuel Shimelis NSR/2319/08</a>
+                                            <br>
+                                            <span>Comments: I forgot to submit my correct paper, so I have emailed you!</span>
+                                        </div>
+                                        <div class="mt-3">
+                                            <a href="" class="link mr-2">Afomia T/Selassie NSR/7284/08</a>
+                                        </div>
+                                        <!-- End of List of detail submissions -->
+                                    </div>
+                                    <!-- End of List of Submissions -->
+
+                                    <!-- Give New Assignment -->
+                                    <div class="card card-body push-corners mt-3">
+                                        <div>
+                                            <a href=""><i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i></a>   
+                                            <span class="subtitle d-inline">Give New Assignment</span>
+                                        </div>
+                                        <form action="" class="md-form">
+                                            <input class="form-control" type="text" name="assignment-name" id="" placeholder="Assignment Name (Ex. Assignment 1)">
+                                            <div class="input-group mb-3">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="">
+                                                    <label class="custom-file-label" for="">Attach assignment file (optional):</label>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <span>Send to:</span>
+                                                <span>Section picking option should be added here</span>
+                                            </div>
+                                            <textarea type="text" id="" class="md-textarea form-control push-corners" rows="3" name="assign-comments" placeholder="Comments for assignment... (optional)"></textarea>
+                                            <span class="btn float-right">Give Assignment</span>
+                                        </form>
+                                    </div>
+                                    <!-- End of Give New Assignment -->
+                                </div>
+                            </div>
+
+                            <div id="class-list" class="content hidden-area row">
+                                <div class="col-md-7">
+                                    <div class="card card-body push-corners mb-3">
+                                            <div>
+                                                <span class="h2-responsive">Classes You Teach</span>
+                                                <a class="meta" href="https://youtu.be/YVl3Cfgiac0" target="_blank">How to Add Classes - Video</a>
+                                            </div>
+                                            <div id="drop-courses-form-notif" class="alert alert-info hidden-area" role="alert">
+                                                <span></span>
+                                            </div>
+                                            <table id="class-table" class="table table-striped table-hover table-borderless table-responsive">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="font-weight-bold">Course Name</th>
+                                                    <th class="font-weight-bold">Department</th>
+                                                    <th class="font-weight-bold">Section</th>
+                                                    <th class="font-weight-bold"></th>
+                                                </tr>
+
+                                                {% for class in classes %}
+                                                <tr class="row-{{class.id}}">
+                                                    <td>{{class.course.name}}</td>
+                                                    <td>{{class.section.department_in}}</td>
+                                                    <td>Year {{class.section.year}} <br/>Section {{class.section.year}}</td>
+                                                    <td><button class="btn btn-block" type="button" onclick="drop_course({{class.id}})">Remove Course</button></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                            </table>
+                                    </div>
+
+                                    <div class="card card-body push-corners mb-3">
+                                        <div>
+                                            <span class="h2-responsive">Browse Courses</span>
+                                            <span class="meta">Add the courses you are teaching</span>
+                                        </div>
+                                        <form id="add-courses-form">
+                                        <input name="action_type" type="text" value="add" hidden/>
+                                        {% csrf_token %}
+                                            <div class="recipient-list">
+                                                        {% for t in staff.department_in.get_classes %}
+
+                                                        <div class="recipient-data">
+                                                            <div class="recipient-selection">
+                                                                <div class="recipient-selection form-control blue lighten-5 mt-3">
+                                                                    <div class='d-inline-block' onclick="click_hidden('add-department-{{forloop.counter}}')">
+                                                                        <div class="d-inline mx-2">
+                                                                            {{t.0.department_in.name}}
+                                                                        </div>
+                                                                        <div class="d-inline">
+                                                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="recipient-data-hidden hidden-area" id="add-department-{{forloop.counter}}">
+                                                                <div class="recipient-list">
+                                                                    {% for teaches in t %}
+                                                                    {% ifchanged teaches.year %}
+                                                                    {% if not forloop.first %}
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                    {% endif %}
+
+                                                                    <div class="recipient-data">
+                                                                        <div class="recipient-selection form-control">
+                                                                            <div class='d-inline-block' onclick="click_hidden('add-year-{{forloop.counter}}')">
+                                                                                <div class="d-inline mx-2">
+                                                                                    Year {{teaches.year}}
+                                                                                </div>
+                                                                                <div class="d-inline">
+                                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="recipient-data-hidden hidden-area" id="add-year-{{forloop.counter}}">
+                                                                            <div class="recipient-list">
+                                                                            {% endifchanged %}
+
+                                                                            <div class="recipient-data">
+                                                                                <div class="recipient-selection form-control">
+                                                                                    <div class='d-inline-block' onclick="click_hidden('add-section-{{forloop.counter}}')">
+                                                                                        <div class="d-inline mx-2">
+                                                                                            Section {{teaches.section_id}}
+                                                                                        </div>
+                                                                                        <div class="d-inline">
+                                                                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="recipient-data-hidden hidden-area" id="add-section-{{forloop.counter}}">
+                                                                                    <div class="recipient-list">
+                                                                                        {% for course in teaches.section_takes.all %}
+                                                                                        {% if course.given_by.id == staff.department_in.id %}
+                                                                                        <div class="recipient-data">
+                                                                                            <div class="recipient-selection ml-5 my-2">
+                                                                                                <div class="d-inline">
+                                                                                                    <input name="class" value="{{teaches.id}}-{{course.id}}" type="checkbox" />
+                                                                                                </div>
+                                                                                                <div class="d-inline mx-2">
+                                                                                                    {{course.name}}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {% endif %}
+
+                                                                                        {% endfor %}
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    </div>
+
+                                                                                {% empty %}
+                                                                                <div>
+                                                                                <div>
+                                                                                    <div>
+                                                                                {% endfor %}
+                                                                                        </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                </div>
+                                                                                {% endfor %}
+                                            </div>
+                                            <div id="add-courses-form-notif" class="mt-1 alert alert-info hidden-area" role="alert">
+                                                    <span></span>
+                                            </div>
+                                            <div>
+                                                <button class="btn mt-3" type="button" onclick="add_course()">Add Classes</button>
+                                            </div>
+
+                                            <button id="add-class-form-reset" type="reset" hidden></button>
+                                            </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="manage-department" class="content">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="card card-body push-corners">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="subtitle">Instructors</span>
+                                                    <span class="meta">Click on each instructor to manage their account.</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#InviteNewInstructor"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Invite New</span>
+                                                    <!-- Invite Instructor Modal -->
+                                                    <div class="modal fade" id="InviteNewInstructor" tabindex="-1" role="dialog" aria-labelledby="InviteNewInstructor" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="">Invite New Instructor</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <form action="" class="md-form">
+                                                                <div class="modal-body">
+                                                                    <p>Enter the email of the instructor you would like to invite.</p>
+                                                                    <input type="email" placeholder="Email" class="form-control">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn">Send Invite</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End of Invite Instructor Modal -->
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <a href="" class="link d-block mt-2" data-toggle="modal" data-target="#AshenafiKassahunModal">Ashenafi Kassahun</a>
+                                                    <!-- Edit Instructor Modal -->
+                                                    <!-- Customise the id of the modal which is "AshenafiKassahunModal" now. And also update the data-target of the link above to be the same -->
+                                                    <div class="modal fade" id="AshenafiKassahunModal" tabindex="-1" role="dialog" aria-labelledby="AshenafiKassahunModal" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="">Ashenafi Kassahun</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div>
+                                                                    <p>Would you like to reset the password for this account?
+                                                                            The user will get a recovery email.</p>
+                                                                    <span class="btn btn-secondary">Reset Password</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>Would you like to DELETE this account?
+                                                                            The user will be removed permanently for the system.</p>
+                                                                    <span class="btn danger-color">DELETE Account</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End of Edit Instructor Modal -->
+                                                </div>
+                                                <a href="" class="link d-block mt-2">Amsale Zelalem</a>
+                                                <a href="" class="link d-block mt-2">Yonas Assefa</a>
+                                                <a href="" class="link d-block mt-2">Desalegn Mekuanint</a>
+                                                <a href="" class="link d-block mt-2">Anteneh Lemma</a>
+                                            </div>
+                                        </div>
+                                        <div class="card card-body push-corners mt-3">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="subtitle">Program Coordinators</span>
+                                                    <span class="meta">Click on each program coordinator to manage their account.</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <span class="btn p-2" data-toggle="modal" data-target="#AddProgramCoordinator"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Make New</span>
+                                                    <!-- Make New Program Coordinator Modal -->
+                                                    <div class="modal fade" id="AddProgramCoordinator" tabindex="-1" role="dialog" aria-labelledby="AddProgramCoordinator" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="">Add Program Coordinator</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <form action="" class="md-from">
+                                                                <div class="modal-body">
+                                                                    <p>Pick the instructor you would like to upgrade to a program coordinator.</p>
+                                                                    <select name="new-program-coordinator" id="" class="form-control">
+                                                                        <!-- List of instructors that are NOT program coordinators -->
+                                                                        <option value="" selected disabled>Select an Instructor</option>
+                                                                        <option value="">Ashenafi Kassahun</option>
+                                                                        <option value="">Yonas Assefa</option>
+                                                                        <option value="">Desalegn Mekuanint</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                    <button type="button" class="btn">Add</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End of Make New Program Coordinator Modal -->
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <a href="" class="link d-block mt-2">Amsale Zelalem</a>
+                                                <a href="" class="link d-block mt-2">Anteneh Lemma</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card card-body push-corners">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="subtitle">Courses</span>
+                                                    <span class="meta">These are courses given by your department.</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#AddCourseModal"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Add New</span>
+                                                    <!-- Add Course Modal -->
+                                                    <div class="modal fade" id="AddCourseModal" tabindex="-1" role="dialog" aria-labelledby="AddCourseModal" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="">Add Course</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <form action="" class="md-form mb-0 pb-0">
+                                                                <div class="modal-body">
+                                                                    <input class="form-control" type="text" name="new-course-name" id="" placeholder="Course Name">
+                                                                    <p class="mb-0 pb-0 pt-2">Which section is this given to:</p>
+                                                                    <div class="row px-3">
+                                                                        <input class="form-control col mr-3" type="number" name="new-course-year" id="" placeholder="Year (Ex. 1)">
+                                                                        <input class="form-control col ml-3" type="number" name="new-course-section" id="" placeholder="Section (Ex. 2)">        
+                                                                    </div>
+                                                                    
+                                                                    <p class="mb-0 pb-0">Given during:</p>
+                                                                    <div class="custom-control custom-radio ml-5">
+                                                                        <input type="radio" class="custom-control-input" id="semester-1" name="new-course-semester">
+                                                                        <label class="custom-control-label" for="semester-1">Semester 1</label>
+                                                                    </div>
+
+                                                                    <div class="custom-control custom-radio ml-5">
+                                                                        <input type="radio" class="custom-control-input" id="semester-2" name="new-course-semester">
+                                                                        <label class="custom-control-label" for="semester-2">Semester 2</label>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                    <button type="button" class="btn">Add Course</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End of Add Course Modal -->
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <a href="" class="link d-block mt-2">Introduction to Computer Science</a>
+                                                <a href="" class="link d-block mt-2">Complexity Theory</a>
+                                                <a href="" class="link d-block mt-2">Assembly Language</a>
+                                                <a href="" class="link d-block mt-2">Compiler Design</a>
+                                                <a href="" class="link d-block mt-2">Human Computer Interaction</a>
+                                                <a href="" class="link d-block mt-2">Automata and Machine Language</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card card-body push-corners">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="subtitle">Sections</span>
+                                                    <span class="meta">These are class sections in your department.</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <span class="btn p-2 float-right" data-toggle="modal" data-target="#AddSectionModal"><i class="fa fa-line-chart mr-1" aria-hidden="true"></i>Add New</span>
+                                                    <!-- Add Section Modal -->
+                                                    <div class="modal fade" id="AddSectionModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="">Add Section</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <form action="" class="md-form mb-0 pb-0">
+                                                                <div class="modal-body">
+                                                                    <p>Specify the year and section number:</p>
+                                                                    <div class="row px-3">
+                                                                        <input class="form-control col mr-3" type="number" name="new-course-year" id="" placeholder="Year (Ex. 1)">
+                                                                        <input class="form-control col ml-3" type="number" name="new-course-section" id="" placeholder="Section (Ex. 2)">        
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                <button type="button" class="btn">Add Section</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End of Add Section Modal -->
+                                                </div>
+                                            </div>
+                                        <div class="recipient-list">
+                                                {% for t in staff.department_in.get_classes %}
+
+                                                <div class="recipient-data">
+                                                    <div class="recipient-data-hidden" id="add-department-{{forloop.counter}}">
+                                                        <div class="recipient-list">
+                                                            {% for teaches in t %}
+                                                            {% ifchanged teaches.year %}
+                                                            {% if not forloop.first %}
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                            {% endif %}
+
+                                                            <div class="recipient-data">
+                                                                <div class="recipient-selection form-control" onclick="click_hidden('add-year-{{forloop.counter}}2')">
+                                                                    <div class='d-inline-block'>
+                                                                        <div class="d-inline mx-2">
+                                                                            Year {{teaches.year}}
+                                                                        </div>
+                                                                        <div class="d-inline">
+                                                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="recipient-data-hidden hidden-area" id="add-year-{{forloop.counter}}2">
+                                                                    <div class="recipient-list">
+                                                                    {% endifchanged %}
+
+                                                                        <div class="ml-4 py-2 flex-container">
+                                                                            <div>
+                                                                                Section {{teaches.section_id}}
+                                                                            </div>
+                                                                            <!-- DELETE Section area -->
+                                                                            <div>
+                                                                                <span data-toggle="modal" data-target="#DeleteSection"><i class="fa fa-paper-plane mr-3 red-text" aria-hidden="true"></i></span>
+                                                                                <!-- DELETE Section Modal -->
+                                                                                <!-- Customize the id of the modal and make it unique for each section rendered. For example "DeleteSection{{year}}{{section.section_id}}" -->
+                                                                                <div class="modal fade" id="DeleteSection" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                                                                    <div class="modal-dialog" role="document">
+                                                                                    <div class="modal-content">
+                                                                                        <div class="modal-header danger-color">
+                                                                                        <h5 class="modal-title white-text" id="">CAUTION!</h5>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                        </div>
+                                                                                        <div class="modal-body">
+                                                                                            <p>You are about to delete this section and all related resources.</p>
+                                                                                            <p>Are you sure?</p>
+                                                                                        </div>
+                                                                                        <div class="modal-footer">
+                                                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                                                                        <button type="button" class="btn danger-color">DELETE</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- End of DELETE Section Modal -->
+                                                                            </div>
+                                                                        </div>
+
+                                                                            {% empty %}
+                                                                                <div>
+                                                                                <div>
+                                                                                <div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 {% endfor %}
                                             </div>
                                         </div>
                                     </div>
-
-                                    {% if not doesnt_exist %}
-                                    <div id="group-chat" class="content hidden-area">
-                                        <div class="row">
-                                        <div class="col-md-6 order-md-2">
-                                            <div id="group-chat-keyboard" class="card card-body push-corners mb-3">
-                                                <form name="group-chat-post-form" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" value="chat" name="action-type"/>
-
-                                                    <div>
-                                                        <h1 class="h2-responsive">Department Chat</h1>
-                                                    </div>
-                                                    <div id="keyboard-form">
-                                                        <div id="group-chat-post-content-error" class="error alert alert-danger hidden-area" role="alert">
-
-                                                        </div>
-
-                                                        <div class="md-form">
-                                                            <textarea type="text" id="chatmessage" class="md-textarea form-control push-corners" rows="5" name="post-content" required></textarea>
-                                                            <label for="chatmessage">Type your message here...</label>
-                                                        </div>
-
-                                                        <div id="keyboard-extra">
-                                                            <div id="keyboard-files">
-                                                                <div>
-                                                                    <h1 class="h5-responsive mt-3">Add attachment</h1>
-                                                                </div>
-
-                                                                <div id="group-chat-attachment-error" class="error alert alert-danger hidden-area" role="alert">
-
-                                                                </div>
-
-                                                                <div class="keyboard-files">
-                                                                    <div class="input-group mb-3">
-                                                                        <div class="custom-file">
-                                                                            <input type="file" id="inputGroupFile01" name="group-chat-post-file">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="keyboard-images">
-                                                                    <div class="input-group mb-3">
-                                                                        <div class="custom-file">
-                                                                            <input type="file" accept="image/*" name="group-chat-post-image">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div id="group-chat-post-notif" class="my-1 alert alert-info hidden-area" role="alert">
-
-                                                            </div>
-                                                            <div id="keyboard-form-button">
-                                                                <button class="btn btn-block push-corners" type="button" onclick="post_action('chat')">Send</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button id="group-chat-form-reset" type="reset" hidden></button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div id="chat-post-list" class="col-md-6 order-md-1">
-                                            {% for post in group_posts %}
-                                                {% ifchanged post.pub_date.month or post.pub_date.day %}
-                                                    <div class="mx-3 mt-3">
-                                                        <p>{{post.pub_date | date:"F j"}}</p>
-                                                    </div>
-                                                {% endifchanged %}
-                                                <div class="card card-body push-corners mb-3">
-                                                        <div class="post-header">
-                                                            <p class="font-weight-bold">{{post.post_by}}</p>
-                                                        </div>
-
-                                                        <div class="post-images">
-                                                            {% for image in post.images.all %}
-                                                            <div class="mb-3">
-                                                                <img width="100%" src="/media/{{image.image}}"/>
-                                                            </div>
-                                                            {% endfor %}
-                                                        </div>
-
-                                                        <div class="post-content">
-                                                            <p>{{post}}</p>
-                                                        </div>
-
-                                                        <div>
-                                                            {% for file in post.files.all %}
-                                                                <div class="file">
-                                                                    <div>
-                                                                        <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        <p class="meta mb-2">File size:  {{ file.file.size | filesizeformat}}</p>
-                                                                    </div>
-                                                                </div>
-                                                            {% endfor %}
-                                                        </div>
-
-                                                        <div>
-                                                            <div>
-                                                                <span class="meta">{{post.delivered}} Views | </span>
-                                                                <span class="meta">{{post.pub_date}}</span>
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
                                 </div>
-                                {% endif %}
+                            </div>
 
-                                <div id="forums" class="content hidden-area row">
-                                    <div class="col-md-7">
-                                        {% include 'forum/snippets/forum.html' with user_forums=user_forums trending_forums=trending_forums%}
-                                    </div>
-								</div>
-
-                                <div id="assignments" class="content row">
-                                    <div class="col-md-7">
-
-                                        <!-- Assignments initial page -->
-                                        <div class="card card-body push-corners">
-                                            <!-- assignments header -->
-                                            <div class="flex-container">
-                                                <div>
-                                                    <span class="subtitle">Assignments</span>
-                                                    <span class="meta">Click on the title to view responses</span>
-                                                </div>
-                                                <div>
-                                                    <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Give New</span>
-                                                </div>
-                                            </div>
-                                            <!-- end of headers -->
-
-                                            <!-- List of assignments -->
-                                            <div class="row mt-3">
-                                                <div class="col">
-                                                    <a href="" class="link mr-2">Build Space Ship</a>
-                                                    <span class="green-text mr-2">Accepting</span>
-                                                    <span class="meta d-inline-block">July 5, 2019</span>
-                                                    <br>
-                                                    <span>
-                                                        Your assignment is to build a space ship using two pens, a hairband and one banana peel.
-                                                    </span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <span class="btn btn-secondary"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Edit</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mt-3">
-                                                <div class="col">
-                                                    <a href="" class="link mr-2">Assignment 1</a>
-                                                    <span class="red-text mr-2">Closed</span>
-                                                    <span class="meta d-inline-block">June 20, 2019</span>
-                                                    <br>
-                                                    <span>
-                                                        Email me your papers by the detailed time at courses.dag@gmail.com.
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <!-- End of list of assignemtns -->
-                                        </div>
-                                        <!-- End of Assignments initial Page -->
-
-
-                                        <!-- List of Submissions -->
-                                        <div class="card card-body push-corners mt-3">
-                                            <!-- Assignment submissions header -->
-                                            <div class="flex-container">
-                                                <div>
-                                                    <!-- When back is clicked, it goes to Assignments initial page -->
-                                                    <a href=""><i class="fa fa-line-chart mr-3 align-top pt-3 link" aria-hidden="true"></i></a>
-                                                    <div class="d-inline-block">
-                                                        <span class="subtitle">Assignment 1</span>
-                                                        <span class="meta">List of submissions</span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <span class="btn"><i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Download All</span>
-                                                </div>
-                                            </div>
-                                            <!-- End of assignment submissions header -->
-
-                                            <!-- List of detail submissions -->
-                                            <div class="mt-3">
-                                                <!-- The assignment file is downloaded when the name of the student is clicked -->
-                                                <a href="" class="link mr-2">Addismiraph Abebe NSR/2009/08</a>
-                                                <br>
-                                                <span>Comments: Hi teacher, I have switched two of the questions. So one is on the back side of the pages.</span>
-                                            </div>
-                                            <div class="mt-3">
-                                                <a href="" class="link mr-2">Biruk Tamiru NSR/6191/08</a>
-                                            </div>
-                                            <div class="mt-3">
-                                                <a href="" class="link mr-2">Ammanuel Shimelis NSR/2319/08</a>
-                                                <br>
-                                                <span>Comments: I forgot to submit my correct paper, so I have emailed you!</span>
-                                            </div>
-                                            <div class="mt-3">
-                                                <a href="" class="link mr-2">Afomia T/Selassie NSR/7284/08</a>
-                                            </div>
-                                            <!-- End of List of detail submissions -->
-                                        </div>
-                                        <!-- End of List of Submissions -->
-
-                                        <!-- Give New Assignment -->
-                                        <div class="card card-body push-corners mt-3">
-                                            <div>
-                                                <a href=""><i class="fa fa-line-chart mr-2 d-inline link" aria-hidden="true"></i></a>   
-                                                <span class="subtitle d-inline">Give New Assignment</span>
-                                            </div>
-                                            <form action="" class="md-form">
-                                                <input class="form-control" type="text" name="assignment-name" id="" placeholder="Assignment Name (Ex. Assignment 1)">
-                                                <div class="input-group mb-3">
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="">
-                                                        <label class="custom-file-label" for="">Attach assignment file (optional):</label>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <span>Send to:</span>
-                                                    <span>Section picking option should be added here</span>
-                                                </div>
-                                                <textarea type="text" id="" class="md-textarea form-control push-corners" rows="3" name="assign-comments" placeholder="Comments for assignment... (optional)"></textarea>
-                                                <span class="btn float-right">Give Assignment</span>
-                                            </form>
-                                        </div>
-                                        <!-- End of Give New Assignment -->
-                                    </div>
+                            <div id="account-setting" class="content hidden-area">
+                                <div id="profile-form-notif" class="alert alert-info hidden-area" role="alert">
+                                    <span></span>
                                 </div>
 
-                                <div id="class-list" class="content hidden-area row">
-                                    <div class="col-md-7">
-                                        <div class="card card-body push-corners mb-3">
-                                                <div>
-                                                    <span class="h2-responsive">Classes You Teach</span>
-                                                    <a class="meta" href="https://youtu.be/YVl3Cfgiac0" target="_blank">How to Add Classes - Video</a>
-                                                </div>
-                                                <div id="drop-courses-form-notif" class="alert alert-info hidden-area" role="alert">
-                                                    <span></span>
-                                                </div>
-                                                <table id="class-table" class="table table-striped table-hover table-borderless table-responsive">
-                                                <tbody>
-                                                    <tr>
-                                                        <th class="font-weight-bold">Course Name</th>
-                                                        <th class="font-weight-bold">Department</th>
-                                                        <th class="font-weight-bold">Section</th>
-                                                        <th class="font-weight-bold"></th>
-                                                    </tr>
+                                <div id="profile-form" class="card card-body push-corners mb-3 col-md-7">
+                                    <form id="profile-update-form" method="post">
+                                        {% csrf_token %}
 
-                                                    {% for class in classes %}
-                                                    <tr class="row-{{class.id}}">
-                                                        <td>{{class.course.name}}</td>
-                                                        <td>{{class.section.department_in}}</td>
-                                                        <td>Year {{class.section.year}} <br/>Section {{class.section.year}}</td>
-                                                        <td><button class="btn btn-block" type="button" onclick="drop_course({{class.id}})">Remove Course</button></td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                                </table>
+                                        <div class="h3-responsive mb-2">
+                                            Account Information
                                         </div>
 
-                                        <div class="card card-body push-corners mb-3">
-                                            <div>
-                                                <span class="h2-responsive">Browse Courses</span>
-                                                <span class="meta">Add the courses you are teaching</span>
-                                            </div>
-                                            <form id="add-courses-form">
-                                            <input name="action_type" type="text" value="add" hidden/>
-                                            {% csrf_token %}
-                                                <div class="recipient-list">
-                                                            {% for t in staff.department_in.get_classes %}
-
-                                                            <div class="recipient-data">
-                                                                <div class="recipient-selection">
-                                                                    <div class="recipient-selection form-control blue lighten-5 mt-3">
-                                                                        <div class='d-inline-block' onclick="click_hidden('add-department-{{forloop.counter}}')">
-                                                                            <div class="d-inline mx-2">
-                                                                                {{t.0.department_in.name}}
-                                                                            </div>
-                                                                            <div class="d-inline">
-                                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="recipient-data-hidden hidden-area" id="add-department-{{forloop.counter}}">
-                                                                    <div class="recipient-list">
-                                                                        {% for teaches in t %}
-                                                                        {% ifchanged teaches.year %}
-                                                                        {% if not forloop.first %}
-                                                                                </div>
-                                                                            </div>
-                                                                            </div>
-                                                                        {% endif %}
-
-                                                                        <div class="recipient-data">
-                                                                            <div class="recipient-selection form-control">
-                                                                                <div class='d-inline-block' onclick="click_hidden('add-year-{{forloop.counter}}')">
-                                                                                    <div class="d-inline mx-2">
-                                                                                        Year {{teaches.year}}
-                                                                                    </div>
-                                                                                    <div class="d-inline">
-                                                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="recipient-data-hidden hidden-area" id="add-year-{{forloop.counter}}">
-                                                                                <div class="recipient-list">
-                                                                                {% endifchanged %}
-
-                                                                                <div class="recipient-data">
-                                                                                    <div class="recipient-selection form-control">
-                                                                                        <div class='d-inline-block' onclick="click_hidden('add-section-{{forloop.counter}}')">
-                                                                                            <div class="d-inline mx-2">
-                                                                                                Section {{teaches.section_id}}
-                                                                                            </div>
-                                                                                            <div class="d-inline">
-                                                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="recipient-data-hidden hidden-area" id="add-section-{{forloop.counter}}">
-                                                                                        <div class="recipient-list">
-                                                                                            {% for course in teaches.section_takes.all %}
-                                                                                            {% if course.given_by.id == staff.department_in.id %}
-                                                                                            <div class="recipient-data">
-                                                                                                <div class="recipient-selection ml-5 my-2">
-                                                                                                    <div class="d-inline">
-                                                                                                        <input name="class" value="{{teaches.id}}-{{course.id}}" type="checkbox" />
-                                                                                                    </div>
-                                                                                                    <div class="d-inline mx-2">
-                                                                                                        {{course.name}}
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            {% endif %}
-
-                                                                                            {% endfor %}
-
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        </div>
-
-                                                                                    {% empty %}
-                                                                                    <div>
-                                                                                    <div>
-                                                                                        <div>
-                                                                                    {% endfor %}
-                                                                                            </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    </div>
-                                                                                    {% endfor %}
-                                                </div>
-                                                <div id="add-courses-form-notif" class="mt-1 alert alert-info hidden-area" role="alert">
-                                                        <span></span>
-                                                </div>
-                                                <div>
-                                                    <button class="btn mt-3" type="button" onclick="add_course()">Add Classes</button>
-                                                </div>
-
-                                                <button id="add-class-form-reset" type="reset" hidden></button>
-                                                </form>
-
+                                        <div>
+                                            <div id="error-title" class="error alert alert-danger hidden-area" role="alert"></div>
+                                            <label for="title">Title</label>
+                                            <select id="title" name="title" required>
+                                                {% for x, y in titles %}
+                                                    {% if staff.title == x %}
+                                                    <option value="{{x}}" selected>{{y}}</option>
+                                                    {% else%}
+                                                    <option value="{{x}}">{{y}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
                                         </div>
-                                    </div>
+
+
+                                        <div id="error-firstname" class="error alert alert-danger hidden-area" role="alert"></div>
+                                        <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" name="first-name" id="firstname" type="text" placeholder="First Name" value="{{staff.first_name}}" required />
+                                        </div>
+
+                                        <div id="error-lastname" class="error alert alert-danger hidden-area" role="alert"></div>
+                                        <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" name="last-name" id="lastname" type="text" placeholder="Last Name" value="{{staff.last_name}}" required />
+                                        </div>
+
+                                        <div id="error-phonenum" class="error alert alert-danger hidden-area" role="alert"></div>
+                                        <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" name="phone-number" id="phonenum" type="tel" placeholder="Phone Number" value="{{staff.phone}}" required />
+                                        </div>
+
+
+
+                                        <div id="error-email" class="error alert alert-danger hidden-area" role="alert"></div>
+                                        <div class="md-form mt-4 mb-2 mx-1">
+                                                <input class="form-control" name="email" id="email" type="email" placeholder="Email" value="{{staff.email}}" required />
+                                        </div>
+
+
+
+                                        <div class="mt-4">
+                                            <span>Enter your password to save changes</span>
+                                        </div>
+
+                                        <div>
+                                            <div id="error-password" class="error alert alert-danger hidden-area" role="alert"></div>
+                                            <div class="d-inline">
+                                                    <input name="password" id="password" type="password" required />
+                                            </div>
+                                            <div class="d-inline">
+                                                <button class="btn" id="signup-button" type="button" onclick="account_update()">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-
-                                <div id="account-setting" class="content hidden-area">
-                                    <div id="profile-form-notif" class="alert alert-info hidden-area" role="alert">
-                                        <span></span>
-                                    </div>
-
-                                    <div id="profile-form" class="card card-body push-corners mb-3 col-md-7">
-                                        <form id="profile-update-form" method="post">
-                                            {% csrf_token %}
-
-                                            <div class="h3-responsive mb-2">
-                                                Account Information
-                                            </div>
-
-                                            <div>
-                                                <div id="error-title" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                <label for="title">Title</label>
-                                                <select id="title" name="title" required>
-                                                    {% for x, y in titles %}
-                                                        {% if staff.title == x %}
-                                                        <option value="{{x}}" selected>{{y}}</option>
-                                                        {% else%}
-                                                        <option value="{{x}}">{{y}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-
-                                            <div id="error-firstname" class="error alert alert-danger hidden-area" role="alert"></div>
-                                            <div class="md-form mt-4 mb-2 mx-1">
-                                                    <input class="form-control" name="first-name" id="firstname" type="text" placeholder="First Name" value="{{staff.first_name}}" required />
-                                            </div>
-
-                                            <div id="error-lastname" class="error alert alert-danger hidden-area" role="alert"></div>
-                                            <div class="md-form mt-4 mb-2 mx-1">
-                                                    <input class="form-control" name="last-name" id="lastname" type="text" placeholder="Last Name" value="{{staff.last_name}}" required />
-                                            </div>
-
-                                            <div id="error-phonenum" class="error alert alert-danger hidden-area" role="alert"></div>
-                                            <div class="md-form mt-4 mb-2 mx-1">
-                                                    <input class="form-control" name="phone-number" id="phonenum" type="tel" placeholder="Phone Number" value="{{staff.phone}}" required />
-                                            </div>
-
-
-
-                                            <div id="error-email" class="error alert alert-danger hidden-area" role="alert"></div>
-                                            <div class="md-form mt-4 mb-2 mx-1">
-                                                    <input class="form-control" name="email" id="email" type="email" placeholder="Email" value="{{staff.email}}" required />
-                                            </div>
-
-
-
-                                            <div class="mt-4">
-                                                <span>Enter your password to save changes</span>
-                                            </div>
-
-                                            <div>
-                                                <div id="error-password" class="error alert alert-danger hidden-area" role="alert"></div>
-                                                <div class="d-inline">
-                                                        <input name="password" id="password" type="password" required />
-                                                </div>
-                                                <div class="d-inline">
-                                                    <button class="btn" id="signup-button" type="button" onclick="account_update()">Save Changes</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                            </div>
                             </div>
                     </div>
                     <div class="row mb-3 mt-1 ml-2" >
