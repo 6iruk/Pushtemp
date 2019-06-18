@@ -75,23 +75,19 @@ fetch(URL+'signup',{
               extension: 'PDF',
               size: '',
               uri: '../assets/images/openday.jpg'				//url of the file
-              post_by: 'Dr. Dagmawi',
             },
           ],
           images: [
             {
               id: 1,
-              post_by: 'Dr. Dagmawi',
               uri: '../assets/images/openday.jpg'				//url of the image
             },
             {
               id: 2,
-              post_by: 'Dr. Dagmawi',
               uri: '../assets/images/openday.jpg'
             },
             {
               id: 3,
-              post_by: 'Dr. Dagmawi',
               uri: '../assets/images/openday.jpg'
             },
           ],
