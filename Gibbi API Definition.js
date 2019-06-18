@@ -47,7 +47,7 @@ fetch(URL+'signup',{
 }
 
 //Your Push Posts Request
-fetch(URL+'signup',{
+fetch(URL+'posts',{
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -122,3 +122,68 @@ fetch(URL+'readpost',{
           postId: id,								//I will send you the id of the post so you can track that post
       }),
     })
+    
+    
+    
+//Push Board Posts Request
+fetch(URL+'pushboard',{
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: {
+          userToken: '23yiu4hjkrhfdi',
+          latestPushboardId: -1			//this is the ID of the last post I have
+          												//-1 means I have nothing yet
+        }
+      })
+      
+//Pushboard Posts Response
+//Exactly the same as Your Push but these are Pushboard posts for the user AND name the post_course field as 'Pushboard'
+{
+	posts: [						//a list of posts 
+        {
+          id: 0,
+          content: "This is a trial post.",
+          read: true, 			//part of the ClickReadPost use case
+          							//true if post has been read by user, false if post has not been read
+          files: [
+            {
+              id: 1,
+              name: 'Chapter 1',
+              extension: 'PDF',
+              size: '',
+              uri: '../assets/images/openday.jpg'				//url of the file
+            },
+          ],
+          images: [
+            {
+              id: 1,
+              uri: '../assets/images/openday.jpg'				//url of the image
+            },
+            {
+              id: 2,
+              uri: '../assets/images/openday.jpg'
+            },
+            {
+              id: 3,
+              uri: '../assets/images/openday.jpg'
+            },
+          ],
+          post_by: 'Dr. Dagmawi',
+          post_course: 'Pushboard',             //have this for all posts
+          pub_date: "10 AM, June 10, 2018"
+        },
+        {
+          id: 1,
+          content: "This is a trial post. This has a much more longer text so it has two lines. Let's see how this is handled",
+          read: false, //for tracker
+          files: [],
+          images: [],
+          post_by: 'Mr. Gashaw',
+          post_course: 'Pushboard',
+          pub_date: "10 AM, September 10, 2018"
+        },
+      ]
+}
