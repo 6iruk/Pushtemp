@@ -93,6 +93,7 @@ fetch(URL+'posts',{
           ],
           post_by: 'Dr. Dagmawi',
           post_course: 'Software Engineering',
+          post_courseid: 32,
           pub_date: "10 AM, June 10, 2018"
         },
         {
@@ -103,6 +104,7 @@ fetch(URL+'posts',{
           images: [],
           post_by: 'Mr. Gashaw',
           post_course: 'Windows Programming',
+          post_courseid: 21,
           pub_date: "10 AM, September 10, 2018"
         },
       ],
@@ -226,8 +228,45 @@ fetch(URL+'reminders',
         due_time: "10:30 AM",
         post_by: 'Ms. Aynalem',
         post_course: 'Wireless Communication',
+        post_courseid: 38,
         pub_date: "10 AM, June 10, 2018"
       },
     ],
     latestReminderId: 23,      //send back the id of the last reminder
 }
+
+//Courses Lists Request
+fetch(URL+'courses',{
+      method: 'POST',
+      headers:{
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          userToken: userToken,
+      }),
+    })
+
+//Courses Lists Response
+[       //response is a list of objects
+    {
+      name: 'Introduction to Computer Science',
+      id: 5
+    },
+    {
+      name: 'Calculus Two',
+      id: 6
+    },
+    {
+      name: 'Advanced Algorithm',
+      id: 7
+    },
+    {
+      name: 'Civic and Ethical Education',
+      id: 8
+    },
+    {
+      name: 'Software Engineering',
+      id: 1
+    },
+  ]
