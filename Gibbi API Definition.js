@@ -27,15 +27,15 @@ fetch(URL+'signup',{
           'Content-Type': 'application/json',
         },
         body: {
-          department: data.department,
-          firstname: data.firstname,
-          lastname: data.lastname,
-          reg_id: data.reg_id,
-          email: data.email,
-          year: this.state.year,
-          section: this.state.section,
-          phone: this.state.phone,
-          password: this.state.password
+          department: 'Computer Science',
+          firstname: 'Addismiraph',
+          lastname: 'Abebe',
+          reg_id: 'NSR/2009/08',
+          email: 'genioaddis@gmail.com',
+          year: 1,
+          section: 1,
+          phone: '0913350082',
+          password: 'aaupush123'
         }
       })
 
@@ -105,7 +105,8 @@ fetch(URL+'posts',{
           post_course: 'Windows Programming',
           pub_date: "10 AM, September 10, 2018"
         },
-      ]
+      ],
+      latestPostId: 3,      //send back the id of the last post
 }
 
 
@@ -185,5 +186,48 @@ fetch(URL+'pushboard',{
           post_course: 'Pushboard',
           pub_date: "10 AM, September 10, 2018"
         },
-      ]
+      ],
+      latestPostId: 3,      //send back the id of the last post
+}
+
+
+//Reminders Request
+fetch(URL+'reminders', 
+      {
+        method: 'POST',
+        headers:{
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userToken: '23yiu4hjkrhfdi',
+            latestReminderId: 13,       //this is the ID of the last post I have
+          												//-1 means I have nothing yet
+        }),
+      })
+      
+//Reminder Response
+{
+    reminders: [            //a list of reminder objects
+      {
+        id: 11,
+        name: "Assignment 1",
+        content: "Your assignment is to build a space ship. Group numbers cannot exceed more than 5. ZIP photos and upload it here.",
+        submitted: false, //whether or not the user has submitted their answer
+        reminderType: "Assignment",   //"Assignment" assignment reminder and "Normal" or others like test and presentions
+        file: {
+            id: 1,
+            name: 'Assignment 1',
+            extension: 'PDF',
+            size: '3 MB',
+            uri: 'http://www.cheat-sheets.org/saved-copy/jsquick.pdf',				//url of the file
+          },
+        due_date: "July 10, 2018",
+        due_time: "10:30 AM",
+        post_by: 'Ms. Aynalem',
+        post_course: 'Wireless Communication',
+        pub_date: "10 AM, June 10, 2018"
+      },
+    ],
+    latestReminderId: 23,      //send back the id of the last reminder
 }
