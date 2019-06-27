@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 
 {% block title %}
-<title>AAU Push - Sign up</title>
+<title>Gibbi - Sign up</title>
 {% endblock %}
 
 {% block nav %}
@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col-lg-6 mt-3">
                         <div class='card card-body push-corners'>
-                            <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
+                            <p> <span class='link font-weight-bold'>New to Gibbi? </span>Sign up for free.</p>
                             <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
                             <form method="post" action="{% url 'Sign Up' %}">
                                     {% csrf_token %}

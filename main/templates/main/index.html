@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 
 {% block title %}
-<title>AAU Push - Welcome</title>
+<title>Gibbi - Welcome</title>
 {% endblock %}
 
 {% block nav %}
@@ -21,13 +21,13 @@
                         <h1 class="h1-responsive font-weight-bold">Make the most of college</h1>
                         <hr>
                         <p>
-                            AAU Push fills the communication gap between students and teachers. Teachers simply post announcements and upload course textbooks, references and assignments for students. Students get it through website and the Android application.
+                            Gibbi fills the communication gap between students and teachers. Teachers simply post announcements and upload course textbooks, references and assignments for students. Students get it through website and the Android application.
                         </p>
                     </div>
                     <div class="col-lg-2"></div>
                     <div class="col-lg-4 mt-4">
                         <div class='card card-body push-corners'>
-                            <p> <span class='link font-weight-bold'>New to AAU Push? </span>Sign up for free.</p>
+                            <p> <span class='link font-weight-bold'>New to Gibbi? </span>Sign up for free.</p>
                             <img class="img-fluid" alt="Laptop and Desk" src="{% static 'main/laptop.jpg' %}" />
                             <form method="post" action="{% url 'Sign Up' %}">
                                     {% csrf_token %}
@@ -101,7 +101,7 @@
                 <!-- ADD LOGIN OPTION HERE FOR WHEN RESIZED TO SMALLER SCREENS-->
                 <div class="row mt-2">
                         <p class="meta grey-text">
-                            Copyright 2018 AAU Push
+                            Copyright 2018 Gibbi
                         | <a href="#" class="link">About Us</a>
                         | <a href="#" class="link">Feedback</a>
                         | <a href="#" class="link">Terms</a>
