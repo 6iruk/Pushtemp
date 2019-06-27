@@ -1,6 +1,8 @@
 base_url = "http://localhost:8000";
 
 function nav_click(page) {
+  $('#feedback-box').modal('toggle')    //'show' or 'hide' are also possible instead of 'toggle'
+  $('#error-feedback').html("Here is the error message!!");
   if(page == 'post') {
     $(".content").css("display","none");
     $("#post-form").css("display","block");
