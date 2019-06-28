@@ -210,7 +210,7 @@ def teacher_xls_page(request):
                         template2 = open(os.path.join(BASE_DIR, 'email_template2.html'), "r")
                         html += template2.read()
 
-                        response = requests.post("https://api.mailgun.net/v3/aaupush.com/messages", auth=("api", key), data={"from": "AAU PUSH <aaupush@gmail.com>", "to": email, "subject": "AAU Push Account Activation", "html": html})
+                        response = requests.post("https://api.mailgun.net/v3/aaupush.com/messages", auth=("api", key), data={"from": "Gibbi <aaupush@gmail.com>", "to": email, "subject": "Gibbi Account Activation", "html": html})
 
                         code.append(response.text)
                         if response.status_code != 200:

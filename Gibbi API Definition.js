@@ -243,12 +243,13 @@ fetch(URL+'courses',{
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-          userToken: userToken,
+          userToken: '23yiu4hjkrhfdi',
       }),
     })
 
 //Courses Lists Response
-[       //response is a list of objects
+//response is a list of objects
+[       
     {
       name: 'Introduction to Computer Science',
       id: 5
@@ -270,3 +271,56 @@ fetch(URL+'courses',{
       id: 1
     },
   ]
+  
+  
+//List of My Forums request
+//This is a list of the forums a user is in
+fetch(URL+'myforums', 
+    {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userToken: '23yiu4hjkrhfdi',
+            latestForumId: 3,       //that means I already have forums 2 and 1. If -1, it means I have nothing.
+        }),
+    })
+    
+//List of My Forums response
+{
+    forums: [       //list of forum objects
+                    {
+                        id: 1,
+                        name: 'Complexity Theory',
+                        desc: 'Forum for Q&A and class discussions',
+                        thumbnail: '../assets/images/openday.jpg',
+                        creator: true,      //true if the user request is the creator of the forum
+                    },
+                ],
+    latestForumId: 23,
+}
+
+
+//Send message to forum request
+fetch(URL+'forumsendmessage',{
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userToken: '23yiu4hjkrhfdi',
+                forumId: 12,
+                message: 'Hello this is my message.',
+                latestForumPostId: 321
+            }),
+          })
+
+//Send Message to forum response
+{
+    success: 1,             //success is 1 if message is recorded. 0 if there is a problem.
+    error: 'User not found'     //the problem that could occur on server side
+}
+

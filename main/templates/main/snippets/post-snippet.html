@@ -2,6 +2,17 @@
 
 {% for post in source %}
     <div class="card card-body push-corners mb-3">
+        <div class="flex-container">
+            <div class="post-by">
+                    <span class="font-weight-bold">{{ post.post.post_by }}</span>
+                    <span class="meta">{{ post.post_to.course.name }}</span>
+            </div>
+            {% if post.id in read %}
+            <div class="read-post-class">
+                <span class="btn read-post-{{post.post.id}}" onclick="read('{{post.post.id}}')">Read </span>
+            </div>
+            {% endif %}
+        </div>
         <div class="mt-2">
             <p style="white-space: pre-wrap;">{{ post.post }}</p>
         </div>
@@ -26,17 +37,6 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
-        <div class="flex-container">
-            <div class="post-by">
-                    <span class="font-weight-bold">{{ post.post.post_by }}</span>
-                    <span class="meta">{{ post.post_to.course.name }}</span>
-            </div>
-            {% if post.id in read %}
-            <div class="read-post-class">
-                <span class="btn read-post-{{post.post.id}}" onclick="read('{{post.post.id}}')">Read </span>
-            </div>
-            {% endif %}
         </div>
         <div class="meta">
                 {{ post.post.pub_date | naturaltime}}
