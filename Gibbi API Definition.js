@@ -1,4 +1,4 @@
-//Login Request
+//Login Request [IMPLEMENTED]
 fetch(URL+'login', 
     {
         method: 'POST',
@@ -7,7 +7,7 @@ fetch(URL+'login',
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            reg_id: 'reg_id',
+            'reg-id': 'reg-id',
             password: 'password',
             'user-type': 'student',
         }),
@@ -19,7 +19,7 @@ fetch(URL+'login',
 	userToken: 'xxxxxxx'			//null if failed, user token is sent if successful
 }
 
-//Signup Request
+//Signup Request [IMPLEMENTED]
 fetch(URL+'signup',{
         method: 'POST',
         headers: {
@@ -30,7 +30,7 @@ fetch(URL+'signup',{
           department: 'Computer Science',
           firstname: 'Addismiraph',
           lastname: 'Abebe',
-          reg_id: 'NSR/2009/08',
+          'reg-id': 'NSR/2009/08',
           email: 'genioaddis@gmail.com',
           year: 1,
           section: 1,
@@ -46,7 +46,7 @@ fetch(URL+'signup',{
 	userToken: '23yiu4hjkrhfdi',		//send user's token is login is successful
 }
 
-//Your Push Posts Request
+//Your Push Posts Request [IMPLEMENTED]
 fetch(URL+'posts',{
         method: 'POST',
         headers: {
@@ -112,7 +112,7 @@ fetch(URL+'posts',{
 }
 
 
-//Notification when user clicks on 'Read' for a post
+//Notification when user clicks on 'Read' for a post [IMPLEMENTED]
 //No response necessary
 fetch(URL+'readpost',{
       method: 'POST',
@@ -235,7 +235,7 @@ fetch(URL+'reminders',
     latestReminderId: 23,      //send back the id of the last reminder
 }
 
-//Courses Lists Request
+//Courses Lists Request [IMPLEMENTED]
 fetch(URL+'courses',{
       method: 'POST',
       headers:{
@@ -249,7 +249,7 @@ fetch(URL+'courses',{
 
 //Courses Lists Response
 //response is a list of objects
-[       
+[
     {
       name: 'Introduction to Computer Science',
       id: 5
@@ -270,7 +270,7 @@ fetch(URL+'courses',{
       name: 'Software Engineering',
       id: 1
     },
-  ]
+]
   
   
 //List of My Forums request
@@ -324,3 +324,50 @@ fetch(URL+'forumsendmessage',{
     error: 'User not found'     //the problem that could occur on server side
 }
 
+
+//Get University Data request
+ fetch(URL+'uniData')
+
+//Get University Data response
+[
+  {
+    name: 'Computer Science',
+    id: 0,
+    years: [
+      {
+        year: 1,
+        sections: ['1', '2']
+      }, 
+      {
+        year: 2,
+        sections: ['1', '2']
+      },
+      {
+        year: 3,
+        sections: ['1']
+      },
+      {
+        year: 4,
+        sections: ['1']
+      },
+    ],
+  },
+  {
+    name: 'Biology',
+    id: 1,
+    years: [
+      {
+        year: 1,
+        sections: ['1', '2','3']
+      }, 
+      {
+        year: 2,
+        sections: ['1', '2','3']
+      },
+      {
+        year: 3,
+        sections: ['1','2','3']
+      },
+    ],
+  }
+]
