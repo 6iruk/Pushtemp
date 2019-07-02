@@ -92,3 +92,117 @@ function login(user){
        });
   }
 }
+
+function feedback(message) {
+  $('#error-feedback').html(message);
+  $('#feedback-box').modal('show')    //'show' or 'hide' are also possible instead of 'toggle'
+  setTimeout( function() {
+    $('#feedback-box').modal('hide')    //'show' or 'hide' are also possible instead of 'toggle'
+  },7000);
+}
+
+
+$( document ).ready(function() {
+
+  $(".userLoginForm").show()
+  $(".userForgotPasswordForm").hide()
+  $(".userForgotPasswordContinue").hide()
+  $(".studentForgotPasswordContinue").hide()
+  $(".staffForgotPasswordContinue").hide()
+  $(".userResetPasswordForm").hide()
+  $(".userResetPasswordSuccess").hide()
+
+  $('.forgotPasswordButton').click(function(){
+    var elem = $( this );
+    var usertype = elem.attr( "user-type" )
+    if (usertype == "student"){
+      //nothing here for now
+    }
+    else if (usertype=='staff'){
+      $(".userLoginForm").hide()
+      $(".userForgotPasswordForm").show()
+    }
+  })
+  
+  $("#resetAccountStaff").click(function( event ) {
+    form = document.forms.namedItem("resetAccountStaffForm");
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/getrecovery/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              $(".userForgotPasswordContinue").show()
+              $(".staffForgotPasswordContinue").show()
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Reminder edit failed' + result.remark)
+            }
+        },
+    error: () => {
+      console.log('in error')
+      $("#push-loader").css("display", "none");
+      feedback('Failed please try again.')
+      // $(".userForgotPasswordForm").hide() //remove at integration
+      // $(".userForgotPasswordContinue").show()
+      // $(".staffForgotPasswordContinue").show()
+    }
+      })
+    })
+
+    $(".staffForgotPasswordContinueButton").click(function( event ) {
+      $(".staffForgotPasswordContinue").hide()
+      $(".userResetPasswordForm").show()
+    })
+    
+      
+    $("#newPasswordButton").click(function( event ) {
+      form = document.forms.namedItem("newPasswordForm");
+      formdata =  new FormData(form);
+      if ($("input[name='new-password']").val() == $("input[name='confirm-password']").val()){
+        $("#push-loader").css("display", "block");
+        $.ajax({
+        url: base_url + '/json/recoverpassword/',
+        data: formdata,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        dataType:'json',
+        success: function (result) {
+                $("#push-loader").css("display", "none");
+                if(result.status == 1) {
+                  $("#push-loader").css("display", "none");
+                  $(".userResetPasswordForm").hide()
+                  $(".userResetPasswordSuccess").show()
+                }
+    
+                else if(result.status == 0)  {
+                  $("#push-loader").css("display", "none");
+                  feedback('Failed to reset password. Please try again.')
+                }
+            },
+        error: () => {
+          console.log('in error')
+          $("#push-loader").css("display", "none");
+          feedback('Failed. Please try again.')
+          // $(".userResetPasswordForm").hide() //remove at integration
+          // $(".userResetPasswordSuccess").show()
+        }
+          })
+      }
+      else {
+        feedback('Passwords do not match')
+      }
+      })
+    
+})

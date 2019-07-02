@@ -28,10 +28,22 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
             <a class="nav-link" href="#" onclick="nav_click('tracker')" data-toggle="collapse" data-target="#pushNav">Tracker</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="#" onclick="nav_click('group-chat')" data-toggle="collapse" data-target="#pushNav">Department Chat</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="nav_click('message-department')" data-toggle="collapse" data-target="#pushNav">Message Department</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('forums')" data-toggle="collapse" data-target="#pushNav">Forums</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="nav_click('assignments')" data-toggle="collapse" data-target="#pushNav">Assignments</a>
         </li>
         <li class="nav-item active">
                 <a class="nav-link" href="#" onclick="nav_click('class-list')" data-toggle="collapse" data-target="#pushNav">Class List</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="#" onclick="nav_click('manage-department')" data-toggle="collapse" data-target="#pushNav">Manage Department</a>
         </li>
         <li class="nav-item">
                 <a class="nav-link" href="#" onclick="nav_click('account-setting')" data-toggle="collapse" data-target="#pushNav">Account</a>
@@ -39,19 +51,41 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
         <li class="nav-item">
                 <a class="nav-link" href="/login/" data-toggle="collapse" data-target="#pushNav">Log out</a>
         </li>
+
         {% else %}
-        <li class="nav-item active">
+
+        <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('post')" data-toggle="collapse" data-target="#pushNav">Post</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('tracker')" data-toggle="collapse" data-target="#pushNav">Tracker</a>
         </li>
+        {% if staff.role == "Department Head" or staff.role == "Instructor" %}
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="nav_click('group-chat')" data-toggle="collapse" data-target="#pushNav">Department Chat</a>
+            </li>
+        {% endif %}
+        {% if staff.role == "Dean" %}
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="nav_click('message-department')" data-toggle="collapse" data-target="#pushNav">Message Department</a>
+            </li>
+        {% endif %}
         <li class="nav-item">
             <a class="nav-link" href="#" onclick="nav_click('forums')" data-toggle="collapse" data-target="#pushNav">Forums</a>
         </li>
+        {% if staff.role == "Department Head" or staff.role == "Instructor" %}
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="nav_click('assignments')" data-toggle="collapse" data-target="#pushNav">Assignments</a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="nav_click('class-list')" data-toggle="collapse" data-target="#pushNav">Class List</a>
+            </li>
+        {% endif %}
+        {% if staff.role == "Department Head"%}
         <li class="nav-item">
-                <a class="nav-link" href="#" onclick="nav_click('class-list')" data-toggle="collapse" data-target="#pushNav">Class List</a>
+            <a class="nav-link" href="#" onclick="nav_click('manage-department')" data-toggle="collapse" data-target="#pushNav">Manage Department</a>
         </li>
+        {% endif %}
         <li class="nav-item">
                 <a class="nav-link" href="#" onclick="nav_click('account-setting')" data-toggle="collapse" data-target="#pushNav">Account</a>
         </li>
@@ -82,23 +116,28 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fa fa-line-chart mr-3" aria-hidden="true"></i>Tracker
                                 </a>
                             </div>
+                            {% if staff.role == "Department Head" or staff.role == "Instructor" %}
                             <div class="push-sidebar-item" onclick="nav_click('group-chat')">
                                 <a href="#">
                                     <i class="fa fa-building mr-3" aria-hidden="true"></i>Department Chat
                                 </a>
                             </div>
+                            {% endif %}
+                            {% if staff.role == "Dean" %}
                             <!-- if user is college dean -->
                             <div class="push-sidebar-item" onclick="nav_click('message-department')">
                                 <a href="#">
                                     <i class="fa fa-envelope mr-3" aria-hidden="true"></i>Message Department
                                 </a>
                             </div>
+                            {% endif %}
                             <!-- end if -->
                             <div class="push-sidebar-item" onclick="nav_click('forums')">
                                 <a href="#">
                                     <i class="fa fa-comments mr-3" aria-hidden="true"></i>Forums
                                 </a>
                             </div>
+                            {% if staff.role == "Department Head" or staff.role == "Instructor" %}
                             <div class="push-sidebar-item" onclick="nav_click('assignments')">
                                 <a href="#">
                                     <i class="fa fa-paperclip mr-3" aria-hidden="true"></i>Assignments
@@ -109,12 +148,15 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fa fa-list-ol mr-3" aria-hidden="true"></i>Class List
                                 </a>
                             </div>
+                            {% endif %}
                             <!-- if user is department head -->
+                            {% if staff.role == "Department Head"%}
                             <div class="push-sidebar-item" onclick="nav_click('manage-department')">
                                 <a href="#">
                                     <i class="fa fa-cog mr-3" aria-hidden="true"></i>Manage Department
                                 </a>
                             </div>
+                            {% endif %}
                             <!-- end if -->
                             <div class="push-sidebar-item" onclick="nav_click('account-setting')">
                                 <a href="#">
@@ -165,8 +207,9 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                         <div id="post-recipient-error" class="error alert alert-danger hidden-area" role="alert">
 
                                                         </div>
-
+                                                        
                                                         <div id="post-recipient">
+                                                                {% if staff.role == "Department Head" or staff.role == "Instructor" %}
                                                                 {% if  staff.get_classes %}
                                                                 <div class="class-recipient">
                                                                     <div class="recipient-list">
@@ -244,69 +287,12 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                                                 <br><br>This video explains how to: <a href="https://youtu.be/YVl3Cfgiac0" target="_blank">How to Add Classes</a>
                                                                                             </div>
                                                                                         {% endif %}
-                                                                                        
-
-
-                                                         <div class="section-recipient hidden-area">
-                                                            <div class="list-header">
-                                                                    <p>{{staff.department_in.name}}</p>
-                                                            </div>
-
-                                                            <div class="recipient-list">
-                                                                {% for section in department_sections %}
-                                                                    {% ifchanged section.year %}
-                                                                        {% if not forloop.first %}
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        {% endif %}
-
-                                                                        <div class="recipient-data">
-                                                                            <div class="recipient-selection form-control  blue lighten-5 mt-3">
-                                                                                <div class="d-inline">
-                                                                                    <input name="section-recipients" value="year-{{section.department_in.id}}-{{section.year}}" type="checkbox" />
-                                                                                </div>
-                                                                                <div class="d-inline-block" onclick="click_hidden('section-year-{{forloop.counter}}')">
-                                                                                    <div class="d-inline mx-2">
-                                                                                        <span>Year&nbsp;{{section.year}}</span>
-                                                                                    </div>
-                                                                                    <div class="d-inline">
-                                                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="hidden-area" id="section-year-{{forloop.counter}}">
-                                                                                <div class="recipient-list">
-                                                                                    <div class="recipient-data">
-                                                                                        <div class="recipient-selection ml-5 my-2">
-                                                                                            <div class="d-inline">
-                                                                                                <input name="section-recipients" value="section-{{section.id}}" type="checkbox" />
-                                                                                            </div>
-                                                                                            <div class="d-inline">
-                                                                                                    <span>Section&nbsp;{{section.section_id}}</span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                        {% else %}
-                                                                                <div class="recipient-data ml-5 my-2">
-                                                                                        <div class="d-inline">
-                                                                                            <input name="section-recipients" value="section-{{section.id}}" type="checkbox" />
-                                                                                        </div>
-                                                                                        <div class="d-inline">
-                                                                                                <span>Section&nbsp;{{section.section_id}}</span>
-                                                                                        </div>
-                                                                                </div>
-                                                                    {% endifchanged %}
-                                                                {% endfor %}
-                                                                </div>
-                                                                </div>
-                                                                </div>
-                                                            </div>
+                                                                                    {% endif %} <!-- end if for staff type conditional-->
+                                                                                    {% if staff.role == "Dean" or staff.role == "Registrar" %}
+                                                                                        {% include 'main/snippets/dep-picker.html' %}
+                                                                                    {% endif %}
+                                                                                  </div>  
                                                         </div>
-                                                        </div>
-                                                      </div>
-
                                             <div class="col-md-6">
                                                 <div>
                                                     <div>
@@ -395,32 +381,122 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                             </div>
                                     </div>
                                 </div>
+                                {% if staff.role == "Department Head" or staff.role == "Instructor" %}
                                 <!-- Set Reminder -->
                                 <div class="card card-body push-corners mt-3 col-md-6">
                                     <div>
                                         <span class="subtitle d-inline">Set Reminder</span>
                                     </div>
-                                    <form action="" class="md-form">
+                                    <form id="set-reminder-form" class="md-form">
+                                        {% csrf_token %}
+                                        <select name="for" id="" class="form-control">
+                                                <option selected disabled>Reminder for</option>
+                                                <option value="Assignment">Assignment</option>
+                                                <option value="Test">Test</option>
+                                                <option value="Project">Project</option>
+                                                <option value="Make up Class">Make up Class</option>
+                                                <option value="Presentation">Presentation</option>
+                                        </select>
                                         <input class="form-control" type="text" name="reminder-name" id="" placeholder="Reminder Name (Ex. Test 1)">
-                                        <input class="flatpickr flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
+                                        <input name="reminder-date" class="flatpickr flatDate flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
                                         <div>
                                             <span>Send to:</span>
-                                            <span>Section picking option should be added here</span>
+                                            <div>
+                                                {% if  staff.get_classes %}
+                                                                <div class="class-recipient">
+                                                                    <div class="recipient-list">
+                                                                        {% for t in staff.get_classes %}
+
+                                                                        <div class="recipient-data">
+                                                                            <div class="recipient-selection">
+                                                                                <div class="recipient-selection form-control blue lighten-5 mt-3">
+                                                                                    <div class='d-inline-block' onclick="click_hidden('class-department-{{forloop.counter}}')">
+                                                                                        <div class="d-inline mx-2">
+                                                                                            {{t.0.section.department_in.name}}
+                                                                                        </div>
+                                                                                        <div class="d-inline">
+                                                                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="recipient-data-hidden" id="class-department-{{forloop.counter}}">
+                                                                                <div class="recipient-list">
+                                                                                    {% for teaches in t %}
+                                                                                    {% ifchanged teaches.section.year %}
+                                                                                    {% if not forloop.first %}
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </div>
+                                                                                    {% endif %}
+
+                                                                                    <div class="recipient-data">
+                                                                                        <div class="recipient-selection form-control">
+                                                                                            <div class='d-inline-block' onclick="click_hidden('class-year-{{forloop.counter}}')">
+                                                                                                <div class="d-inline mx-2">
+                                                                                                    Year {{teaches.section.year}}
+                                                                                                </div>
+                                                                                                <div class="d-inline">
+                                                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div class="recipient-data-hidden" id="class-year-{{forloop.counter}}">
+                                                                                            <div class="recipient-list">
+                                                                                              {% endifchanged %}
+
+                                                                                                <div class="recipient-data">
+                                                                                                    <div class="recipient-selection ml-5 my-2">
+                                                                                                        <div class="d-inline">
+                                                                                                            <input name="class-recipients" value="{{teaches.section.id}}-{{teaches.course.id}}" type="checkbox" />
+                                                                                                        </div>
+                                                                                                        <div class="d-inline mx-2">
+                                                                                                            Section {{teaches.section.section_id}} - {{teaches.course.name}}
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                {% empty %}
+                                                                                                <div>
+                                                                                                  <div>
+                                                                                                    <div>
+                                                                                                {% endfor %}
+                                                                                                          </div>
+                                                                                                        </div>
+                                                                                                      </div>
+                                                                                                    </div>
+                                                                                                  </div>
+                                                                                                </div>
+                                                                                                {% endfor %}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {% else %}
+                                                                                            <div class="error alert alert-warning" role="alert">
+                                                                                                There are no classes added. Add your classes in the "Class List" tab.
+
+                                                                                                <br><br>This video explains how to: <a href="https://youtu.be/YVl3Cfgiac0" target="_blank">How to Add Classes</a>
+                                                                                            </div>
+                                                                                        {% endif %}
+                                            </div>
                                         </div>
                                         <textarea type="text" id="" class="md-textarea form-control push-corners" rows="3" name="reminder-comments" placeholder="Comments for reminder... (optional)"></textarea>
-                                        <span class="btn float-right">Set Reminder</span>
+                                        <span class="btn float-right" onclick="set_reminder()">Set Reminder</span>
                                     </form>
                                 </div>
+                                {% endif %}
                                 <!-- End of Set Reminder -->
                             </div>
 
 
 
 
-                            <div id="post-tracker" class="content hidden-area row">
+                            <div id="post-tracker" class="content hidden-area">
+                                <div class="row">
                                 <div class="col-md-7">
                                     <div id="post-list">
-                                        {% for post in posts %}
+                                        {% for post in posts reversed %}
                                         <!-- NORMAL POST Interface: if POST is normal post -->
                                         <div class="card card-body push-corners mb-3">
                                             <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}')">
@@ -501,29 +577,31 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 <div class="flex-container">
                                                     <div></div>
                                                     <div>
-                                                        <span id="{{post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.id}}">Delete</span>
-                                                        <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}">Edit</span>   
+                                                        <span id="{{post.post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.post.id}}">Delete</span>
+                                                        <span id="{{post.post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.post.id}}">Edit</span>   
                                                     </div>
                                                 </div>                                                
                                                 <!-- Edit Modal Small -->
-                                                <div class="modal fade" id="editModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}" aria-hidden="true">
+                                                <div class="modal fade" id="editModel{{post.post.id}}" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.post.id}}" aria-hidden="true">
 
                                                     <!-- Change class .modal-sm to change the size of the modal -->
                                                     <div class="modal-dialog" role="document">
 
                                                         <div class="modal-content">
-                                                            <form action="">
+                                                            <form action="" name="editModal{{post.post.id}}">
+                                                                {%csrf_token%}
                                                                 <div class="modal-header">
-                                                                <h4 class="modal-title w-100" id="editModel{{post.id}}Label">Edit Post</h4>
+                                                                <h4 class="modal-title w-100" id="editModel{{post.post.id}}Label">Edit Post</h4>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="md-form my-0">
-                                                                        <textarea type="text" id="form10" class="md-textarea form-control push-corners" rows="5" name="post-content" placeholder="Type your message here...">{{post.post}}</textarea>
+                                                                        <input type="text" name="post-id" id="{{post.post.id}}" value="{{post.post.id}}" hidden>
+                                                                        <textarea type="text" id="editModel{{post.post.id}}content" class="md-textarea form-control push-corners" rows="5" name="content" placeholder="Type your message here...">{{post.post}}</textarea>
                                                                     </div>
-                                                                    {% if post.post.files.all %}
+                                                                    <!-- {% if post.post.files.all %}
                                                                         <div class="detail-files">
                                                                             <span class="font-weight-bold">Files: </span>
                                                                             <ul>
@@ -536,11 +614,11 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                                 {% endfor %}
                                                                             </ul>
                                                                         </div>
-                                                                    {% endif %}
+                                                                    {% endif %} -->
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn">Save changes</button>
+                                                                <button type="button" data-toggle="modal" data-target="#editModel{{post.post.id}}" class="btn submitEditPost" id="{{post.post.id}}">Save changes</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -550,14 +628,14 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                 <!-- Edit Modal Small -->
 
                                                 <!-- Delete Modal Small -->
-                                                <div class="modal fade" id="deleteModel{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.id}}" aria-hidden="true">
+                                                <div class="modal fade" id="deleteModel{{post.post.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.post.id}}" aria-hidden="true">
 
                                                     <!-- Change class .modal-sm to change the size of the modal -->
                                                     <div class="modal-dialog" role="document">
 
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                            <h4 class="modal-title w-100" id="deleteModel{{post.id}}Label">Delete Post</h4>
+                                                            <h4 class="modal-title w-100" id="deleteModel{{post.post.id}}Label">Delete Post</h4>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
@@ -571,7 +649,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             </div>
                                                             <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn danger-color">Delete</button>
+                                                            <span class="btn danger-color submitDeletePost" id={{post.post.id}}>Delete</span>
                                                             </div>
                                                         </div>
 
@@ -581,122 +659,117 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                             </div>
                                         </div>
                                         <!-- End of NORMAL POST: Interface if POST is normal post -->
-
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% if staff.role == "Department Head" or staff.role == "Instructor" %}
+                                <div class="col-md-5">
+                                        {% for reminder in reminders reversed %}
                                         <!-- REMINDER POST Interface: if POST is a reminder -->
                                         <div class="card card-body push-corners mb-3">
-                                            <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}2')">
-                                                <i class="fa fa-clock-o fa-lg mr-1" aria-hidden="true"></i>
-                                                <span class="font-weight-bold mb-4">Reminder - Test 1</span>
-                                                <div class="post-content">
-                                                    <p style="white-space: pre-wrap;">Hello, this is a test reminder.</p>
-                                                </div>
-
-                                                <div class="flex-container">
-                                                    <div class="tracking-delivered">
-                                                        <i class="fa fa-check" aria-hidden="true"></i> Delivered to: <span class="font-weight-bold">{{post.post.delivered}} students</span>
+                                                <div class="post" onclick="click_hidden('post-detail-{{forloop.counter}}2')">
+                                                    <i class="fa fa-clock-o fa-lg mr-1" aria-hidden="true"></i>
+                                                    <span class="font-weight-bold mb-4">Reminder - {{reminder.title}}</span>
+                                                    <div class="post-content">
+                                                        <p style="white-space: pre-wrap;">{{reminder.note}}</p>
                                                     </div>
-
-                                                    <div class="see-more">
-                                                        <span class="btn">See more</span>
+    
+                                                    <div class="flex-container">
+                                                        <div class="tracking-delivered">
+                                                        </div>
+    
+                                                        <div class="see-more">
+                                                            <span class="btn">See more</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="hidden-area" id="post-detail-{{forloop.counter}}2">
-                                                <hr>
-                                                <div class="post-detial-header">
-                                                    <span class="font-weight-bold">Posted to: </span>
-                                                    <ul>
-                                                    {% for recipient in post.post.post_to_section_set.all %}
-                                                    <li class="ml-3">
-                                                        {{recipient.recipient}}
-                                                    </li>
-                                                    {% endfor %}
-
-                                                    {% for recipient in post.post.post_to_class_set.all %}
-                                                    <li class="recipient">
-                                                        {{recipient.recipient}}
-                                                    </li>
-                                                    {% endfor %}
-                                                    </ul>
-                                                </div>
-
-                                                <div>
-                                                    <span class="font-weight-bold">Reminder date: </span>
-                                                    <span>June 20, 2019 - 9 AM</span>
-                                                </div>
-
-                                                <div class="flex-container">
-                                                    <div></div>
+    
+                                                <div class="hidden-area" id="post-detail-{{forloop.counter}}2">
+                                                    <hr>
+    
                                                     <div>
-                                                        <span id="{{post.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{post.id}}2">Delete</span>
-                                                        <span id="{{post.id}}" class="btn edit-post" data-toggle="modal" data-target="#editModel{{post.id}}2">Edit</span>   
+                                                        <span class="font-weight-bold">Reminder date: </span>
+                                                        <span>{{reminder.due_date | date:"F d, Y - f A"}}</span>
                                                     </div>
-                                                </div>                                                
-                                                <!-- Edit Modal Small -->
-                                                <div class="modal fade" id="editModel{{post.id}}2" tabindex="-1" role="dialog" aria-labelledby="editModel{{post.id}}2" aria-hidden="true">
-
-                                                    <!-- Change class .modal-sm to change the size of the modal -->
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <form action="" class="md-form">
+    
+                                                    <div class="flex-container">
+                                                        <div></div>
+                                                        <div>
+                                                            <span id="{{reminder.id}}" class="btn delete-post danger-color" data-toggle="modal" data-target="#deleteModel{{reminder.id}}2">Delete</span>
+                                                            <span id="{{reminder.id}}" class="btn edit-post" data-toggle="modal" data-target="#editReminderModal{{reminder.id}}2">Edit</span>   
+                                                        </div>
+                                                    </div>                                                
+                                                    <!-- Edit Modal Small -->
+                                                    <div class="modal fade" id="editReminderModal{{reminder.id}}2" tabindex="-1" role="dialog" aria-labelledby="editModel{{reminder.id}}2" aria-hidden="true">
+    
+                                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <form class="md-form" name="editReminderForm{{reminder.id}}">
+                                                                    {% csrf_token %}
+                                                                    <div class="modal-header">
+                                                                    <h4 class="modal-title w-100" id="editModel{{reminder.id}}2Label">Edit Reminder</h4>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <span>Reminder Title:</span>
+                                                                        <input type="text" name="reminder-id" value="{{reminder.id}}" hidden>
+                                                                        <input type="text" name="reminder-title" id="" class="form-control mb-4" placeholder="Edit Title" value="{{reminder.title}}">
+                                                                        <input class="flatpickr flatpickr-input form-control my-4" type="text" name="reminder-date" placeholder="Select Date and Time..." readonly="readonly" value="{{reminder.due_date|date:'c'}}">
+                                                                        <span>Comments:</span>
+                                                                        <textarea type="text" id="" class="md-textarea form-control push-corners py-0" rows="5" name="reminder-note" placeholder="Type your message here...">{{reminder.note}}</textarea>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                    <button class="btn submitEditReminder" id="{{reminder.id}}">Save changes</button>
+                                                                    </div>
+                                                                </form> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Edit Modal Small -->
+    
+                                                    <!-- Delete Modal Small -->
+                                                    <div class="modal fade" id="deleteModel{{reminder.id}}2" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{reminder.id}}2" aria-hidden="true">
+    
+                                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                                        <div class="modal-dialog" role="document">
+    
+                                                            <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                <h4 class="modal-title w-100" id="editModel{{post.id}}2Label">Edit Reminder</h4>
+                                                                <h4 class="modal-title w-100" id="deleteModel{{reminder.id}}2Label">Delete Post</h4>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <span>Reminder Title:</span>
-                                                                    <input type="text" name="reminder-name-edit" id="" class="form-control mb-4" placeholder="Test 1">
-                                                                    <input class="flatpickr flatpickr-input form-control my-4" type="text" placeholder="Select Date and Time..." readonly="readonly">
-                                                                    <span>Comments:</span>
-                                                                    <textarea type="text" id="" class="md-textarea form-control push-corners py-0" rows="5" name="post-content" placeholder="Type your message here...">Hello this is a test reminder.</textarea>
+                                                                    <p>
+                                                                        Are you sure? 
+                                                                        <br>
+                                                                        You will permanently remove this reminder.
+                                                                    </p>
                                                                 </div>
+                                                                <form name="deleteReminderModal{{reminder.id}}">
+                                                                        {% csrf_token %}
+                                                                        <input type="text" name="post-id" value="{{reminder.id}}" hidden>
+                                                                </form>
                                                                 <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn">Save changes</button>
+                                                                <button id="{{reminder.id}}" class="btn danger-color submitDeleteReminder">Delete</button>
                                                                 </div>
-                                                            </form> 
+                                                            </div>
+    
                                                         </div>
                                                     </div>
+                                                    <!-- Edit Modal Small -->
                                                 </div>
-                                                <!-- Edit Modal Small -->
-
-                                                <!-- Delete Modal Small -->
-                                                <div class="modal fade" id="deleteModel{{post.id}}2" tabindex="-1" role="dialog" aria-labelledby="deleteModel{{post.id}}2" aria-hidden="true">
-
-                                                    <!-- Change class .modal-sm to change the size of the modal -->
-                                                    <div class="modal-dialog" role="document">
-
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                            <h4 class="modal-title w-100" id="deleteModel{{post.id}}2Label">Delete Post</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>
-                                                                    Are you sure? 
-                                                                    <br>
-                                                                    You will permanently remove this reminder.
-                                                                </p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn danger-color">Delete</button>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <!-- Edit Modal Small -->
                                             </div>
-                                        </div>
-                                        <!-- End of REMINDER POST Interface: if POST is a reminder -->
-                                        {% endfor %}
+                                            <!-- End of REMINDER POST Interface: if POST is a reminder -->
+                                            {% endfor %}
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
 
@@ -718,8 +791,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     </div>
 
                                                     <div class="md-form">
-                                                        <textarea type="text" id="chatmessage" class="md-textarea form-control push-corners" rows="5" name="post-content" required></textarea>
-                                                        <label for="chatmessage">Type your message here...</label>
+                                                        <textarea placeholder="Type your message here..." type="text" id="chatmessage" class="md-textarea form-control push-corners" rows="5" name="post-content" required></textarea>
                                                     </div>
 
                                                     <div id="keyboard-extra">
@@ -735,7 +807,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             <div class="keyboard-files">
                                                                 <div class="input-group mb-3">
                                                                     <div class="custom-file">
-                                                                        <input type="file" id="inputGroupFile01" name="group-chat-post-file">
+                                                                        <input type="file" id="inputGroupFile01" name="file-1">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -743,7 +815,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                             <div class="keyboard-images">
                                                                 <div class="input-group mb-3">
                                                                     <div class="custom-file">
-                                                                        <input type="file" accept="image/*" name="group-chat-post-image">
+                                                                        <input type="file" accept="image/*" name="image-1">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -761,7 +833,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                         </div>
                                     </div>
                                     <div id="chat-post-list" class="col-md-6 order-md-1">
-                                        {% for post in group_posts %}
+                                        {% for post in group_posts reversed %}
                                             {% ifchanged post.pub_date.month or post.pub_date.day %}
                                                 <div class="mx-3 mt-3">
                                                     <p>{{post.pub_date | date:"F j"}}</p>
@@ -769,11 +841,11 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                             {% endifchanged %}
                                             <div class="card card-body push-corners mb-3">
                                                     <div class="post-header">
-                                                        <p class="font-weight-bold">{{post.post_by}}</p>
+                                                        <p class="font-weight-bold">{{post.post.post_by}}</p>
                                                     </div>
 
                                                     <div class="post-images">
-                                                        {% for image in post.images.all %}
+                                                        {% for image in post.post.images.all %}
                                                         <div class="mb-3">
                                                             <img width="100%" src="/media/{{image.image}}"/>
                                                         </div>
@@ -781,11 +853,11 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                     </div>
 
                                                     <div class="post-content">
-                                                        <p>{{post}}</p>
+                                                        <p>{{post.post.content}}</p>
                                                     </div>
 
                                                     <div>
-                                                        {% for file in post.files.all %}
+                                                        {% for file in post.post.files.all %}
                                                             <div class="file">
                                                                 <div>
                                                                     <a class="link font-weight-bold" href="/media/{{file.file}}">{{ file.name }} [{{ file.extension | upper }}]</a>
@@ -800,8 +872,8 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                                     <div>
                                                         <div>
-                                                            <span class="meta">{{post.delivered}} Views | </span>
-                                                            <span class="meta">{{post.pub_date}}</span>
+                                                            <span class="meta">{{post.post.delivered}} Views | </span>
+                                                            <span class="meta">{{post.post.pub_date}}</span>
                                                         </div>
                                                     </div>
                                             </div>
@@ -819,28 +891,29 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                     </div>
 
                                     <div class="card card-body push-corners mt-3">
-                                        <form action="" class="md-form mt-0">
-                                            <textarea type="text" id="" class="md-textarea form-control push-corners pt-0" rows="5" name="dep-message" placeholder="Type your message" required></textarea>
+                                        <form action="" id="" class="md-form mt-0" name="deanMessageDepartment">
+                                            <input type="hidden" value="dean" name="action-type"/>
+                                            <textarea type="text" id="" class="md-textarea form-control push-corners pt-0" rows="5" name="post-content" placeholder="Type your message..." required></textarea>
                                             <div class="input-group mb-3">
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="">
+                                                    <input type="file" class="custom-file-input" id="" name="file-1">
                                                     <label class="custom-file-label" for="">Attach file (optional):</label>
                                                 </div>
                                             </div>
                                             <div class="input-group mb-3">
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="">
+                                                    <input type="file" class="custom-file-input" id="" name="image-1">
                                                     <label class="custom-file-label" for="">Attach image (optional):</label>
                                                 </div>
                                             </div>
                                                 <p class="pb-0 mb-0 pt-3">Send to (you can select multiple):</p>
-                                                <select class="form-control" name="dep-message-for" id="" multiple class="d-block">
+                                                <select class="form-control" name="department-list" id="dep-message-for" multiple class="d-block">
                                                     {% for department in departments %}
                                                     <option value="{{department.id}}">{{department.name}}</option>
                                                     {% endfor %}
                                                 </select>
                                             
-                                            <span class="btn float-right">Send</span>
+                                            <span class="btn float-right submitDeanMessage">Send</span>
                                         </form>
                                     </div>
                                 </div>
@@ -998,7 +1071,83 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                             <div>
                                                 <span>Send to:</span>
-                                                <span>Section picking option should be added here</span>
+                                                {% if  staff.get_classes %}
+                                                                <div class="class-recipient">
+                                                                    <div class="recipient-list">
+                                                                        {% for t in staff.get_classes %}
+
+                                                                        <div class="recipient-data">
+                                                                            <div class="recipient-selection">
+                                                                                <div class="recipient-selection form-control blue lighten-5 mt-3">
+                                                                                    <div class='d-inline-block' onclick="click_hidden('class-department-{{forloop.counter}}')">
+                                                                                        <div class="d-inline mx-2">
+                                                                                            {{t.0.section.department_in.name}}
+                                                                                        </div>
+                                                                                        <div class="d-inline">
+                                                                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="recipient-data-hidden" id="class-department-{{forloop.counter}}">
+                                                                                <div class="recipient-list">
+                                                                                    {% for teaches in t %}
+                                                                                    {% ifchanged teaches.section.year %}
+                                                                                    {% if not forloop.first %}
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </div>
+                                                                                    {% endif %}
+
+                                                                                    <div class="recipient-data">
+                                                                                        <div class="recipient-selection form-control">
+                                                                                            <div class='d-inline-block' onclick="click_hidden('class-year-{{forloop.counter}}')">
+                                                                                                <div class="d-inline mx-2">
+                                                                                                    Year {{teaches.section.year}}
+                                                                                                </div>
+                                                                                                <div class="d-inline">
+                                                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div class="recipient-data-hidden" id="class-year-{{forloop.counter}}">
+                                                                                            <div class="recipient-list">
+                                                                                              {% endifchanged %}
+
+                                                                                                <div class="recipient-data">
+                                                                                                    <div class="recipient-selection ml-5 my-2">
+                                                                                                        <div class="d-inline">
+                                                                                                            <input name="class-recipients" value="{{teaches.section.id}}-{{teaches.course.id}}" type="checkbox" />
+                                                                                                        </div>
+                                                                                                        <div class="d-inline mx-2">
+                                                                                                            Section {{teaches.section.section_id}} - {{teaches.course.name}}
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                {% empty %}
+                                                                                                <div>
+                                                                                                  <div>
+                                                                                                    <div>
+                                                                                                {% endfor %}
+                                                                                                          </div>
+                                                                                                        </div>
+                                                                                                      </div>
+                                                                                                    </div>
+                                                                                                  </div>
+                                                                                                </div>
+                                                                                                {% endfor %}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {% else %}
+                                                                                            <div class="error alert alert-warning" role="alert">
+                                                                                                There are no classes added. Add your classes in the "Class List" tab.
+
+                                                                                                <br><br>This video explains how to: <a href="https://youtu.be/YVl3Cfgiac0" target="_blank">How to Add Classes</a>
+                                                                                            </div>
+                                                                                        {% endif %}
                                             </div>
                                             <textarea type="text" id="" class="md-textarea form-control push-corners" rows="3" name="assign-comments" placeholder="Comments for assignment... (optional)"></textarea>
                                             <span class="btn float-right">Give Assignment</span>
@@ -1172,14 +1321,15 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                             </div>
-                                                            <form action="" class="md-form">
+                                                            <form name="inviteInstructorForm" class="md-form">
+                                                                {% csrf_token %}
                                                                 <div class="modal-body">
                                                                     <p>Enter the email of the instructor you would like to invite.</p>
-                                                                    <input type="email" placeholder="Email" class="form-control">
+                                                                    <input type="email" placeholder="Email" name="email" class="form-control">
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn">Send Invite</button>
+                                                                <span class="btn inviteInstructorButton">Send Invite</span>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -1467,6 +1617,7 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
                                             Account Information
                                         </div>
 
+                                        <input type="text" name="user-type" id="" value="staff" hidden>
                                         <div>
                                             <div id="error-title" class="error alert alert-danger hidden-area" role="alert"></div>
                                             <label for="title">Title</label>
@@ -1484,19 +1635,13 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 
                                         <div id="error-firstname" class="error alert alert-danger hidden-area" role="alert"></div>
                                         <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" name="first-name" id="firstname" type="text" placeholder="First Name" value="{{staff.first_name}}" required />
+                                                <input class="form-control" name="first-name" id="first-name" type="text" placeholder="First Name" value="{{staff.first_name}}" required />
                                         </div>
 
                                         <div id="error-lastname" class="error alert alert-danger hidden-area" role="alert"></div>
                                         <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" name="last-name" id="lastname" type="text" placeholder="Last Name" value="{{staff.last_name}}" required />
+                                                <input class="form-control" name="last-name" id="last-name" type="text" placeholder="Last Name" value="{{staff.last_name}}" required />
                                         </div>
-
-                                        <div id="error-phonenum" class="error alert alert-danger hidden-area" role="alert"></div>
-                                        <div class="md-form mt-4 mb-2 mx-1">
-                                                <input class="form-control" name="phone-number" id="phonenum" type="tel" placeholder="Phone Number" value="{{staff.phone}}" required />
-                                        </div>
-
 
 
                                         <div id="error-email" class="error alert alert-danger hidden-area" role="alert"></div>
@@ -1537,15 +1682,14 @@ aria-controls="pushNav" aria-expanded="false" aria-label="Toggle navigation">
 {% load static %}
 <script src="{% static 'main/staff-account.js' %}"></script>
 <script src="{% static 'forum/forum.js' %}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     
     $(document).ready(function(){
-        flatpickr(".flatpickr", {
+        flatpickr(".flatDate", {
             enableTime: true,
             altInput: true,
             altFormat: "F j, Y",
-            dateFormat: "Y-m-d",
+            dateFormat: "Z",
             minDate: "today",
         });
     });

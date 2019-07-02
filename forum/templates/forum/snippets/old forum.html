@@ -1,0 +1,169 @@
+<!-- this page will be a snippet that will be embedded in the student and staff dashboard pages -->
+{% load humanize %}
+
+<button class="forum-home-button">
+    Home
+</button>
+
+<button class="create-forum-button">Create Forum</button>
+
+<button class="search-forum-button">Search Forum</button>
+
+<button class="forum-feed-button">Forum Feed</button>
+
+<div id="forum-home" class="forum-content">
+    <div class="card card-body push-corners mb-3">
+        <div class="flex-container">
+            <div>
+                <p class="h3-responsive">My Forums</p>
+            </div>
+            <div>
+                <span class="btn create-forum-button">Create Forum</span>
+            </div>
+        </div>
+            <div id="user-forums">
+
+            </div>
+    </div>
+    <div class="card card-body push-corners mb-3">
+            <div class="flex-container">
+                <div>
+                    <p class="h3-responsive">Trending Forums</p>
+                </div>
+                <div>
+                    <span class="btn search-forum-button">Search Forum</span>
+                </div>
+            </div>
+            <div id="trending-forums">
+                
+            </div>
+    </div>
+</div>
+
+<hr>
+
+<div id="create-forum" class="forum-content">
+    <div class="card card-body push-corners mb-3">
+        <div>
+            <p class="h3-responsive">Create Forum</p>
+        </div>
+        <form action="" method="post">
+            <div class="md-form mt-4 mb-2 mx-1">
+                <input class="form-control" name="forum-name" id="forum-name" type="text" placeholder="Forum Name" required />
+            </div>
+            <div class="md-form mt-4 mb-2 mx-1">
+                <input class="form-control" name="forum-desc" id="forum-desc" type="text" placeholder="Forum Description" required />
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose forum cover image</label>
+                </div>
+            </div>
+            <div>
+                <div class="d-inline align-middle mr-3">Filter users that join by:</div>
+                <div class="d-inline">
+                    <select class="md-form">
+                        <option name="" id="" selected>None</option>
+                        <option name="" id="">By department</option>
+                        <option name="" id="">By year</option>
+                        <option name="" id="">By section</option>
+                    </select>
+                </div>
+            </div>
+
+            <select multiple name="department-filter" id="department-filter">
+                {% for department in departments %}
+                    {% if department == student.department_in %}
+                        <option value="{{department.name}}" selected disabled>{{department.name}}</option>
+                    {% else %}
+                        <option value="{{department.name}}">{{department.name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <select multiple name="year-filter" id="year-filter">
+                {% for section in sections %}
+                    {% ifchanged section.year %}
+                        {% if section.year == student.section.year %}
+                            <option value="{{section.year}}" selected disabled>{{section.year}}</option>
+                        {% else %}
+                            <option value="{{section.year}}">Year {{section.year}}</option>
+                        {% endif %}
+                    {% endifchanged %}
+                {% endfor %}
+            </select>
+
+            <select multiple name="section-filter" id="section-filter">
+                {% for section in sections %}
+                    {% ifchanged section.section_id %}
+                        {% if section.section_id == student.section.section_id %}
+                            <option value="{{section.section_id}}" selected disabled>Section {{section.section_id}}</option>
+                        {% else %}
+                            <option value="{{section.section_id}}">Section {{section.section_id}}</option>
+                        {% endif %}
+                    {% endifchanged %}
+                {% endfor %}
+            </select>
+
+
+            <p>
+                Fetch for list of departments in the college
+                Once that's picked, fetch for years in that department
+                Once that's picked, fetch for sections in that year and dep
+                On all levels, if it's in the user's department, year or section, the user's data should be disabled.
+                On all levels, a 'Any department' or 'Any year' option should be there.
+            </p>
+            Would you like to add a Join Code? (Optional) <input type="text" placeholder="Join Code">
+            <input class="btn btn-block" type="submit" value="Create Forum">
+        </form>
+    </div>
+</div>
+<hr>
+
+<div id="search-forum" class="forum-content">
+    <div class="card card-body push-corners mb-3">
+        <div>
+            <p class="h3-responsive">Search Forum</p>
+        </div>
+        <form action="">
+            <input type="text" name="query" id="query">
+            <input type="submit" value="Go">
+        </form>
+        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+            <a>4 Kilo Events</a>
+        </div>
+        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+            <a>Chemistry Unchained</a>
+        </div>
+        <div class="link font-weight-bold mt-2" onclick="forum_click('course-list-{{forloop.counter}}',{{class.id}})">
+            <a>Google Trainings</a>
+        </div>
+        Forums loaded must be ones that the user can possibly join into
+    </div>
+</div>
+
+<hr>
+
+<div id="forum-feed" class="forum-content">
+    <div class="card card-body push-corners mb-3">
+        <button class="btn" onclick="loadmore()">Load More</button>
+
+        <div id="forum-messages">
+
+        </div>
+        
+        <form onsubmit="return false" id="forum-send">
+            <input type="number" hidden name="forum_id" value="" id="forum-message-id">
+            <input type="text" name="content" placeholder="Type message here" id="forum-message" required>
+            <input type="file" name="file" id="forum-file">
+            <input type="file" name="image" id="forum-image">
+            <input class="btn send-message-button" type="submit" value="Send Message">
+        </form>
+        <span class="btn" id="leave-forum-button">Leave Forum</span>
+    </div>
+</div>
+

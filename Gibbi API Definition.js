@@ -193,7 +193,7 @@ fetch(URL+'pushboard',{
 }
 
 
-//Reminders Request
+//Reminders Request [IMPLEMENTED]
 fetch(URL+'reminders', 
       {
         method: 'POST',
@@ -371,3 +371,25 @@ fetch(URL+'forumsendmessage',{
     ],
   }
 ]
+
+//Submit assignment
+fetch(URL+'submitassignment/',{
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                userToken: '23yiu4hjkrhfdi',
+                comments: 'This is my comment.',
+                file: {
+                    name: 'My submission.pdf',
+                    type: 'application/pdf',
+                    uri: 'content://com.android.externalstorage.documents/document/primary%3ADownload%2FCities%20are%20like%20people%20%20This%20is%20Addis..pdf' 
+                }
+            }),
+          })
+//Submit assignment response
+{
+    success: 1,
+    error: 'error message if needed',
+}

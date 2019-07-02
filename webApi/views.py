@@ -7,8 +7,11 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 import datetime, zipfile, io
 from main import models
+import random
+import os
+import requests
 
-# Create your views here.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def index(request):
         return HttpResponse("Welcome to Push API")
@@ -232,7 +235,7 @@ def Post(request):
             Posts = models.Post_To_Class.objects.filter( post__id__gt = int(request.GET.get('by-class-post'))).filter(query)
 
         elif request.GET.get('by-student-post'):
-            Posts = models.Post_To_Student.objects.filter( post__id__gt = int(request.GET.get('by-student-post'))).filter(query)
+            Posts = models.Post_To_Student.objects.filter( post__id__gt = int(request.GET.get('by-student-post'))).filter(post_to = student)
 
         elif request.GET.get('by-page'):
             posts_to_class = models.Post_To_Class.objects.filter(query)
@@ -287,6 +290,9 @@ def Post(request):
 
     # Loop through every Post and add them as a json object
     for Post in Posts:
+        if not models.Tracking.objects.filter(student = student, post = Post.post).exists():
+            models.Tracking.objects.create(student = student, post = Post.post, status = 1, del_on = datetime.datetime.now())
+
         output += "{"
         output += "\"id\":" + str(Post.post.id) + ","
         output += "\"content\":" + "\"" + Post.post.content + "\"" + ","
@@ -462,6 +468,8 @@ def Instructor_Teaches(request):
     return HttpResponse(output, content_type='application/json')
 
 
+########## ACTIONS ##########
+
 
 def login(request):
         user = None
@@ -534,6 +542,167 @@ def login(request):
 
         return HttpResponse(output, content_type='application/json')
 
+
+def logout(request):
+    if request.user.is_authenticated:
+        logout(request)
+
+        return HttpResponse("{\"status\":1, \"remark\":\"Logged out\"}", content_type='application/json')
+
+    else:
+        return HttpResponse("{\"status\":0, \"remark\":\"Not logged in\"}", content_type='application/json')
+
+
+
+def recoverpassword(request):
+    if User.objects.filter(username = request.POST['email']).exists():
+        user = User.objects.get(username = request.POST['email'])
+
+        if not request.POST.get('new-password') or (request.POST.get('new-password').strip() == "") or len(request.POST.get('new-password')) < 7:
+            return HttpResponse("{\"status\":0, \"remark\":\"Password not valid\"}", content_type='application/json')
+
+        if models.Recovery.objects.filter(code = request.POST['code'], user =  user, status = False, expiry__gt = datetime.datetime.now()).exists():
+            record = models.Recovery.objects.get(code = request.POST['code'], user =  user)
+            user.set_password(request.POST['new-password'])
+            user.save()
+            record.status = True
+            record.save()
+
+            return HttpResponse("{\"status\":1, \"remark\":\"Success\"}", content_type='application/json')
+
+        else:
+            return HttpResponse("{\"status\":0, \"remark\":\"Failed\"}", content_type='application/json')
+    else:
+        return HttpResponse("{\"status\":0, \"remark\":\"Failed\"}", content_type='application/json')
+
+
+
+def getrecovereycode(request):
+    if User.objects.filter(username = request.POST['email']).exists():
+        user = User.objects.get(username = request.POST['email'])
+
+
+    email = request.POST.get('email').strip()
+    code = "cd" + str(random.randint(10000, 99999))
+    
+    models.Recovery.objects.create(code = code, user =  user, status = False, expiry__gt = datetime.datetime.now() + datetime.timedelta(days=7))
+
+    if not User.objects.filter(username = email).exists():
+        cnf = open(os.path.join(BASE_DIR, 'mailgin_api.cnf'), "r")
+        key = cnf.readline().strip()
+
+        template1 = open(os.path.join(BASE_DIR, 'email_template1.html'), "r")
+        html = template1.read()
+        html += email+ "<br>Code: " + code
+
+        template2 = open(os.path.join(BASE_DIR, 'email_template2.html'), "r")
+        html += template2.read()
+
+        response = requests.post("https://api.mailgun.net/v3/aaupush.com/messages", auth=("api", key), data={"from": "Gibbi <aaupush@gmail.com>", "to": email, "subject": "Gibbi Account Activation", "html": html})
+
+        if response.status_code != 200:
+            return HttpResponse("{\"status\":2, \"remark\":\"Invitation not sent\"}", content_type='application/json')
+        else:
+            user.save()
+            return HttpResponse("{\"status\":1, \"remark\":\"Instructor Invited\"}", content_type='application/json')
+    else:
+        return HttpResponse("{\"status\":3, \"remark\":\"Email already in use\"}", content_type='application/json')
+
+
+
+def submitassignments(request):
+    if request.user.is_authenticated and models.Student.objects.filter(user=request.user).exists():
+        student = models.Student.objects.get(user=request.user)
+
+    else:
+        return HttpResponse("{\"status\":0, \"remark\":\"User not authenticated\"}", content_type='application/json')
+
+
+    if not request.POST.get('assignment') or (request.POST.get('assignment').strip() == ""):
+        return HttpResponse("{\"status\":0, \"remark\":\"Assignment ID required\"}", content_type='application/json')
+
+    if not request.FILES.get('file'):
+        return HttpResponse("{\"status\":0, \"remark\":\"File required\"}", content_type='application/json')
+
+
+    name = request.FILES['file'].name
+    comment = request.POST.get('comment')
+    file = models.File.objects.create(file = request.FILES.get('file'), name = name, extension = name.split('.')[-1], post_by = student.user)
+    assignment = models.Reminder.objects.get(id = str(request.POST.get('assignment')))
+
+    models.Assignment_Submission.objects.create(file = file, assignment = assignment, student = student, comment = comment)
+
+    return HttpResponse("{\"status\":1, \"remark\":\"Submitted Successfully\"}", content_type='application/json')
+
+
+
+def inviteinstructor(request):
+    if request.user.is_authenticated and models.Staff.objects.filter(user=request.user).exists():
+        staff = models.Staff.objects.get(user=request.user)
+        if staff.role != "Department Head":
+            return HttpResponse("{\"status\":0, \"remark\":\"User not department head\"}", content_type='application/json')
+
+    else:
+        return HttpResponse("{\"status\":0, \"remark\":\"User not authenticated\"}", content_type='application/json')
+
+    if request.POST.get('email') and request.POST.get('email').strip() != "":
+        e = request.POST.get('email')
+        if (e.strip().rfind('.') == -1 or e.strip().rfind('@') == -1 or (e.strip().rfind('.') <= e.strip().rfind('@'))):
+          return HttpResponse("{\"status\":0, \"remark\":\"Email not valid\"}", content_type='application/json')
+
+    else:
+        return HttpResponse("{\"status\":0, \"remark\":\"Email not valid\"}", content_type='application/json')
+
+    email = request.POST.get('email').strip()
+    password = "aau" + str(random.randint(10000, 99999))
+
+    if not User.objects.filter(username = email).exists():
+        user = User(username = email, email = "staff@aau.com")
+        user.set_password(password)
+        cnf = open(os.path.join(BASE_DIR, 'mailgin_api.cnf'), "r")
+        key = cnf.readline().strip()
+
+        template1 = open(os.path.join(BASE_DIR, 'email_template1.html'), "r")
+        html = template1.read()
+        html += email+ "<br>Password: " + password
+
+        template2 = open(os.path.join(BASE_DIR, 'email_template2.html'), "r")
+        html += template2.read()
+
+        response = requests.post("https://api.mailgun.net/v3/aaupush.com/messages", auth=("api", key), data={"from": "Gibbi <aaupush@gmail.com>", "to": email, "subject": "Gibbi Account Activation", "html": html})
+
+        if response.status_code != 200:
+            return HttpResponse("{\"status\":2, \"remark\":\"Invitation not sent\"}", content_type='application/json')
+        else:
+            user.save()
+            return HttpResponse("{\"status\":1, \"remark\":\"Instructor Invited\"}", content_type='application/json')
+    else:
+        return HttpResponse("{\"status\":3, \"remark\":\"Email already in use\"}", content_type='application/json')
+
+
+
+def setreminder(request):
+    if request.user.is_authenticated and models.Staff.objects.filter(user=request.user).exists():
+        staff = models.Staff.objects.get(user=request.user)
+
+    else:
+        return HttpResponse("{\"status\":0, \"remark\":\"User not authenticated\"}", content_type='application/json')
+
+    reminder = models.Reminder.objects.create(pub_date = datetime.datetime.now(),reminder_for = request.POST.get('for'), title = request.POST.get('reminder-name'), note = request.POST.get('reminder-comments'), due_time = request.POST.get('reminder-date'), due_date = request.POST.get('reminder-date'), post_by = staff)
+    class_recipients = request.POST.getlist('class-recipients')
+
+    for recipient in class_recipients:
+        detail = recipient.split('-')
+
+        class_ = models.Instructor_Teaches.objects.get(section__id = int(detail[0]), course__id = int(detail[1]))
+
+        models.Reminder_To_Class.objects.create(reminder_to = class_, reminder = reminder)
+
+    return HttpResponse("{\"status\":1, \"remark\":\"Reminder Set\"}", content_type='application/json')
+
+
+
+#def disablestaffaccount():
 
 
 def signup(request):
@@ -926,15 +1095,15 @@ def post_action(request):
             content = request.POST.get('post-content')
             pub_date = datetime.datetime.now()
 
-            post = models.Post.objects.create(content = content, post_type = 4, post_by = staff, pub_date = pub_date)
+            post = models.Post.objects.create(content = content, post_type = 4, post_by = staff.user, pub_date = pub_date)
 
             if request.FILES.get('file-1'):
                 name = request.FILES['file-1'].name
-                file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff)
+                file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff.user)
                 post.files.add(file)
 
             if request.FILES.get('image-1'):
-                file = models.Image.objects.create(image = request.FILES.get('image-1'), post_by = staff)
+                file = models.Image.objects.create(image = request.FILES.get('image-1'), post_by = staff.user)
                 post.images.add(file)
 
             models.Post_To_Chat.objects.create(post_to = staff.department_in, post = post)
@@ -961,7 +1130,7 @@ def post_action(request):
             html += "<div class='post-images'>"
             for image in post.images.all():
                 html += "<div class='mb-3'>"
-                html += "<img width='100%' src='/media/" + image.image + "\'/>"
+                html += "<img width='100%' src='/media/" + str(image.image) + "\'/>"
                 html += "</div>"
             html += "</div>"
             html += "<div class='post-content'>"
@@ -970,12 +1139,12 @@ def post_action(request):
 
             html += "<div>"
             for file in post.files.all():
-                html += '<div class="file">'
-                html += '<div>'
-                html += '<a class="link font-weight-bold" href="/media/' + file.file + '">' +  file.name + '['+ file.extension.isupper + ']</a>'
+                html += "<div class='file'>"
+                html += "<div>"
+                html += "<a class='link font-weight-bold' href='/media/" + str(file.file) + "'>" +  file.name + "["+ str(file.extension.isupper) + "]</a>"
                 html += '</div>'
                 html += '<div>'
-                html += '<p class="meta mb-2">File size:  ' + sizeof_fmt(file.file.size)  + '</p>'
+                html += "<p class='meta mb-2'>File size:  " + sizeof_fmt(file.file.size)  + '</p>'
                 html += '</div>'
                 html += '</div>'
             html += '</div>'
@@ -996,7 +1165,36 @@ def post_action(request):
             html += "</div>"
             html += "</div>"
 
-            return HttpResponse("{\"status\":1, \"remark\":\"Post Successful\", \"html\":\"" + html + "\"}", content_type='application/json')
+            response = HttpResponse("{\"status\":1, \"remark\":\"Post Successful\", \"html\":\"" + html + "\"}", content_type='application/json')
+            print('Post response',response)
+            return response
+
+        if request.POST.get('action-type') == "dean":
+            if not request.POST.get('post-content') or (request.POST.get('post-content').strip() == ""):
+                    return HttpResponse("{\"status\":0, \"remark\":\"Content not found\", \"id\":\"#group-chat-post-content-error\", \"html\":\"<span>Post content is required</span>\"}", content_type='application/json')
+
+            if request.FILES.get('image-1'):
+                if request.FILES['image-1'].name.split('.')[-1].strip().lower() not in ["jpeg","jpg","gif","png","bmp","svg"]:
+                    return HttpResponse("{\"status\":0, \"remark\":\"File name not found\",  \"id\":\"#group-chat-attachment-error\", \"html\":\"<span>Image format not supported</span>\"}", content_type='application/json')
+
+
+            content = request.POST.get('post-content')
+            pub_date = datetime.datetime.now()
+
+            post = models.Post.objects.create(content = content, post_type = 4, post_by = staff.user, pub_date = pub_date)
+
+            if request.FILES.get('file-1'):
+                name = request.FILES['file-1'].name
+                file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = name.split('.')[-1], post_by = staff.user)
+                post.files.add(file)
+
+            if request.FILES.get('image-1'):
+                file = models.Image.objects.create(image = request.FILES.get('image-1'), post_by = staff.user)
+                post.images.add(file)
+
+            models.Post_To_Chat.objects.create(post_to = staff.department_in, post = post)
+
+            return HttpResponse("{\"status\":1, \"remark\":\"Post Successful\"}", content_type='application/json')
 
 
         if (request.POST.get('post-content').strip() == ""):
@@ -1030,30 +1228,30 @@ def post_action(request):
         pub_date = datetime.datetime.now()
 
         if len(request.POST.getlist('section-recipients')) > 0:
-            post = models.Post.objects.create(content = content, post_type = 1, post_by = staff, pub_date = pub_date)
+            post = models.Post.objects.create(content = content, post_type = 1, post_by = staff.user, pub_date = pub_date)
 
             if request.FILES.get('file-1'):
                     name = request.POST.get('file-name-1')
-                    file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff.user)
                     post.files.add(file)
 
             if request.FILES.get('file-2'):
                     name = request.POST.get('file-name-2')
-                    file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff.user)
                     post.files.add(file)
 
             if request.FILES.get('file-3'):
                     name = request.POST.get('file-name-3')
-                    file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff.user)
                     post.files.add(file)
 
 
             if request.FILES.get('image-1'):
-                file = models.Image.objects.create(image = request.FILES['image-1'], post_by = staff)
+                file = models.Image.objects.create(image = request.FILES['image-1'], post_by = staff.user)
                 post.images.add(file)
 
             if request.FILES.get('image-2'):
-                file = models.Image.objects.create(image = request.FILES['image-2'], post_by = staff)
+                file = models.Image.objects.create(image = request.FILES['image-2'], post_by = staff.user)
                 post.images.add(file)
 
 
@@ -1077,26 +1275,26 @@ def post_action(request):
 
             if request.FILES.get('file-1'):
                     name = request.POST.get('file-name-1')
-                    file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    file = models.File.objects.create(file = request.FILES.get('file-1'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff.user)
                     post.files.add(file)
 
             if request.FILES.get('file-2'):
                     name = request.POST.get('file-name-2')
-                    file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    file = models.File.objects.create(file = request.FILES.get('file-2'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff.user)
                     post.files.add(file)
 
             if request.FILES.get('file-3'):
                     name = request.POST.get('file-name-3')
-                    file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff)
+                    file = models.File.objects.create(file = request.FILES.get('file-3'), name = name, extension = request.FILES['file-1'].name.split('.')[-1], post_by = staff.user)
                     post.files.add(file)
 
 
             if request.FILES.get('image-1'):
-                file = models.Image.objects.create(image = request.FILES['image-1'], post_by = staff)
+                file = models.Image.objects.create(image = request.FILES['image-1'], post_by = staff.user)
                 post.images.add(file)
 
             if request.FILES.get('image-2'):
-                file = models.Image.objects.create(image = request.FILES['image-2'], post_by = staff)
+                file = models.Image.objects.create(image = request.FILES['image-2'], post_by = staff.user)
                 post.images.add(file)
 
             class_recipients = request.POST.getlist('class-recipients')
@@ -1127,7 +1325,7 @@ def post_action(request):
 
 
 def edit_post(request):
-    post = Post.objects.get(id = int(request.POST.get('post-id')))
+    post = models.Post.objects.get(id = int(request.POST.get('post-id')))
     post.content = request.POST.get('content')
     post.save()
 
@@ -1135,7 +1333,25 @@ def edit_post(request):
 
 
 def delete_post(request):
-    post = Post.objects.get(id = int(request.GET.get('post-id')))
+    post = models.Post.objects.get(id = int(request.GET.get('post-id')))
+    post.delete()
+
+    return HttpResponse("{\"status\":1, \"remark\":\"Edit successful\"}", content_type='application/json')
+
+
+def edit_reminder(request):
+    post = models.Reminder.objects.get(id = int(request.POST.get('reminder-id')))
+    post.title = request.POST.get('reminder-title')
+    post.note = request.POST.get('reminder-note')
+    post.due_date = request.POST.get('reminder-date')
+
+    post.save()
+
+    return HttpResponse("{\"status\":1, \"remark\":\"Edit successful\"}", content_type='application/json')
+
+
+def delete_reminder(request):
+    post = models.Reminder.objects.get(id = int(request.GET.get('reminder-id')))
     post.delete()
 
     return HttpResponse("{\"status\":1, \"remark\":\"Edit successful\"}", content_type='application/json')

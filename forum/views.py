@@ -193,6 +193,38 @@ def join_forum(request):
 
     return HttpResponse("{\"status\":1, \"remark\":\"User joined the forum\"}", content_type='application/json')
 
+#join closed forum. Takes 'code',  /forum/joinclosedforum/
+
+#create forum   /forum/createforum/
+# forum-name
+# forum-description
+# thumbnail
+# departments
+# joincode
+
+#search forum   /forum/search/
+# query
+
+#Assignment Functions
+#set assignment /setassignment/
+# assignment-name
+# file
+# due_date
+# class-recipients
+# comment (optional)
+
+#assignmentlist /assignmentlist/
+# assignment-name
+# accepting: true or false
+# description
+# due_date
+
+#assignment submissions /getsubmissions/
+#I will send assignment-id
+# student-name
+# student-id
+# comment
+# file
 
 def leave_forum(request):
     forum = Forum.objects.get(id = int(request.GET.get('forum-id')))
@@ -202,6 +234,7 @@ def leave_forum(request):
 
 
 def delete_forum(request):
+    #verify if user is the creator
     forum = Forum.objects.get(id = int(request.GET.get('forum-id')))
     forum.delete()
 

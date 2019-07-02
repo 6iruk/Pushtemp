@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 from main import views
 from forum import views as views2
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('' ,views.index, name='Home'),
@@ -34,5 +36,6 @@ urlpatterns = [
     path('Push_Page/', include('pushPages.urls')),
     path('admin/', admin.site.urls),
     path('json/', include('webApi.urls')),
+    path('mobile/', include('mobileApi.urls')),
     path('api/forum/', include('forum.urls')),
-]
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -1,0 +1,13 @@
+<p>All students within the selected departments will be notified.</p>
+{% for department in departments%}
+    <div class="recipient-selection form-control  blue lighten-5 mt-3">
+        <div class="d-inline">
+            <input name="departments" value="department-{{department.id}}" type="checkbox" />
+        </div>
+        <div class="d-inline-block">
+            <div class="d-inline mx-2">
+                <span>{{department.name}}</span>
+            </div>
+        </div>
+    </div>
+{% endfor %}

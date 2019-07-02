@@ -1,7 +1,0 @@
-#sqlite database
-*.sqlite3
-*.pyc
-*.cnf
-uploads/
-var/
-aaupush/

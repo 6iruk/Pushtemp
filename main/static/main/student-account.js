@@ -72,11 +72,11 @@ function course_click(page,class_id) {
     $("#push-loader").css("display", "block");
 
     if( page == "miscellaneous-files") {
-      var url = base_url + "/json/Post?by-type=miscellaneous";
+      var url = base_url + "/json/Post/?by-type=miscellaneous";
     }
 
     else {
-      var url = base_url + "/json/Post?by-type=class-post-list&by-class=";
+      var url = base_url + "/json/Post/?by-type=class-post-list&by-class=";
       url += class_id;
     }
 
@@ -119,7 +119,7 @@ function add_course() {
              clearTimeout(add_notif_timer);
              $("#add-courses-form-notif > span").html("You have added " + result.count + " courses");
              $("#add-courses-form-notif").css("display","block");
-             document.location.href='/student/account';
+             document.location.href='/student/account/';
 
            }
 
@@ -163,7 +163,7 @@ function drop_course(class_id) {
              else {
                $("#drop-courses-form-notif > span").html("You have dropped the course " + result.course);
                $("#drop-courses-form-notif").css("display","block");
-               document.location.href='/student/account';
+               document.location.href='/student/account/';
              }
 
              $("#drop-courses-form-notif").css("display","block");
@@ -213,7 +213,7 @@ function account_update(page) {
               $(".error").css("display","none");
              $("#profile-form-notif > span").html("Update Successful");
              $("#profile-form-notif").css("display", "block");
-             document.location.href='/student/account';
+             document.location.href='/student/account/';
            }
 
            else if(result.status == 2) {

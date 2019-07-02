@@ -1,8 +1,6 @@
 base_url = "http://localhost:8000";
 
 function nav_click(page) {
-  $('#feedback-box').modal('toggle')    //'show' or 'hide' are also possible instead of 'toggle'
-  $('#error-feedback').html("Here is the error message!!");
   if(page == 'post') {
     $(".content").css("display","none");
     $("#post-form").css("display","block");
@@ -87,9 +85,10 @@ function post_action(action) {
       type: 'POST',
       dataType:'json',
       success: function (result) {
+              console.log(result)
              $("#push-loader").css("display", "none");
              if(result.status == 1) {
-               $("#chat-post-list").append(result.html);
+               $("#chat-post-list").prepend(result.html);
                $("#group-chat-post-notif").html("<span>Post Successful</span>");
                $("#group-chat-post-notif").css("display", "block");
                $(".error").css("display", "none");
@@ -107,6 +106,7 @@ function post_action(action) {
              }
          },
        error: function(result){
+        console.log(result)
          $("#push-loader").css("display", "none");
          $("#group-chat-post-notif").html("<p>Post Failed</p>");
          $("#group-chat-post-notif").css("display", "block");
@@ -159,6 +159,36 @@ function post_action(action) {
         },7000);
       }
      });
+}
+
+function set_reminder(){
+    $("#push-loader").css("display", "block");
+    $.post(base_url + "/json/setreminder/", $( "#set-reminder-form" ).serialize(), function (result,status) {
+      $("#push-loader").css("display", "none");
+      if(status == "success") {
+        if(result.status == 0) {
+          $(".error").css("display","none");
+          $("#" + result.id).html(result.html);
+          $("#" + result.id).css("display","block");
+        }
+
+         else if(result.status == 1) {
+          $(".error").css("display","none");
+          $("#profile-form-notif > span").html("Update Successful");
+          $("#profile-form-notif").css("display", "block");
+          document.location.href='/staff/account/';
+        }
+      }
+
+      else {
+        $("#profile-form-notif > span").html("Update Failed");
+        $("#profile-form-notif").css("display", "block");
+
+        setTimeout( function() {
+          $("#profile-form-notif").css("display", "none");
+        },7000);
+      }
+       });
 }
 
 var add_notif_timer;
@@ -258,19 +288,32 @@ function account_update() {
       $("#push-loader").css("display", "none");
       if(status == "success") {
         if(result.status == 0) {
+          feedback('error')
           $(".error").css("display","none");
           $("#" + result.id).html(result.html);
           $("#" + result.id).css("display","block");
         }
 
          else if(result.status == 1) {
+          feedback('success')
            $(".error").css("display","none");
           $("#profile-form-notif > span").html("Update Successful");
           $("#profile-form-notif").css("display", "block");
-          document.location.href='/staff/account';
+          document.location.href='/staff/account/';
         }
 
         else if(result.status == 2) {
+          feedback('2')
+          $(".error").css("display","none");
+          $("#profile-form-notif > span").html(result.remark);
+          $("#profile-form-notif").css("display", "block");
+
+          setTimeout( function() {
+            $("#profile-form-notif").css("display", "none");
+          },7000);
+        }
+        else if(result.status == 3) {
+          feedback('3')
           $(".error").css("display","none");
           $("#profile-form-notif > span").html(result.remark);
           $("#profile-form-notif").css("display", "block");
@@ -290,4 +333,328 @@ function account_update() {
         },7000);
       }
        });
+}
+
+function feedback(message) {
+  $('#error-feedback').html(message);
+  $('#feedback-box').modal('show')    //'show' or 'hide' are also possible instead of 'toggle'
+  setTimeout( function() {
+    $('#feedback-box').modal('hide')    //'show' or 'hide' are also possible instead of 'toggle'
+  },7000);
+}
+
+$( document ).ready(function() {
+  
+  //Edit Post
+  $(".submitEditPost").click(function( event ) {
+    var elem = $( this );
+    console.log('in submitEditPost ',elem.attr( "id" ))
+    var postid = elem.attr( "id" )
+    form = document.forms.namedItem("editModal"+postid);
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/edit_post/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              feedback('Your post has been edited successfully! Refresh to update.')
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Post edit failed')
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+    }
+      })
+  })
+
+  //Delete Post
+  $(".submitDeletePost").click(function( event ) {
+    var elem = $( this );
+    var postid = elem.attr( "id" )
+    console.log('About to delete:', postid)
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/delete_post/?post-id='+postid,
+    processData: false,
+    contentType: false,
+    type: 'GET',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              feedback('Your post has been deleted. Refresh to update.')
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Post delete failed')
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+    }
+      })
+  })
+
+  //Edit Reminder
+  $(".submitEditReminder").click(function( event ) {
+    var elem = $( this );
+    console.log('in submitEditReminder ',elem.attr( "id" ))
+    var postid = elem.attr( "id" )
+    form = document.forms.namedItem("editReminderForm"+postid);
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/edit_reminder/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              feedback('Your reminder has been edited successfully! Refresh to update.' + result.remark)
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Reminder edit failed' + result.remark)
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed' + result.remark)
+    }
+      })
+  })
+
+  //Delete reminder
+  $(".submitDeleteReminder").click(function( event ) {
+    var elem = $( this );
+    var postid = elem.attr( "id" )
+    form = document.forms.namedItem("deleteReminderModal"+postid);
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/delete_reminder/?reminder-id='+postid,
+    processData: false,
+    contentType: false,
+    type: 'GET',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              feedback('Your post has been deleted. Refresh to update.')
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Post delete failed')
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+    }
+      })
+  })
+
+
+  //submit dean message
+  $(".submitDeanMessage").click(function( event ) {
+    var elem = $( this );
+    form = document.forms.namedItem("deanMessageDepartment");
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/post_action/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              feedback('Your post has been edited successfully!')
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Post edit failed')
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+    }
+      })
+  })
+
+  //assignmment submit modal
+  $(".submitAssignmentModal").click(function( event ) {
+    var elem = $( this );
+    var id = elem.attr('postid')
+    form = document.forms.namedItem("submitAssignmentForm"+id);
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/submitassignment/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+            $("#push-loader").css("display", "none");
+            if(result.status == 1) {
+              $("#push-loader").css("display", "none");
+              feedback('Your post has been edited successfully!')
+            }
+
+            else if(result.status == 0)  {
+              $("#push-loader").css("display", "none");
+              feedback('Post edit failed')
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+    }
+      })
+  })
+
+  //invite instructor
+  $(".inviteInstructorButton").click(function( event ) {
+    form = document.forms.namedItem("inviteInstructorForm");
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/inviteinstructor/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+      console.log("in success")
+            $("#push-loader").css("display", "none");
+            if(result.status == 0) {
+              console.log("0")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+              feedback(result.remark)
+            }
+            else if(result.status == 1)  {
+              console.log("1")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+            }
+            else if(result.status == 2)  {
+              console.log("2")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+            }
+            else if (result.status==3) {
+              console.log("3")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+      console.log("error")
+    }
+      })
+      console.log("sent request")
+  })
+
+
+  //recover password
+  $(".inviteInstructorButton").click(function( event ) {
+    form = document.forms.namedItem("inviteInstructorForm");
+    formdata =  new FormData(form);
+
+    $("#push-loader").css("display", "block");
+    $.ajax({
+    url: base_url + '/json/inviteinstructor/',
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    success: function (result) {
+      console.log("in success")
+            $("#push-loader").css("display", "none");
+            if(result.status == 0) {
+              console.log("0")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+              feedback(result.remark)
+            }
+            else if(result.status == 1)  {
+              console.log("1")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+            }
+            else if(result.status == 2)  {
+              console.log("2")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+            }
+            else if (result.status==3) {
+              console.log("3")
+              $("#push-loader").css("display", "none");
+              console.log(result.remark)
+            }
+        },
+    error: () => {
+      $("#push-loader").css("display", "none");
+      feedback('failed')
+      console.log("error")
+    }
+      })
+      console.log("sent request")
+  })
+
+});
+
+function email_exists(){
+  var elem = $( this );
+  var email = elem.attr('email')
+  $.ajax({
+    url: base_url + '/json/email_exists/?email='+email,
+    data: formdata,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    dataType:'json',
+    });
+
 }

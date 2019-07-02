@@ -87,12 +87,12 @@ def login_page(request):
 
 
 def student_account_page(request):
-    # if request.user.is_authenticated and Student.objects.filter(user=request.user).exists():
-    #     student = Student.objects.get(user=request.user)
-    #
-    # else:
-    #      return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
-    student = Student.objects.get(id=1)
+    if request.user.is_authenticated and Student.objects.filter(user=request.user).exists():
+        student = Student.objects.get(user=request.user)
+
+    else:
+         return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
+
     classes_in = student.class_in.all()
     query = Q()
     for class_in in classes_in:
@@ -150,10 +150,11 @@ def staff_account_page(request):
     else:
          return HttpResponse('<h1>PAGE NOT FOUND!!!</h1>')
 
-    posts_to_class = Post_To_Class.objects.filter(post__post_by = staff).order_by('-post__pub_date')
-    posts_to_section = Post_To_Section.objects.filter(post__post_by = staff).order_by('-post__pub_date')
+    posts_to_class = Post_To_Class.objects.filter(post__post_by = staff.user).order_by('-post__pub_date')
+    posts_to_section = Post_To_Section.objects.filter(post__post_by = staff.user).order_by('-post__pub_date')
     posts = sorted((list(posts_to_section) + list(posts_to_class)), key=lambda x: x.post.pub_date)
 
+    reminders = Reminder.objects.filter(post_by = staff)
     group_posts = Post_To_Chat.objects.filter(post_to = staff.department_in)
 
     classes = Instructor_Teaches.objects.filter(instructor=staff)
@@ -176,7 +177,8 @@ def staff_account_page(request):
     temp1 = Forum.objects.filter(restrictions=None)
     temp2 = Forum.objects.filter(restrictions__department=staff.department_in ,restrictions__year=None, restrictions__section=None)
     trending_forums = sorted((list(temp1) + list(temp2)), key=lambda x: x.members.count())
-    context = {'user_forums':user_forums,'trending_forums':trending_forums,'departments':departments, 'posts':posts, 'staff':staff, 'is_first':is_first, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
+
+    context = {'group_posts':group_posts,'reminders':reminders, 'user_forums':user_forums,'trending_forums':trending_forums,'departments':departments, 'posts':posts, 'staff':staff, 'is_first':is_first, 'classes':classes, 'sections':sections,'department_sections':department_sections, 'titles':(('Mr.','Mr.'),('Ms.','Ms.'),('Mrs.','Mrs.'),('Dr.','Doctor'),('Prof.','Professor'))}
     return render(request, 'main/staff/staff-account.html', context)
 
 

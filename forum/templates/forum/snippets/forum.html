@@ -2,77 +2,81 @@
 
 <div>
     <!-- My forums area -->
-    <div class="card card-body push-corners">
+    <div class="card card-body push-corners myForumsArea">
         <div class="flex-container">
                 <span class="subtitle">My Forums</span>
-                <span class="btn"><i class="fa fa-plus-square mr-3 align-middle" aria-hidden="true"></i>Create</span>
+                <span id="createForumArea" class="btn"><i class="fa fa-plus-square mr-3 align-middle" aria-hidden="true"></i>Create</span>
         </div>
-        <div class="row mt-3 no-gutters">
-            <div class="col-auto">
-                {% load static %}
-                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+        <div id="my-forums-list">
+            <div class="row mt-3 no-gutters">
+                <div class="col-auto">
+                    {% load static %}
+                    <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+                </div>
+                <div class="col ml-3">
+                    <a href="#" class="link d-block">Complexity Theory</a>
+                    <p">Q&A place for this course.</p>
+                </div>
             </div>
-            <div class="col ml-3">
-                <a href="#" class="link d-block">Complexity Theory</a>
-                <p">Q&A place for this course.</p>
+            <div class="row mt-3 no-gutters">
+                <div class="col-auto">
+                    {% load static %}
+                    <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+                </div>
+                <div class="col ml-3">
+                    <a href="#" class="link d-block">Study Help - Chemistry</a>
+                    <p">This is the description of the forum.</p>
+                </div>
             </div>
-        </div>
-        <div class="row mt-3 no-gutters">
-            <div class="col-auto">
-                {% load static %}
-                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
-            </div>
-            <div class="col ml-3">
-                <a href="#" class="link d-block">Study Help - Chemistry</a>
-                <p">This is the description of the forum.</p>
-            </div>
-        </div>
-        <div class="row mt-3 no-gutters">
-            <div class="col-auto">
-                {% load static %}
-                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
-            </div>
-            <div class="col ml-3">
-                <a href="#" class="link d-block">Google Trainings</a>
-                <p">Machine learning and many more trending. Topics are covered here.</p>
+            <div class="row mt-3 no-gutters">
+                <div class="col-auto">
+                    {% load static %}
+                    <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+                </div>
+                <div class="col ml-3">
+                    <a href="#" class="link d-block">Google Trainings</a>
+                    <p">Machine learning and many more trending. Topics are covered here.</p>
+                </div>
             </div>
         </div>
     </div>
     <!-- End of My Forums area -->
 
     <!-- Trending forums area -->
-    <div class="card card-body push-corners my-3">
+    <div class="card card-body push-corners my-3 trendingForumsArea">
         <div class="flex-container">
                 <span class="subtitle">Trending Forums</span>
-                <span class="btn"><i class="fa fa-search mr-3" aria-hidden="true"></i>Search</span>
+                <span class="btn" id="searchForumAreaButton"><i class="fa fa-search mr-3" aria-hidden="true"></i>Search</span>
         </div>
-        <div class="row mt-3 no-gutters">
-            <div class="col-auto">
-                {% load static %}
-                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+        <div id="trending-forums-list">
+            <div class="row mt-3 no-gutters">
+                <div class="col-auto">
+                    {% load static %}
+                    <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+                </div>
+                <div class="col ml-3">
+                    <a href="#" class="link d-block"> 4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></a>
+                    <p">Q&A place for this course.</p>
+                </div>
             </div>
-            <div class="col ml-3">
-                <a href="#" class="link d-block"> 4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></a>
-                <p">Q&A place for this course.</p>
-            </div>
-        </div>
-        <div class="row mt-3 no-gutters">
-            <div class="col-auto">
-                {% load static %}
-                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
-            </div>
-            <div class="col ml-3">
-                <a href="#" class="link d-block">GC Cup News</a>
-                <p">This is the description of the forum.</p>
+            <div class="row mt-3 no-gutters">
+                <div class="col-auto">
+                    {% load static %}
+                    <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+                </div>
+                <div class="col ml-3">
+                    <a href="#" class="link d-block">GC Cup News</a>
+                    <p">This is the description of the forum.</p>
+                </div>
             </div>
         </div>
     </div>
     <!-- End of Trending forums area -->
 
     <!-- Create Forum Part -->
-    <div class="card card-body push-corners my-3">
+    <div class="card card-body push-corners my-3 createForumArea">
         <div class="row">
-            <div class="col-auto">
+            <div class="col-auto" id="backCreateForumArea">
                 <i class="fa fa-caret-left blue-text fa-3x mr-2 d-inline link" aria-hidden="true"></i>   
             </div>  
             <div class="col pl-0">
@@ -80,118 +84,81 @@
             </div>
         </div>
         <div class="mt-3">
-            <form action="" class="md-form">
+            <form action="" class="md-form" name="createForumForm" id="createForumForm">
                 
                 <input class="form-control" type="text" name="forum-name" id="" placeholder="Forum Name">
                 
-                <textarea class="form-control md-textarea" rows="2" type="textarea" name="forum-desc" id="" placeholder="Forum Description"></textarea>
+                <textarea class="form-control md-textarea" rows="2" type="textarea" name="forum-description" id="" placeholder="Forum Description"></textarea>
 
                 <div class="input-group mb-3">
                     <div class="custom-file">
-                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="">
+                        <input type="file" name="thumbnail" accept=".jpg, .jpeg, .png" class="custom-file-input" id="">
                         <label class="custom-file-label" for="">Choose forum cover image</label>
                     </div>
                 </div>
-                
-                <div>
-                    <span>Filter users:</span>
-                    <input class="ml-2" type="checkbox" name="filter-users" id="">
-                </div>
 
-                <!-- <div class="mt-2">
-                    <span>Filter users by:</span>
-                    <select class="form-control" name="filter-by" id="">
-                        <option value="department">By department</option>
-                        <option value="year">By year</option>
-                        <option value="section">By section</option>
-                    </select>
-                </div> -->
-
-                <div>
-                    <span>Allow users in the following departments:</span>
-                    <select multiple class="form-control" name="by-department" id="">
-                        <option value="0" selected>All Departments</option>
-                        <option value="1">Computer Science</option>
-                        <option value="2">Mathematics</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <span>Allow users in the following years:</span>
-                    <select multiple class="form-control" name="by-year" id="">
-                        <option value="0" selected>All years</option>
-                        <option value="1">Year 1</option>
-                        <option value="2">Year 2</option>
-                        <option value="3">Year 2</option>
-                    </select>
-                </div>
-
-                <div>
-                    <span>Allow users in the following sections:</span>
-                    <select multiple class="form-control" name="by-section" id="">
-                        <option value="0" selected>All sections</option>
-                        <option value="1">Section 1</option>
-                        <option value="2">Section 2</option>
-                    </select>
-                </div>
+                {% include 'main/snippets/dep-picker.html' %}
                 
                 <div class="row">
                     <span class="col-auto mt-1">Add join code (optional):</span>
-                    <input class="form-control col" type="text" name="join-code" id="" placeholder="Join Code">
+                    <input class="form-control col" type="text" name="joincode" id="" placeholder="Join Code">
                 </div>
                 
-                <span class="btn float-right"><i class="fa fa-plus-square mr-3" aria-hidden="true"></i>Create</span>
+                <button class="btn float-right" type="submit" id="createForumButton"><i class="fa fa-plus-square mr-3" aria-hidden="true"></i>Create</button>
             </form>
         </div>
     </div>
     <!-- End of Create forum form -->
 
     <!-- Search Forum -->
-    <div class="card card-body push-corners my-3">
+    <div class="card card-body push-corners my-3 searchForumArea">
         <div class="row">
-            <div class="col-auto">
+            <div class="col-auto" id="backsearchForumArea">
                 <i class="fa fa-caret-left blue-text fa-3x mr-2 d-inline link" aria-hidden="true"></i>   
             </div>  
             <div class="col pl-0">
                 <span class="subtitle align-middle">Search Forum</span>
             </div>
         </div>
-        <form action="" class="md-form">
+        <form action="" class="md-form" name="search-forum-form">
             <div class="row">
                 <div class="col">
-                    <input class="form-control" type="text" name="forum-query" id="" placeholder="Forum Name">
+                    <input class="form-control" type="text" name="query" id="" placeholder="Forum Name">
                 </div>
                 <div class="col-auto">
-                    <span class="btn"><i class="fa fa-search mr-3" aria-hidden="true"></i>Search</span>
+                    <span class="btn" id="searchForumButton"><i class="fa fa-search mr-3" aria-hidden="true"></i>Search</span>
                 </div>
             </div>
         </form>
-        <div class="row mt-3 no-gutters">
-            <div class="col-auto">
-                {% load static %}
-                <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
-            </div>
-            <div class="col ml-3">
-                <a href="#" class="link d-block">4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></a>
-                <p">Q&A place for this course.</p>
+        <div id="search-result-list">
+            <div class="row mt-3 no-gutters">
+                <div class="col-auto">
+                    {% load static %}
+                    <img src="{% static 'main/thumbnail.png' %}" width="60" height="60">
+                </div>
+                <div class="col ml-3">
+                    <a href="#" class="link d-block">4 Kilo Unleashed <i class="fa fa-lock ml-1" aria-hidden="true"></i></a>
+                    <p">Q&A place for this course.</p>
+                </div>
             </div>
         </div>
     </div>
     <!-- End of search forum -->
 
     <!-- Interface when user opens a FORUM THEY ARE IN -->
+    <div class="openForumArea ForumArea">
         <div class="card card-body push-corners my-3">
             <div class="row">
                 <div class="col">
                     <div class="row">
-                        <div class="col-auto">
+                        <div class="col-auto backToForumLists">
                             <i class="fa fa-caret-left blue-text fa-3x mr-2 align-middle link" aria-hidden="true"></i>    
                         </div>
                         <div class="col-auto pl-0">
-                            <img src="{% static 'main/thumbnail.png' %}" width="50" height="50">  
+                            <img src="{% static 'main/thumbnail.png' %}" id="openForumThumbnail" width="50" height="50">  
                         </div>
                         <div class="col px-0">
-                            <p class="body d-inline">Complexity Theory is Awesome man</p>
+                            <p class="body d-inline" id='openForumTitle'>Complexity Theory is Awesome man</p>
                         </div>
                     </div>
                 </div>
@@ -202,19 +169,16 @@
                             aria-expanded="false">Options</button>
 
                         <div class="dropdown-menu push-corners py-0">
-                            <a class="dropdown-item py-2" href="#">Leave Forum</a>
-                            <a class="dropdown-item danger-color white-text py-2" href="#">Delete Forum</a>
+                            <a class="dropdown-item py-2" href="#" id="leaveForum">Leave Forum</a>
+                            <a class="dropdown-item danger-color white-text py-2" href="#" id="deleteForum">Delete Forum</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div>
-            <span class="btn mb-3">Load Older</span>
-        </div>
 
         <!-- Messages in the forum -->
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column" id="openForumMessages">
             <div class="card card-body push-corners mb-3 w-75">
                 <div class="flex-container">
                     <p class="body font-weight-bold">Biruk Tamiru</p>
@@ -287,33 +251,37 @@
         <!-- end of forum messages -->
 
         <div class="card card-body push-corners">
-            <form action="" class="md-form">
+            <form class="md-form" name="forumSendMessageForm" id="forumSendMessageForm">
                 <div class="row px-3">
-                    <input class="form-control col" type="text" name="message-forum" id="" placeholder="Type your message here">
-                    <span class="btn col-auto">Send</span>
+                    <input type="text" name="forum_id" id="forum_id" value="" hidden>
+                    <input class="form-control col" type="text" name="content" id="" placeholder="Type your message here">
+                    <span class="btn col-auto" id="sendForumMessage">Send</span>
                 </div>
                 <div class="input-group mb-3">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="">
-                        <label class="custom-file-label" for="">Send a file (optional)</label>
+                        <label class="custom-file-label" for="">Send file (optional):</label>
                     </div>
                 </div>
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" id="">
+                        <input type="file" accept=".jpg, .jpeg, .png" class="custom-file-input" name="image-1">
                         <label class="custom-file-label" for="">Send image (optional)</label>
                     </div>
                 </div>
+            </form>
         </div>
+    </div>
     <!-- End of open forum area -->
 
 
     <!-- Interface for when user has NOT JOINED FORUM -->
-        <div class="card card-body push-corners my-3">
+    <div class="joinForumArea ForumArea">
+        <div class="card card-body push-corners my-3 ">
             <div class="row">
                 <div class="col">
                     <div class="row">
-                        <div class="col-auto">
+                        <div class="col-auto backToForumLists">
                             <i class="fa fa-caret-left blue-text fa-3x mr-2 align-middle link" aria-hidden="true"></i>    
                         </div>
                         <div class="col-auto pl-0">
@@ -365,14 +333,16 @@
         <div class="card  card-body push-corners">
             <span class="btn">Join Forum</span>
         </div>
+    </div>
     <!-- End of NOT JOINED FORUM -->
 
     <!-- CLOSED forum with Join Code -->
+    <div class="joinClosedForumArea ForumArea">
         <div class="card card-body push-corners my-3">
             <div class="row">
                 <div class="col">
                     <div class="row">
-                        <div class="col-auto">
+                        <div class="col-auto backToForumLists">
                             <i class="fa fa-caret-left blue-text fa-3x mr-2 align-middle link" aria-hidden="true"></i>    
                         </div>
                         <div class="col-auto pl-0">
@@ -397,6 +367,7 @@
                     <span class="btn my-0">Join Forum</span>
             </form>
         </div>
+    </div>
     <!-- End of closed forum with Join Code -->
 
 </div>

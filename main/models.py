@@ -48,17 +48,18 @@ class Educational_Institution(models.Model):
 
 class Department(models.Model):
 
-   #The university the department is in
+   #The university/college the department is in
    university_in = models.ForeignKey(Educational_Institution, on_delete=models.CASCADE)
 
    #The name of the department
    name = models.CharField(max_length=60)
 
-   #The academic discipline/field the department is concerned with
-   field = models.CharField(max_length=20)
 
    def __str__(self):
       return self.name
+
+   def sectionlist(self):
+      return self.section_set.order_by('department_in','year','section_id')
 
    def get_classes(self):
        x = Q()
@@ -105,7 +106,7 @@ class Course(models.Model):
    course_code = models.CharField(max_length=20, null=True, blank=True)
 
    #The module code of the course
-   module_code = models.CharField(max_length=20, null=True, blank=True)
+   credit_hour = models.CharField(max_length=20, null=True, blank=True)
 
    #The department that gives this course
    given_by = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -121,15 +122,28 @@ class Course(models.Model):
 
 #The upload path for a file
 def upload_path_file(instance, filename):
-   return 'File' + '/' + instance.post_by.department_in.university_in.name + '/' + instance.post_by.department_in.name + '/' + instance.post_by.title + instance.post_by.first_name + " " + instance.post_by.last_name + '/' + instance.name + '.' +  instance.extension
+   if Staff.objects.filter(user=instance.post_by).exists():
+      staff = Staff.objects.get(user=instance.post_by)
 
+      return 'File' + '/' + staff.department_in.university_in.name + '/' + staff.department_in.name + '/' + staff.title + staff.first_name + " " + staff.last_name + '/' + instance.name + '.' +  instance.extension
+
+   elif Student.objects.filter(user=instance.post_by).exists():
+      student = Student.objects.get(user=instance.post_by)
+
+      return 'File' + '/' + 'students' + '/' +  student.reg_id + instance.name + '.' +  instance.extension
 
 
 #The upload path for an image
 def upload_path_image(instance, filename):
-   return 'Image' + '/' + instance.post_by.department_in.university_in.name + '/' + instance.post_by.department_in.name + '/' + instance.post_by.title + instance.post_by.first_name + " " + instance.post_by.last_name + '/' + filename
+   if Staff.objects.filter(user=instance.post_by).exists():
+      staff = Staff.objects.get(user=instance.post_by)
 
+      return 'Image' + '/' + staff.department_in.university_in.name + '/' + staff.department_in.name + '/' + staff.title + staff.first_name + " " + staff.last_name + '/' + filename
 
+   elif Student.objects.filter(user=instance.post_by).exists():
+      student = Student.objects.get(user=instance.post_by)
+
+      return 'Image' + '/' + 'students' + '/' +  student.reg_id + '/'+ filename
 
 class File(models.Model):
 
@@ -212,8 +226,8 @@ class Post(models.Model):
 
 class Reminder(models.Model):
 
-   #The type of the reminder. Test = 1, Assignment = 2, Presentation = 3
-   reminder_for = models.IntegerField()
+   #The type of the reminder. Assignment = 0, Test = 1, project = 2, presentation = 3, Make up class = 4
+   reminder_for = models.CharField(max_length=20)
 
    #The title of the reminder Eg.Test II, Assignment 1
    title = models.CharField(max_length=20)
@@ -225,10 +239,19 @@ class Reminder(models.Model):
    due_date = models.DateTimeField()
 
    #The due time of the test,assignment or presentation
-   due_time = models.DateTimeField()
+   due_time = models.DateTimeField(blank=True)
 
-   #The place where the test,assignment submission or presentation will occur
-   place = models.CharField(max_length=20)
+   #The extension of the type allowed for the assignment
+   file_type = models.CharField(max_length=8, blank=True)
+
+   #The file attached with the assignment
+   file = models.ManyToManyField(File, blank=True)
+
+   #The staff member that posted the reminder
+   post_by = models.ForeignKey('Staff',  on_delete=models.CASCADE)
+
+   #The date and time the post was posted
+   pub_date = models.DateTimeField('Date Published')
 
    def __str__(self):
       return self.title
@@ -251,19 +274,16 @@ class Staff(models.Model):
    #Possible values for the role field
    role_choices = (
       ('Dean','Dean'),
-      ('Associate Dean','Associate Dean'),
       ('Registrar','Registrar'),
       ('Department Head','Department Head'),
-      ('Program Coordinator','Program Coordinator'),
-      ('Instructor','Instructor'),
-      ('Lab Technician','Lab Technician')  # how about we just use instructor
+      ('Instructor','Instructor')
    )
 
    #The university the staff member is in
-   university_in = models.ForeignKey(Educational_Institution,  on_delete=models.CASCADE)
+   university_in = models.ForeignKey(Educational_Institution,  null=True, on_delete=models.CASCADE)
 
    #The department the staff member is in
-   department_in = models.ForeignKey(Department,  on_delete=models.CASCADE)
+   department_in = models.ForeignKey(Department,  null=True, on_delete=models.CASCADE)
 
    #The title of the staff member
    title = models.CharField(max_length=15, choices=title_choices)
@@ -443,6 +463,23 @@ class Reminder_To_Class(models.Model):
 
 
 
+#Assignment submissions from students
+class Assignment_Submission(models.Model):
+
+   #The file submitted by the student
+   file = models.ForeignKey(File,  on_delete=models.CASCADE)
+
+   #The assignment the file is being submitted for
+   assignment = models.ForeignKey(Reminder,  on_delete=models.CASCADE)
+
+   #the comments for the assignment
+   comment = models.TextField(blank=True)
+
+   #The student submitting the file
+   student = models.ForeignKey(Student,  on_delete=models.CASCADE)
+
+
+
 ## TRACKING ##
 
 #A student received/read a post
@@ -490,6 +527,23 @@ class Download(models.Model):
 
 
 
+class Recovery(models.Model):
+
+   #The user that initiated the recovery process
+   user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+   #The recovery code
+   code = models.CharField(max_length=20)
+
+   #Status of the recovery process
+   status = models.BooleanField(default=False)
+
+   #The date/time the code was given
+   expiry = models.DateTimeField('Expires at')
+
+
+   def __str__(self):
+      return str(self.user.username) + "-" + str(self.status)
 ##class Announcement(models.Model):
 ##   pub_date = models.DateTimeField('Date Published')
 ##   exp_date = models.DateTimeField('Expiry Date')
